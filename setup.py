@@ -10,6 +10,7 @@ from setuptools import setup, find_packages
 from distutils import log
 
 from astropy import setup_helpers
+from astropy.version_helper import get_git_devstr, generate_version_py
 
 packagename = 'packagename'
 
@@ -24,6 +25,12 @@ setup_helpers.adjust_compiler()
 
 # Indicate that we are in building mode
 setup_helpers.set_build_mode()
+
+if not release:
+    version += get_git_devstr(sha=False, dir=os.path.abspath(packagename))
+generate_version_py(packagename, version, release,
+                    setup_helpers.get_debug_option())
+
 
 # Use the find_packages tool to locate all packages and modules
 packagenames = find_packages()
