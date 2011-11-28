@@ -12,7 +12,14 @@ from distutils import log
 from astropy import setup_helpers
 from astropy.version_helper import get_git_devstr, generate_version_py
 
-packagename = 'packagename'
+# Set affiliated package-specific settings
+PACKAGENAME = 'packagename'
+DESCRIPTION = 'Astropy affiliated package'
+LONG_DESCRIPTION = ''
+AUTHOR = ''
+AUTHOR_EMAIL = ''
+LICENSE = ''
+URL = 'http://astropy.org'
 
 version = '0.0dev'
 
@@ -27,8 +34,8 @@ setup_helpers.adjust_compiler()
 setup_helpers.set_build_mode()
 
 if not release:
-    version += get_git_devstr(sha=False, path=os.path.abspath(packagename))
-generate_version_py(packagename, version, release,
+    version += get_git_devstr(sha=False, path=os.path.abspath(PACKAGENAME))
+generate_version_py(PACKAGENAME, version, release,
                     setup_helpers.get_debug_option())
 
 
@@ -53,14 +60,14 @@ cmdclassd = {}
 extensions = []
 
 # A dictionary to keep track of all package data to install
-package_data = {packagename: ['data/*']}
+package_data = {PACKAGENAME: ['data/*']}
 
 # Extra files to install - distutils calls them "data_files", but this
 # shouldn't be used for data files - rather any other files that should be
 # installed in a special place
 data_files = []
 
-setup_helpers.update_package_files(packagename, extensions, package_data,
+setup_helpers.update_package_files(PACKAGENAME, extensions, package_data,
                                    data_files)
 
 if setup_helpers.HAVE_CYTHON and not release:
@@ -73,9 +80,9 @@ if setup_helpers.AstropyBuildSphinx is not None:
     cmdclassd['build_sphinx'] = setup_helpers.AstropyBuildSphinx
 
 
-setup(name=packagename,
+setup(name=PACKAGENAME,
       version=version,
-      description='Astropy affiliated package',
+      description=DESCRIPTION,
       packages=packagenames,
       package_data=package_data,
       data_files=data_files,
@@ -83,12 +90,12 @@ setup(name=packagename,
       scripts=scripts,
       requires=['numpy'],  # scipy not required, but strongly recommended
       install_requires=['numpy'],
-      provides=[packagename],
-      author='',
-      author_email='',
-      license='',
-      url='http://astropy.org',
-      long_description='',
+      provides=[PACKAGENAME],
+      author=AUTHOR,
+      author_email=AUTHOR_EMAIL,
+      license=LICENSE,
+      url=URL,
+      long_description=LONG_DESCRIPTION,
       cmdclass=cmdclassd,
       zip_safe=False,
       use_2to3=True
