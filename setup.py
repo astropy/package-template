@@ -17,7 +17,7 @@ DESCRIPTION = 'Astropy affiliated package'
 LONG_DESCRIPTION = ''
 AUTHOR = ''
 AUTHOR_EMAIL = ''
-LICENSE = ''
+LICENSE = 'BSD'
 URL = 'http://astropy.org'
 
 version = '0.0dev'
