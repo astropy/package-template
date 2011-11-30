@@ -1,5 +1,4 @@
 from __future__ import division
-from .tests.helper import run_tests as test
 from example import fib
 
 
@@ -8,3 +7,10 @@ try:
 except ImportError:
     # TODO: Issue a warning...
     __version__ = ''
+
+# set up the test command
+from . import __path__
+from astropy.tests.helper import TestRunner
+_test_runner = TestRunner(__path__[0])
+del TestRunner
+test = _test_runner.run_tests

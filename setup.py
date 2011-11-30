@@ -7,7 +7,6 @@ use_setuptools()
 import os
 import glob
 from setuptools import setup, find_packages
-from distutils import log
 
 from astropy import setup_helpers
 from astropy.version_helper import get_git_devstr, generate_version_py
@@ -34,10 +33,9 @@ setup_helpers.adjust_compiler()
 setup_helpers.set_build_mode()
 
 if not release:
-    version += get_git_devstr(sha=False, path=os.path.abspath(PACKAGENAME))
+    version += get_git_devstr(False, path=os.path.abspath(PACKAGENAME))
 generate_version_py(PACKAGENAME, version, release,
                     setup_helpers.get_debug_option())
-
 
 # Use the find_packages tool to locate all packages and modules
 packagenames = find_packages()
@@ -54,7 +52,7 @@ scripts.remove('scripts/README.rst')
 setup_helpers.check_numpy()
 
 # This dictionary stores the command classes used in setup below
-cmdclassd = {}
+cmdclassd = {'test': setup_helpers.setup_test_command(PACKAGENAME)}
 
 # Additional C extensions that are not Cython-based should be added here.
 extensions = []
@@ -67,6 +65,9 @@ package_data = {PACKAGENAME: ['data/*']}
 # installed in a special place
 data_files = []
 
+# Update extensions, package_data, and data_files from any sub-packages that
+# define their own extension modules and package data.  See the docstring for
+# setup_helpers.update_package_files for more details.
 setup_helpers.update_package_files(PACKAGENAME, extensions, package_data,
                                    data_files)
 
@@ -75,10 +76,8 @@ if setup_helpers.HAVE_CYTHON and not release:
     # Builds Cython->C if in dev mode and Cython is present
     cmdclassd['build_ext'] = build_ext
 
-
 if setup_helpers.AstropyBuildSphinx is not None:
     cmdclassd['build_sphinx'] = setup_helpers.AstropyBuildSphinx
-
 
 setup(name=PACKAGENAME,
       version=version,
