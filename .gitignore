@@ -10,7 +10,7 @@ __pycache__
 *.c
 
 # Other generated files
-astropy/version.py
+*/version.py
 
 # Sphinx
 _build
