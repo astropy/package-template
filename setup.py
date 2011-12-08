@@ -1,10 +1,10 @@
 #!/usr/bin/env python
+# Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 # Use "distribute" - the setuptools fork that supports python 3.
 from distribute_setup import use_setuptools
 use_setuptools()
 
-import os
 import glob
 from setuptools import setup, find_packages
 
@@ -20,7 +20,8 @@ AUTHOR_EMAIL = ''
 LICENSE = 'BSD'
 URL = 'http://astropy.org'
 
-version = '0.0dev'
+#version should be PEP386 compatible (http://www.python.org/dev/peps/pep-0386)
+version = '0.0.dev'
 
 # Indicates if this version is a release version
 release = 'dev' not in version
@@ -33,7 +34,7 @@ setup_helpers.adjust_compiler()
 setup_helpers.set_build_mode()
 
 if not release:
-    version += get_git_devstr(False, path=os.path.abspath(PACKAGENAME))
+    version += get_git_devstr(False, path=PACKAGENAME)
 generate_version_py(PACKAGENAME, version, release,
                     setup_helpers.get_debug_option())
 
@@ -60,16 +61,15 @@ extensions = []
 # A dictionary to keep track of all package data to install
 package_data = {PACKAGENAME: ['data/*']}
 
-# Extra files to install - distutils calls them "data_files", but this
-# shouldn't be used for data files - rather any other files that should be
-# installed in a special place
-data_files = []
+# A dictionary to keep track of extra packagedir mappings
+package_dirs = {}
 
-# Update extensions, package_data, and data_files from any sub-packages that
-# define their own extension modules and package data.  See the docstring for
-# setup_helpers.update_package_files for more details.
+# Update extensions, package_data, packagenames and package_dirs from
+# any sub-packages that define their own extension modules and package
+# data.  See the docstring for setup_helpers.update_package_files for
+# more details.
 setup_helpers.update_package_files(PACKAGENAME, extensions, package_data,
-                                   data_files)
+                                   packagenames, package_dirs)
 
 if setup_helpers.HAVE_CYTHON and not release:
     from Cython.Distutils import build_ext
@@ -79,12 +79,13 @@ if setup_helpers.HAVE_CYTHON and not release:
 if setup_helpers.AstropyBuildSphinx is not None:
     cmdclassd['build_sphinx'] = setup_helpers.AstropyBuildSphinx
 
+
 setup(name=PACKAGENAME,
       version=version,
       description=DESCRIPTION,
       packages=packagenames,
       package_data=package_data,
-      data_files=data_files,
+      package_dir=package_dirs,
       ext_modules=extensions,
       scripts=scripts,
       requires=['astropy'],
