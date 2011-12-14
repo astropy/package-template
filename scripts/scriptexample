@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """An example command-line script"""
 
-from sys import argv
 import packagename.examplescript
 
-packagename.examplescript.main(argv[1:])
+packagename.examplescript.main()

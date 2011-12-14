@@ -21,7 +21,7 @@ def do_fib(n, usecython=False):
         fib(n)
 
 
-def main(args):
+def main(args=None):
     from astropy.utils.compat import argparse
 
     parser = argparse.ArgumentParser(description='Process some integers.')
