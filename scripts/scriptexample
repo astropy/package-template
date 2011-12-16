@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""An example command-line script"""
+
+import packagename.examplemod
+
+packagename.examplemod.main()
