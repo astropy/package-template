@@ -34,7 +34,7 @@ setup_helpers.adjust_compiler()
 setup_helpers.set_build_mode()
 
 if not release:
-    version += get_git_devstr(False, path=PACKAGENAME)
+    version += get_git_devstr(False)
 generate_version_py(PACKAGENAME, version, release,
                     setup_helpers.get_debug_option())
 
