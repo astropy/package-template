@@ -29,7 +29,7 @@ it for your particular affiliated package.
        should be named (for examples' sake, we will call it ``yourpkg``). By
        tradition/very strong suggestion, python package names should be all
        lower-case.
-    2. Change the `DECRIPTION` variable to a short (one or few sentence) 
+    2. Change the `DESCRIPTION` variable to a short (one or few sentence) 
        description of your package.
     3. Define a longer description as a string in the `LONG_DESCRIPTION` 
        variable.  You may want this to be the docstring of your package itself
@@ -43,6 +43,7 @@ it for your particular affiliated package.
        site.  Otherwise, you can leave it pointing to `astropy`_ or just
        delete it.
     6. Exit out of your text editor
+    
 * Now tell git to remember the changes you just made:
 
    git add setup.py
@@ -57,7 +58,7 @@ it for your particular affiliated package.
   changes:
 
     git add licenses/LICENSE.rst
-    (if you changed the license and modified setup.py) git add setup.py
+    git add setup.py  # if you changed the license and modified setup.py
     git commit -m "updated license for new project yourpkg"
 
 * Take a moment to look over the ``packagename/examplemod.py``
@@ -76,7 +77,7 @@ it for your particular affiliated package.
     git rm packagename/examplesubpkg
     git commit -m "removed examples from package template"
 
-* Now rename the source code directory to match your  project's name:
+* Now rename the source code directory to match your project's name:
 
     git mv packagename yourpkg
     git commit -m "renamed template package source to new project yourpkg"
@@ -95,8 +96,8 @@ it for your particular affiliated package.
 
 * Pass these changes on to git:
 
-  git add docs/conf.py
-  git commit -m "updated documentation for new project newpkg"
+    git add docs/conf.py
+    git commit -m "updated documentation for new project newpkg"
 
 * Update the names of the documentation files to match your package's name. 
   First open ``docs/index.rst`` in a text editor and change the text 
@@ -106,19 +107,22 @@ it for your particular affiliated package.
     git mv docs/packagename docs/yourpkg
     git commit -m "Updated docs to reflect new project newpkg"
 
-* Your final step before you start digging in should be to edit this file 
-  (README.rst) and delete all of this content, and replace it with a short
-  description of your affiliated package. Inform git:
+* Edit this file (README.rst) and delete all of this content, and replace it
+  with a short description of your affiliated package. Inform git:
 
     git add README.rst
     git commit -m "replaced README for new project newpkg"
 
 * You're now ready to start doing actual work on your affiliated package.  You
-  will probably want to read over the developer guidelines of the astropy 
-  documentation, and if you are hosting your code in github, you might also
+  will probably want to read over the developer guidelines of the Astropy 
+  documentation, and if you are hosting your code in GitHub, you might also
   want to read the `Github help <http://help.github.com/>`_ to ensure you know
-  how to push your code to github and some recommended workflows that work for
+  how to push your code to GitHub and some recommended workflows that work for
   the core Astropy project.
+  
+* Once you have started work on the affiliated package, you should register
+  your package with the Astropy affiliated package registry. Instructions for
+  doing this will be provided on the `astropy`_ website.
 
 * Good luck with your code and your science!
 
