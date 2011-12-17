@@ -16,6 +16,8 @@ import sys, os, warnings
 # Load all of the global Astropy configuration
 from astropy.sphinx.conf import *
 
+PACKAGENAME = 'packagename'
+
 # The intersphinx_mapping in astropy.sphinx.conf refers to astropy for
 # the benefit of affiliated packages who want to refer to objeects in
 # the astropy core.  However, we don't want to cyclically reference
@@ -38,9 +40,9 @@ copyright = u'2011'
 # built documents.
 #
 # The short X.Y version.
-version = '0.0.0'
+version = PACKAGENAME.__version__.split('-', 1)[0]
 # The full version, including alpha/beta/rc tags.
-release = '0.0.0'
+release = PACKAGENAME.__version__
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 #add_function_parentheses = True
