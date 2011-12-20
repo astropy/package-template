@@ -18,12 +18,6 @@ from astropy.sphinx.conf import *
 
 PACKAGENAME = 'packagename'
 
-# The intersphinx_mapping in astropy.sphinx.conf refers to astropy for
-# the benefit of affiliated packages who want to refer to objeects in
-# the astropy core.  However, we don't want to cyclically reference
-# astropy in its own build so we remove it here.
-del intersphinx_mapping['astropy']
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
