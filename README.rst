@@ -71,10 +71,10 @@ it for your particular affiliated package.
   out.  Once you understand these, though, you'll want to delete them (and
   later replace with your own):
 
-    git rm packagename/examplemod.py
-    git rm scripts/scriptexample
+    git rm packagename/example_mod.py
+    git rm scripts/script_example
     git rm packagename/example.pyx
-    git rm packagename/examplesubpkg
+    git rm packagename/example_subpkg
     git commit -m "removed examples from package template"
 
 * Now rename the source code directory to match your project's name:
