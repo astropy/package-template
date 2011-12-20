@@ -11,12 +11,13 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os, warnings
+import os
+import sys
+
+import packagename
 
 # Load all of the global Astropy configuration
 from astropy.sphinx.conf import *
-
-PACKAGENAME = 'packagename'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -34,9 +35,9 @@ copyright = u'2011'
 # built documents.
 #
 # The short X.Y version.
-version = PACKAGENAME.__version__.split('-', 1)[0]
+version = packagename.__version__.split('-', 1)[0]
 # The full version, including alpha/beta/rc tags.
-release = PACKAGENAME.__version__
+release = packagename.__version__
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 #add_function_parentheses = True

@@ -87,13 +87,15 @@ it for your particular affiliated package.
 * Adjust the information in the documentation to match your new project by
   editing the ``docs/conf.py`` file.
 
-  1. Change the ``PACKAGENAME`` and `project` variables to your project's name
-     (note that `project` does not *need* to be exactly the same as the
-     package name, but that's the normal convention).
-  2. Update the `copyright` variable for the current year, and also your na,e
+  1. Change the ``import packagename`` statement to ``import yourpkg`` (where
+     ``yourpkg`` is the name of your package).
+  2. Change the `project` variable to your project's name (note that this does
+     not *need* to be exactly the same as the package name, but that's the
+     normal convention).
+  3. Update the `copyright` variable for the current year, and also your na,e
      or the name of your collaboration (e.g.,"2011, John Doe and the
      Amazing Package Collaboration.")
-  3. If you ever expect to output your docs in LaTeX or as a man page, you'll
+  4. If you ever expect to output your docs in LaTeX or as a man page, you'll
      also want to update the `latex_documents` and `man_pages` variables to
      reflect your project, name, and author list.
 
