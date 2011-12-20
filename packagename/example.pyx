@@ -1,6 +1,8 @@
 def fib(n):
-    """Print the Fibonacci series up to n."""
+    """Returns the Fibonacci series up to n."""
     a, b = 0, 1
+    c = []
     while b < n:
-        print b,
+        c.append(b)
         a, b = b, a + b
+    return c

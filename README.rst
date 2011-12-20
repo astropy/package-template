@@ -74,6 +74,7 @@ it for your particular affiliated package.
     git rm packagename/example_mod.py
     git rm scripts/script_example
     git rm packagename/example.pyx
+    git rm packagename/test_example.py
     git rm packagename/example_subpkg
     git commit -m "removed examples from package template"
 
