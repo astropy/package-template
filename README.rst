@@ -15,7 +15,7 @@ it for your particular affiliated package.
 
 * You may have already done this, if you are looking at this file locally, but
   if not, you will need to obtain a copy of the package template.  Assuming
-  you have `git`_ installed, just do:
+  you have `git`_ installed, just do::
 
       git clone git://github.com/astropy/package-template.git newpackage
 
@@ -23,28 +23,29 @@ it for your particular affiliated package.
   place it in a directory named ``newpackage``.
 
 * Go into the directory you just created, and open the ``setup.py`` file
-  with your favorite text editor.  In this file, do the following:
+  with your favorite text editor.  Follow the steps below to update it for
+  your new package.
 
-    1. Change the `PACKAGENAME` variable to whatever you decide your package
-       should be named (for examples' sake, we will call it ``yourpkg``). By
-       tradition/very strong suggestion, python package names should be all
-       lower-case.
-    2. Change the `DESCRIPTION` variable to a short (one or few sentence)
-       description of your package.
-    3. Define a longer description as a string in the `LONG_DESCRIPTION`
-       variable.  You may want this to be the docstring of your package itself
-       as Astropy does.  In this case, simple add ``import yourpkg`` somewhere
-       above, and set ``LONG_DESCRIPTION = yourpkg.__doc__``.  Alternatively,
-       you may omit the description by deleting the variable and deleting the
-       line where it is used in the `setup()` function further down.
-    4. Add your name and email address by changing the `AUTHOR` and
-       `AUTHOR_EMAIL` variables.
-    5. If your affiliated package has a website, change `URL` to point to that
-       site.  Otherwise, you can leave it pointing to `astropy`_ or just
-       delete it.
-    6. Exit out of your text editor
+  1. Change the `PACKAGENAME` variable to whatever you decide your package
+     should be named (for examples' sake, we will call it ``yourpkg``). By
+     tradition/very strong suggestion, python package names should be all
+     lower-case.
+  2. Change the `DESCRIPTION` variable to a short (one or few sentence)
+     description of your package.
+  3. Define a longer description as a string in the `LONG_DESCRIPTION`
+     variable.  You may want this to be the docstring of your package itself
+     as Astropy does.  In this case, simple add ``import yourpkg`` somewhere
+     above, and set ``LONG_DESCRIPTION = yourpkg.__doc__``.  Alternatively,
+     you may omit the description by deleting the variable and deleting the
+     line where it is used in the `setup()` function further down.
+  4. Add your name and email address by changing the `AUTHOR` and
+     `AUTHOR_EMAIL` variables.
+  5. If your affiliated package has a website, change `URL` to point to that
+     site.  Otherwise, you can leave it pointing to `astropy`_ or just
+     delete it.
+  6. Exit out of your text editor
 
-* Now tell git to remember the changes you just made:
+* Now tell git to remember the changes you just made::
 
    git add setup.py
    git commit -m "adjusted setup.py for new project yourpkg"
@@ -55,7 +56,7 @@ it for your particular affiliated package.
   the top as the licensees.  Otherwise, make sure to replace that file with
   whatever license you prefer, and update the `LICENSE` variable in
   ``setup.py`` to reflect your choice of license.  Again, tell git about your
-  changes:
+  changes::
 
     git add licenses/LICENSE.rst
     git add setup.py  # if you changed the license and modified setup.py
@@ -70,7 +71,7 @@ it for your particular affiliated package.
   compile python-like code to C to make it run faster - see the project's web
   site for details). These are provided as examples of standard way to lay
   these out. Once you understand these, though, you'll want to delete them
-  (and later replace with your own):
+  (and later replace with your own)::
 
     git rm packagename/example_mod.py
     git rm scripts/script_example
@@ -79,7 +80,7 @@ it for your particular affiliated package.
     git rm -r packagename/example_subpkg
     git commit -m "removed examples from package template"
 
-* Now rename the source code directory to match your project's name:
+* Now rename the source code directory to match your project's name::
 
     git mv packagename yourpkg
     git commit -m "renamed template package source to new project yourpkg"
@@ -99,21 +100,21 @@ it for your particular affiliated package.
      also want to update the `latex_documents` and `man_pages` variables to
      reflect your project, name, and author list.
 
-* Pass these changes on to git:
+* Pass these changes on to git::
 
     git add docs/conf.py
     git commit -m "updated documentation for new project yourpkg"
 
 * Update the names of the documentation files to match your package's name.
   First open ``docs/index.rst`` in a text editor and change the text
-  "packagename/index.rst" to e.g., "yourpkg/index.rst".  Then do:
+  "packagename/index.rst" to e.g., "yourpkg/index.rst".  Then do::
 
     git add docs/index.rst
     git mv docs/packagename docs/yourpkg
     git commit -m "Updated docs to reflect new project yourpkg"
 
 * Edit this file (README.rst) and delete all of this content, and replace it
-  with a short description of your affiliated package. Inform git:
+  with a short description of your affiliated package. Inform git::
 
     git add README.rst
     git commit -m "replaced README for new project yourpkg"
