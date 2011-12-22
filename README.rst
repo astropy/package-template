@@ -3,20 +3,20 @@ Affiliated Package Template Instructions
 ========================================
 
 This package provides a template for packages that are affiliated with the
-`astropy`_ project. This package design mirrors the layout of the main Astropy
-repository, as well as reusing much of the helper code used to organize
-Astropy.  The instructions below describe how to take this template and adjust
-it for your particular affiliated package.
+`Astropy`_ project. This package design mirrors the layout of the main
+`Astropy`_ repository, as well as reusing much of the helper code used to
+organize `Astropy`_.  The instructions below describe how to take this
+template and adjust it for your particular affiliated package.
 
 .. note::
     The instructions below assume you are using git for version control, as is
-    used by the main Astropy repository.  If this is not the case, hopefully
-    it will be clear from context what to do with your particular VCS.
+    used by the Astropy repository.  If this is not the case, hopefully it
+    will be clear from context what to do with your particular VCS.
 
-* Make sure `astropy`_ is installed, as the template depends in part on
+* Make sure `Astropy`_ is installed, as the template depends in part on
   Astropy to do its setup.
 
-* You may have already done this, if you are looking at this file locally, but
+* You may have already done this if you are looking at this file locally, but
   if not, you will need to obtain a copy of the package template.  Assuming
   you have `git`_ installed, just do::
 
@@ -44,7 +44,7 @@ it for your particular affiliated package.
   4. Add your name and email address by changing the `AUTHOR` and
      `AUTHOR_EMAIL` variables.
   5. If your affiliated package has a website, change `URL` to point to that
-     site.  Otherwise, you can leave it pointing to `astropy`_ or just
+     site.  Otherwise, you can leave it pointing to `Astropy`_ or just
      delete it.
   6. Exit out of your text editor
 
@@ -148,7 +148,7 @@ it for your particular affiliated package.
     git push upstream master
     git branch master --set-upstream upstream/master
     
-* (optional) If you are adopting the standard workflow used by astropy with
+* (optional) If you are adopting the standard workflow used by `Astropy`_ with
   github, you will also want to set up a fork of the repo on your own account,
   by going to the github page https://github.com/astropy/yourpkg and clicking
   the "fork" button on the upper right.  Then run the following commands::
@@ -170,11 +170,11 @@ it for your particular affiliated package.
 
 * Once you have started work on the affiliated package, you should register
   your package with the Astropy affiliated package registry. Instructions for
-  doing this will be provided on the `astropy`_ website.
+  doing this will be provided on the `Astropy`_ website.
 
 * Good luck with your code and your science!
 
-.. _astropy: http://www.astropy.org/
+.. _Astropy: http://www.astropy.org/
 .. _git: http://git-scm.com/
 .. _github: http://github.com
 .. _Cython: http://cython.org/
