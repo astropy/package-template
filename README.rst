@@ -6,7 +6,10 @@ This package provides a template for packages that are affiliated with the
 `Astropy`_ project. This package design mirrors the layout of the main
 `Astropy`_ repository, as well as reusing much of the helper code used to
 organize `Astropy`_.  The instructions below describe how to take this
-template and adjust it for your particular affiliated package.
+template and adjust it for your particular affiliated package. 
+
+Everywhere below that the text ``youpkg`` is shown, replace it with the name
+of your particular package.
 
 .. note::
     The instructions below assume you are using git for version control, as is
@@ -92,11 +95,10 @@ template and adjust it for your particular affiliated package.
 * Adjust the information in the documentation to match your new project by
   editing the ``docs/conf.py`` file.
 
-  1. Change the ``import packagename`` statement to ``import yourpkg`` (where
-     ``yourpkg`` is the name of your package).
-  2. Change the `project` variable to your project's name (note that this does
-     not *need* to be exactly the same as the package name, but that's the
-     normal convention).
+  1. Change the `project` variable to your project's name (note that this does
+     not *need* to be exactly the same as the package name, but that's a
+     common convention).
+  2. Change the ``import packagename`` statement to ``import yourpkg``
   3. Update the `copyright` variable for the current year, and also your na,e
      or the name of your collaboration (e.g.,"2011, John Doe and the
      Amazing Package Collaboration.")

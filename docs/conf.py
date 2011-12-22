@@ -22,18 +22,19 @@ from astropy.sphinx.conf import *
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
 
-import packagename
-
 # -- General configuration -----------------------------------------------------
 
 # General information about the project.
-project = u'packagename'
+
+# This does not *have* to match the package name, but typically does
+project = u'packagename' 
 copyright = u'2011'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-#
+
+import packagename
 # The short X.Y version.
 version = packagename.__version__.split('-', 1)[0]
 # The full version, including alpha/beta/rc tags.
