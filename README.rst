@@ -31,21 +31,21 @@ will be clear from context what to do with your particular VCS.
   with your favorite text editor.  Follow the steps below to update it for
   your new package.
 
-  1. Change the `PACKAGENAME` variable to whatever you decide your package
+  1. Change the ``PACKAGENAME`` variable to whatever you decide your package
      should be named (for examples' sake, we will call it ``yourpkg``). By
      tradition/very strong suggestion, python package names should be all
      lower-case.
-  2. Change the `DESCRIPTION` variable to a short (one or few sentence)
+  2. Change the ``DESCRIPTION`` variable to a short (one or few sentence)
      description of your package.
-  3. Define a longer description as a string in the `LONG_DESCRIPTION`
+  3. Define a longer description as a string in the ``LONG_DESCRIPTION``
      variable.  You may want this to be the docstring of your package itself
      as Astropy does.  In this case, simple add ``import yourpkg`` somewhere
      above, and set ``LONG_DESCRIPTION = yourpkg.__doc__``.  Alternatively,
      you may omit the description by deleting the variable and deleting the
-     line where it is used in the `setup()` function further down.
-  4. Add your name and email address by changing the `AUTHOR` and
-     `AUTHOR_EMAIL` variables.
-  5. If your affiliated package has a website, change `URL` to point to that
+     line where it is used in the ``setup()`` function further down.
+  4. Add your name and email address by changing the ``AUTHOR`` and
+     ``AUTHOR_EMAIL`` variables.
+  5. If your affiliated package has a website, change ``URL`` to point to that
      site.  Otherwise, you can leave it pointing to `Astropy`_ or just
      delete it.
   6. Exit out of your text editor
@@ -59,7 +59,7 @@ will be clear from context what to do with your particular VCS.
   don't care and/or are fine with the Astropy license, just edit the file
   ``licenses/LICENSE.rst`` with your name (or your collaboration's name) at
   the top as the licensees.  Otherwise, make sure to replace that file with
-  whatever license you prefer, and update the `LICENSE` variable in
+  whatever license you prefer, and update the ``LICENSE`` variable in
   ``setup.py`` to reflect your choice of license.  You also may need to
   update the comment at the top of ``packagename/__init__.py`` to reflect your
   choice of license. Again, tell git about your changes::
@@ -94,11 +94,28 @@ will be clear from context what to do with your particular VCS.
 * Adjust the information in the documentation to match your new project by
   editing the ``docs/conf.py`` file.
 
-  1. Change the `project` variable to your project's name (note that this does
+  1. Change the ``project`` variable to your project's name (note that this does
      not *need* to be exactly the same as the package name, but that's a
      common convention).
-  2. Change the ``import packagename`` statement to ``import yourpkg``
-  3. Update the `copyright` variable for the current year, and also your na,e
+  2. Change the following lines::
+  
+        import packagename
+        # The short X.Y version.
+        version = packagename.__version__.split('-', 1)[0]
+        # The full version, including alpha/beta/rc tags.
+        release = packagename.__version__
+    
+    to::
+    
+        import yourpkg
+        # The short X.Y version.
+        version = yourpkg.__version__.split('-', 1)[0]
+        # The full version, including alpha/beta/rc tags.
+        release = yourpkg.__version__
+    
+    where ``yourpkg`` is the name of your package.
+  
+  3. Update the ``copyright`` variable for the current year, and also your na,e
      or the name of your collaboration (e.g.,"2011, John Doe and the
      Amazing Package Collaboration.")
   4. If you ever expect to output your docs in LaTeX or as a man page, you'll
@@ -112,7 +129,7 @@ will be clear from context what to do with your particular VCS.
 
 * Update the names of the documentation files to match your package's name.
   First open ``docs/index.rst`` in a text editor and change the text
-  "packagename/index.rst" to e.g., "yourpkg/index.rst".  Then do::
+  ``"packagename/index.rst"`` to e.g., ``"yourpkg/index.rst"``.  Then do::
 
     git add docs/index.rst
     git mv docs/packagename docs/yourpkg
@@ -126,14 +143,14 @@ will be clear from context what to do with your particular VCS.
     git add MANIFEST.in
     git commit -m "updated MANIFEST.in for new project yourpkg"
 
-* Edit this file (README.rst) and delete all of this content, and replace it
+* Edit this file (``README.rst``) and delete all of this content, and replace it
   with a short description of your affiliated package. Inform git::
 
     git add README.rst
     git commit -m "replaced README for new project yourpkg"
     
 * (This step assumes your affiliated package is hosted as part of the astropy
-  organization on github.  If it's instead hosted somewhere else, just adjust
+  organization on Github.  If it's instead hosted somewhere else, just adjust
   the URL in the instructions below to match wherever your repository lives)
   Now you will want to tell git that it should be pushing and pulling updates
   to the repository of *your* project, rather than the package template::
@@ -152,7 +169,7 @@ will be clear from context what to do with your particular VCS.
     
 * (optional) If you are adopting the standard workflow used by `Astropy`_ with
   github, you will also want to set up a fork of the repo on your own account,
-  by going to the github page https://github.com/astropy/yourpkg and clicking
+  by going to the Github page https://github.com/astropy/yourpkg and clicking
   the "fork" button on the upper right.  Then run the following commands::
   
     git remote add origin git@github.com:yourgithubusername/yourpkg.git
