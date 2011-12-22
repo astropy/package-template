@@ -114,7 +114,7 @@ will be clear from context what to do with your particular VCS.
         # The full version, including alpha/beta/rc tags.
         release = yourpkg.__version__
 
-    where ``yourpkg`` is the name of your package.
+     where ``yourpkg`` is the name of your package.
 
   3. Update the ``copyright`` variable for the current year, and also your na,e
      or the name of your collaboration (e.g.,"2011, John Doe and the
