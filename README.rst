@@ -118,6 +118,37 @@ it for your particular affiliated package.
 
     git add README.rst
     git commit -m "replaced README for new project yourpkg"
+    
+* (This step assumes your affiliated package is hosted as part of the astropy
+  organization on github.  If it's instead hosted somewhere else, just adjust
+  the URL in the instructions below to match wherever your repository lives)
+  Now you will want to tell git that it should be pushing and pulling updates
+  to the repository of *your* project, rather than the package template::
+  
+    git remote rename origin template
+    git remote add upstream git@github.com:astropy/yourpkg.git
+    
+  Now that it is pointing to the correct master, you should push everything up
+  to your project and make sure that your local master is tied to your project
+  rather than the template.  You'll only be able to do this if your github 
+  repository is empty (if not, add the ``-f`` option to the ``push`` 
+  command - that will overwrite whatever is there)::
+    
+    git push upstream master
+    git branch master --set-upstream upstream/master
+    
+* (optional) If you are adopting the standard workflow used by astropy with
+  github, you will also want to set up a fork of the repo on your own account,
+  by going to the github page https://github.com/astropy/yourpkg and clicking
+  the "fork" button on the upper right.  Then run the following commands::
+  
+    git remote add origin git@github.com:yourgithubusername/yourpkg.git
+    git branch master --set-upstream origin/master
+    
+  Now you can push, pull, and branch whatever you want in your local fork
+  without affecting the official version, but when you want to push something 
+  up to the main repository, just switch to the appropriate branch and do 
+  ``git push upstream master``.
 
 * You're now ready to start doing actual work on your affiliated package.  You
   will probably want to read over the developer guidelines of the Astropy
