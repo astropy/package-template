@@ -13,6 +13,9 @@ it for your particular affiliated package.
     used by the main Astropy repository.  If this is not the case, hopefully
     it will be clear from context what to do with your particular VCS.
 
+* Make sure `astropy`_ is installed, as the template depends in part on
+  Astropy to do its setup.
+
 * You may have already done this, if you are looking at this file locally, but
   if not, you will need to obtain a copy of the package template.  Assuming
   you have `git`_ installed, just do::
