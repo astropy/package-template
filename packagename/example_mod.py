@@ -1,10 +1,11 @@
 def fib(n):
-    """Print the Fibonacci series up to n."""
+    """Returns the Fibonacci series up to n."""
     a, b = 0, 1
+    c = []
     while b < n:
-        print b,
+        c.append(b)
         a, b = b, a + b
-
+    return c
 
 def do_fib(n, usecython=False):
     if usecython:
@@ -12,11 +13,11 @@ def do_fib(n, usecython=False):
 
         print 'Using cython-based fib'
 
-        cfib(n)
+        return cfib(n)
     else:
         print 'Using pure python fib'
 
-        fib(n)
+        return fib(n)
 
 
 def main(args=None):
@@ -30,4 +31,5 @@ def main(args=None):
 
     res = parser.parse_args(args)
 
-    do_fib(res.n, res.cy)
+    fib = do_fib(res.n, res.cy)
+    print fib
