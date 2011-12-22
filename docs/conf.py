@@ -22,8 +22,6 @@ from astropy.sphinx.conf import *
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
 
-import packagename
-
 # -- General configuration -----------------------------------------------------
 
 # General information about the project.
