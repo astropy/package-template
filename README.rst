@@ -116,7 +116,7 @@ will be clear from context what to do with your particular VCS.
 
      where ``yourpkg`` is the name of your package.
 
-  3. Update the ``copyright`` variable for the current year, and also your na,e
+  3. Update the ``copyright`` variable for the current year, and also your name
      or the name of your collaboration (e.g.,"2011, John Doe and the
      Amazing Package Collaboration.")
   4. If you ever expect to output your docs in LaTeX or as a man page, you'll
