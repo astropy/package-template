@@ -58,8 +58,9 @@ template and adjust it for your particular affiliated package.
   ``licenses/LICENSE.rst`` with your name (or your collaboration's name) at
   the top as the licensees.  Otherwise, make sure to replace that file with
   whatever license you prefer, and update the `LICENSE` variable in
-  ``setup.py`` to reflect your choice of license.  Again, tell git about your
-  changes::
+  ``setup.py`` to reflect your choice of license.  You also may need to
+  update the comment at the top of ``packagename/__init__.py`` to reflect your
+  choice of license. Again, tell git about your changes::
 
     git add licenses/LICENSE.rst
     git add setup.py  # if you changed the license and modified setup.py
