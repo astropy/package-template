@@ -8,7 +8,7 @@ This package provides a template for packages that are affiliated with the
 organize `Astropy`_.  The instructions below describe how to take this
 template and adjust it for your particular affiliated package. 
 
-Everywhere below that the text ``youpkg`` is shown, replace it with the name
+Everywhere below that the text ``yourpkg`` is shown, replace it with the name
 of your particular package.
 
 .. note::
@@ -23,10 +23,10 @@ of your particular package.
   if not, you will need to obtain a copy of the package template.  Assuming
   you have `git`_ installed, just do::
 
-      git clone git://github.com/astropy/package-template.git newpackage
+      git clone git://github.com/astropy/package-template.git yourpkg
 
   This will download the latest version of the template from `github`_ and
-  place it in a directory named ``newpackage``.
+  place it in a directory named ``yourpkg``.
 
 * Go into the directory you just created, and open the ``setup.py`` file
   with your favorite text editor.  Follow the steps below to update it for
