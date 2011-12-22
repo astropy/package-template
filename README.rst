@@ -106,7 +106,7 @@ will be clear from context what to do with your particular VCS.
         release = packagename.__version__
 
 
-    to::
+     to::
 
         import yourpkg
         # The short X.Y version.
