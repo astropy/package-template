@@ -113,6 +113,14 @@ it for your particular affiliated package.
     git mv docs/packagename docs/yourpkg
     git commit -m "Updated docs to reflect new project yourpkg"
 
+* Adjust the ``MANIFEST.in`` file to reflect your package's name by changing
+  the line 4 from ``recursive-include packagename *.pyx *.c`` to 
+  ``recursive-include yourpkg *.pyx *.c`` and pass this onto git::
+  
+    ... edit MANIFEST.in as described above...
+    git add MANIFEST.in
+    git commit -m "updated MANIFEST.in for new project yourpkg"
+
 * Edit this file (README.rst) and delete all of this content, and replace it
   with a short description of your affiliated package. Inform git::
 
