@@ -68,7 +68,7 @@ template and adjust it for your particular affiliated package.
 
 * Take a moment to look over the ``packagename/example_mod.py``,
   ``packagename/test_example.py``, ``scripts/script_example``, and
-  ``packagename/example.pyx`` files, as well as the
+  ``packagename/example_c.pyx`` files, as well as the
   ``packagename/example_subpkg`` directory. These are examples of a
   pure-python module, a test script, an example command-line script, a
   `Cython`_ module, and a sub-package, respectively. (`Cython`_ is a way to
@@ -79,7 +79,7 @@ template and adjust it for your particular affiliated package.
 
     git rm packagename/example_mod.py
     git rm scripts/script_example
-    git rm packagename/example.pyx
+    git rm packagename/example_c.pyx
     git rm packagename/test_example.py
     git rm -r packagename/example_subpkg
     git commit -m "removed examples from package template"

@@ -8,14 +8,12 @@ def fib(n):
 
 def do_fib(n, usecython=False):
     if usecython:
-        from .example import fib
+        from .example_c import fib as cfib
 
         print 'Using cython-based fib'
 
-        fib(n)
+        cfib(n)
     else:
-        global fib
-
         print 'Using pure python fib'
 
         fib(n)
