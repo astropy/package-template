@@ -2,6 +2,6 @@
 # -*- coding: utf-8 -*-
 """An example command-line script"""
 
-import packagename.examplemod
+import packagename.example_mod
 
-packagename.examplemod.main()
+packagename.example_mod.main()
