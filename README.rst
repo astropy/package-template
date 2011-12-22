@@ -105,6 +105,7 @@ will be clear from context what to do with your particular VCS.
         # The full version, including alpha/beta/rc tags.
         release = packagename.__version__
 
+
     to::
 
         import yourpkg
