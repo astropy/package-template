@@ -11,10 +11,9 @@ template and adjust it for your particular affiliated package.
 Everywhere below that the text ``yourpkg`` is shown, replace it with the name
 of your particular package.
 
-.. note::
-    The instructions below assume you are using git for version control, as is
-    used by the Astropy repository.  If this is not the case, hopefully it
-    will be clear from context what to do with your particular VCS.
+**Note**: The instructions below assume you are using git for version control,
+as is used by the Astropy repository. If this is not the case, hopefully it
+will be clear from context what to do with your particular VCS.
 
 * Make sure `Astropy`_ is installed, as the template depends in part on
   Astropy to do its setup.
