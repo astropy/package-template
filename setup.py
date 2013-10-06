@@ -104,9 +104,6 @@ else:
 
         from astropy.setup_helpers import filter_packages, update_package_files
 
-        # Use the find_packages tool to locate all packages and modules
-        metadata['packages'] = filter_packages(find_packages())
-
         # Additional C extensions that are not Cython-based should be added here.
         metadata['ext_modules'] = []
 
