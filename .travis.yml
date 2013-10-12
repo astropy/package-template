@@ -12,6 +12,11 @@ env:
 
 matrix:
     include:
+
+        # Test egg_info works if Astropy and Numpy are not installed
+        - python: 2.7
+          env: ASTROPY_VERSION=none NUMPY_VERSION=none SETUP_CMD='egg_info'
+
         - python: 2.7
           # opdeps needed because the matplotlib sphinx extension requires them
           env: ASTROPY_VERSION=development NUMPY_VERSION=1.7.1 SETUP_CMD='build_sphinx -w -n'
@@ -39,8 +44,8 @@ before_install:
 
 install:
    - export PYTHONIOENCODING=UTF8 # just in case
-   - pip -q install --upgrade "numpy==$NUMPY_VERSION" --use-mirrors
-   - pip -q install --upgrade Cython --use-mirrors
+   - if [[ $SETUP_CMD != egg_info ]]; then pip -q install --upgrade "numpy==$NUMPY_VERSION" --use-mirrors; fi
+   - if [[ $SETUP_CMD != egg_info ]]; then pip -q install --upgrade Cython --use-mirrors; fi
    - if [[ $SETUP_CMD == build_sphinx* ]]; then pip -q install sphinx==1.1.3 --use-mirrors; fi
    - if [[ $SETUP_CMD == build_sphinx* ]]; then pip -q install matplotlib --use-mirrors; fi
 

@@ -6,7 +6,7 @@ import os
 import sys
 
 import setuptools_bootstrap
-from setuptools import setup
+from setuptools import setup, find_packages
 
 #A dirty hack to get around some early import/configurations ambiguities
 if sys.version_info[0] >= 3:
@@ -14,6 +14,8 @@ if sys.version_info[0] >= 3:
 else:
     import __builtin__ as builtins
 builtins._ASTROPY_SETUP_ = True
+
+PY3 = sys.version_info[0] >= 3
 
 # Set affiliated package-specific settings
 PACKAGENAME = 'packagename'
@@ -54,6 +56,13 @@ metadata['scripts'] = [fname for fname in glob.glob(os.path.join('scripts', '*')
 # Add the project-global data
 metadata['package_data'][PACKAGENAME] = ['data/*']
 
+def filter_packages(packagenames):
+    exclude = '_py2' if PY3 else '_py3'
+    return [x for x in packagenames if not x.endswith(exclude)]
+
+# Use the find_packages tool to locate all packages and modules
+metadata['packages'] = filter_packages(find_packages())
+
 if len(sys.argv) >= 2 and sys.argv[1] == 'egg_info':
 
     # TODO: if we have a copy of get_git_devstr in the package template we can
@@ -93,11 +102,7 @@ else:
     except ImportError: # compatibility with Astropy 0.2 - can be removed in cases
                         # where Astropy 0.2 is no longer supported
 
-        from setuptools import find_packages
         from astropy.setup_helpers import filter_packages, update_package_files
-
-        # Use the find_packages tool to locate all packages and modules
-        metadata['packages'] = filter_packages(find_packages())
 
         # Additional C extensions that are not Cython-based should be added here.
         metadata['ext_modules'] = []
