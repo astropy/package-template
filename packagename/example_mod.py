@@ -1,3 +1,17 @@
+# Licensed under a 3-clause BSD style license - see LICENSE.rst
+from __future__ import absolute_import, division, print_function, unicode_literals
+from astropy import config as _config
+
+
+class Conf(_config.ConfigNamespace):
+    """Configuration parameters. See `astropy.config`."""
+    pkg_cfg_item = _config.ConfigItem(
+        'foo', 'Example package configurable item')
+
+
+conf = Conf()
+
+
 def primes(imax):
     """
     Returns prime numbers up to imax.
