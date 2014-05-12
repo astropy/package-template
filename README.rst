@@ -35,17 +35,21 @@ will be clear from context what to do with your particular VCS.
   ``metadata`` section.  These values will be used to automatically
   replace special placeholders in the affiliated package template.
 
-  1. Change the ``package_name`` variable to whatever you decide your
-     package should be named. By tradition/very strong suggestion,
-     python package names should be all lower-case.
-  2. Change the ``description`` variable to a short (one or few
+  1. Change the ``name`` variable to whatever you decide your
+     distribution should be named.
+  2. Change the ``provides`` variable to whatever you decide your
+     package(s) should be named.  By tradition/very strong suggestion,
+     python package names should be all lower-case.  In most cases,
+     there will just be a single package, and it will have the same
+     name as the distribution above.
+  3. Change the ``description`` variable to a short (one or few
      sentence) description of your package.
-  3. Add your name and email address by changing the ``author`` and
+  4. Add your name and email address by changing the ``author`` and
      ``author_email`` variables.
-  4. If your affiliated package has a website, change ``url`` to point
+  5. If your affiliated package has a website, change ``url`` to point
      to that site.  Otherwise, you can leave it pointing to `Astropy`_
      or just delete it.
-  5. Exit out of your text editor
+  6. Exit out of your text editor
 
 * Update the main package docstring in ``packagename/__init__.py``.
 

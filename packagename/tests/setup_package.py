@@ -1,3 +1,5 @@
 def get_package_data():
-    return {
-        _ASTROPY_PACKAGE_NAME_ + '.tests': ['coveragerc']}
+    d = {}
+    for package_name in _ASTROPY_PROVIDES_:
+        d[package_name + '.tests'] = ['coveragerc']
+    return d
