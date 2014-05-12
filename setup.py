@@ -27,6 +27,7 @@ conf.read(['setup.cfg'])
 metadata = dict(conf.items('metadata'))
 
 PACKAGENAME = metadata.get('package_name', 'packagename')
+PACKAGE_DISPLAY_NAME = metadata.get('package_display_name', PACKAGENAME)
 DESCRIPTION = metadata.get('description', 'Astropy affiliated package')
 AUTHOR = metadata.get('author', '')
 AUTHOR_EMAIL = metadata.get('author_email', '')
@@ -120,7 +121,7 @@ for root, dirs, files in os.walk(PACKAGENAME):
                     os.path.relpath(root, PACKAGENAME), filename))
 package_info['package_data'][PACKAGENAME].extend(c_files)
 
-setup(name=PACKAGENAME,
+setup(name=PACKAGE_DISPLAY_NAME,
       version=VERSION,
       description=DESCRIPTION,
       scripts=scripts,
