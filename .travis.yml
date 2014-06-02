@@ -98,16 +98,19 @@ install:
     # Install from wheels, no building from source, force reinstall to make
     # sure we get our wheels.
     - if [[ $SETUP_CMD != egg_info ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE --upgrade --force-reinstall numpy==$NUMPY_VERSION; fi
-    - if [[ $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE --upgrade --force-reinstall $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY; fi
-    - if [[ $ADDITIONAL_DEPENDENCIES_ANY_NUMPY ]]; then $PIP_WHEEL_FLEX_NUMPY $ADDITIONAL_DEPENDENCIES_ANY_NUMPY; fi
 
-    # tests with astropy stable use wheels
+    # Tests with astropy-stable use wheels; install before other dependencies
+    # in case those dependencies depend on astropy. Move this line as appropriate
+    # for your package.
     - if [[ $ASTROPY_VERSION == stable ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE astropy; fi
 
     # Build development astropy from source -- requires cython. Cython does not
     # depend on numpy so we don't care where we get the wheel from.
     - if [[ $SETUP_CMD != egg_info && ( $ASTROPY_VERSION == development || $PACKAGE_NEEDS_CYTHON == true ) ]]; then $PIP_WHEEL_FLEX_NUMPY cython; fi
     - if [[ $ASTROPY_VERSION == development ]]; then pip -q install git+http://github.com/astropy/astropy.git#egg=astropy; fi
+
+    - if [[ $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE --upgrade --force-reinstall $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY; fi
+    - if [[ $ADDITIONAL_DEPENDENCIES_ANY_NUMPY ]]; then $PIP_WHEEL_FLEX_NUMPY $ADDITIONAL_DEPENDENCIES_ANY_NUMPY; fi
 
     # Documentation build has a couple of additional requirements.
     - if [[ $SETUP_CMD == build_sphinx* ]]; then $PIP_WHEEL_FLEX_NUMPY sphinx>=1.2; fi
