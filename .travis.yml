@@ -9,7 +9,7 @@ python:
 env:
     global:
         - WHEELHOUSE_HUB=http://wheels.astropy.org
-        - PIP_WHEEL_STRICT_NUMPY="pip install --use-wheel --no-index"
+        - PIP_WHEEL_STRICT_NUMPY="pip install --use-wheel --force-reinstall"
         - SETUP_CMD='test'
         - ASTROPY_VERSION=stable
         - PIP_WHEEL_FLEX_NUMPY="pip install --use-wheel --find-links=http://wheels.astropy.org --find-links=http://wheels2.astropy.org"
@@ -97,7 +97,7 @@ install:
     # all tests need numpy
     # Install from wheels, no building from source, force reinstall to make
     # sure we get our wheels.
-    - if [[ $SETUP_CMD != egg_info ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE --upgrade --force-reinstall numpy==$NUMPY_VERSION; fi
+    - if [[ $SETUP_CMD != egg_info ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE numpy==$NUMPY_VERSION; fi
 
     # Tests with astropy-stable use wheels; install before other dependencies
     # in case those dependencies depend on astropy. Move this line as appropriate
@@ -109,7 +109,7 @@ install:
     - if [[ $SETUP_CMD != egg_info && ( $ASTROPY_VERSION == development || $PACKAGE_NEEDS_CYTHON == true ) ]]; then $PIP_WHEEL_FLEX_NUMPY cython; fi
     - if [[ $ASTROPY_VERSION == development ]]; then pip -q install git+http://github.com/astropy/astropy.git#egg=astropy; fi
 
-    - if [[ $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE --upgrade --force-reinstall $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY; fi
+    - if [[ $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY; fi
     - if [[ $ADDITIONAL_DEPENDENCIES_ANY_NUMPY ]]; then $PIP_WHEEL_FLEX_NUMPY $ADDITIONAL_DEPENDENCIES_ANY_NUMPY; fi
 
     # Documentation build has a couple of additional requirements.
