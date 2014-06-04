@@ -30,7 +30,7 @@ env:
         # If your package needs any additional packages for all builds
         # that you want to ensure have been built with the same version of
         # numpy used in the tests, put them here.
-        # - ADDITIONAL_DEPENDENCIES_STRICT_NUMPY="scipy"
+        - ADDITIONAL_DEPENDENCIES_STRICT_NUMPY="scipy matplotlib==1.3.1"
 
         # If your package needs additional packages for which the numpy
         # version does not matter, put them here.
