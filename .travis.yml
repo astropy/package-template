@@ -111,7 +111,7 @@ install:
     - if [[ $SETUP_CMD != egg_info && ( $ASTROPY_VERSION == development || $PACKAGE_NEEDS_CYTHON == true ) ]]; then $PIP_WHEEL_FLEX_NUMPY cython; fi
     - if [[ $ASTROPY_VERSION == development ]]; then pip -q install git+http://github.com/astropy/astropy.git#egg=astropy; fi
 
-    - if [[ $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY ]]; then $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY; fi
+    - if [[ $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY ]]; then for dependency in $ADDITIONAL_DEPENDENCIES_STRICT_NUMPY; do $PIP_WHEEL_STRICT_NUMPY --find-links=$WHEELHOUSE_SPOKE $dependency; done; fi
     - if [[ $ADDITIONAL_DEPENDENCIES_ANY_NUMPY ]]; then $PIP_WHEEL_FLEX_NUMPY $ADDITIONAL_DEPENDENCIES_ANY_NUMPY; fi
 
     # Documentation build has a couple of additional requirements.
