@@ -127,7 +127,7 @@ will be clear from context what to do with your particular VCS.
   the "fork" button on the upper right.  Then run the following commands::
 
     git remote add origin git@github.com:yourgithubusername/yourpkg.git
-    git branch master --set-upstream origin/master
+    git branch master --set-upstream-to origin/master
 
   Now you can push, pull, and branch whatever you want in your local fork
   without affecting the official version, but when you want to push something
