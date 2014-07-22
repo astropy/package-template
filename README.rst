@@ -96,6 +96,10 @@ will be clear from context what to do with your particular VCS.
     git add docs/index.rst
     git mv docs/packagename docs/yourpkg
 
+  Open ``docs/yourpkg/index.rst`` and you cna start writing the documentation
+  for your package, but at least replace ``packagename`` in ``automodapi::``
+  with your package name.
+
 * Edit this file (``README.rst``) and delete all of this content, and replace it
   with a short description of your affiliated package.
 
