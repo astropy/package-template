@@ -26,9 +26,41 @@ will be clear from context what to do with your particular VCS.
   you have `git`_ installed, just do::
 
       git clone git://github.com/astropy/package-template.git yourpkg
-
+      
   This will download the latest version of the template from `github`_ and
   place it in a directory named ``yourpkg``.
+
+**Note** The instructions for how to get up and running with your affiliated package depend on whether you are starting from scratch, or if you have an existing code base you are working from. If you are starting from scratch, simply ignore the following section. 
+
+---
+
+### Preserving the commit history of an existing code base
+
+If you are beginning from an existing git repository, you will likely want to preserve your commit history. To do so, proceed as follows.
+
+First, navigate to the directory containing your existing code base and git history: 
+
+* cd yourpkg
+
+Now, make a new directory titled with the name of your package: 
+
+* mkdir yourpkg
+
+Move your code base into the directory you just created:
+
+* git mv *.py yourpkg/
+
+* commit -m “Moved source files to yourpkg/"
+* git remote add package-template https://github.com/astropy/package-template.git
+* git fetch package-template
+* git merge package-template/master
+* git push
+
+Now, your existing commit history has been merged with the commit history of the astropy package-template, your code base is located in yourpkg/yourpkg/, and you can proceed to begin configuring your package using the template. 
+
+
+---
+
 
 * Go into the directory you just created, and open the ``setup.cfg``
   file with your favorite text editor.  Edit the settings in the
@@ -108,6 +140,8 @@ will be clear from context what to do with your particular VCS.
   the URL in the instructions below to match wherever your repository lives)
   Now you will want to tell git that it should be pushing and pulling updates
   to the repository of *your* project, rather than the package template::
+
+**Note:** Users who followed the instructions for how to set up an existing code base should ignore the next git commands. 
 
     git remote rename origin template
     git remote add upstream git@github.com:astropy/yourpkg.git
