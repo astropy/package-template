@@ -90,7 +90,7 @@ entry_points['console_scripts'] = [
 c_files = []
 for root, dirs, files in os.walk(PACKAGENAME):
     for filename in files:
-        if filename.endswith('.c'):
+        if filename.endswith('.c') or filename.endswith('.pxd'):
             c_files.append(
                 os.path.join(
                     os.path.relpath(root, PACKAGENAME), filename))
