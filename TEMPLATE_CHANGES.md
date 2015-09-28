@@ -5,6 +5,11 @@ be removed in affiliated packages.
 The changes below indicate what file the change was made in so that these can
 be copied over manually if desired.
 
+(2015-09-28)
+------------
+- Updated ``setup.cfg`` and ``setup.py`` so that the install requirements and 
+  entry points are set in ``setup.cfg``
+
 1.0 (2015-05-31)
 ----------------
 
