@@ -98,12 +98,12 @@ for root, dirs, files in os.walk(PACKAGENAME):
                     os.path.relpath(root, PACKAGENAME), filename))
 package_info['package_data'][PACKAGENAME].extend(c_files)
 
-install_requires = metadata.get('requires-dist')
-if install_requires is None:
-    install_requires =  ['numpy', 'cython', 'astropy']
+setup_requires = metadata.get('requires-dist')
+if setup_requires is None:
+    setup_requires =  ['numpy', 'cython', 'astropy']
 else:
-    # Convert the config install_requires string into a list
-    install_requires = install_requires.strip().split()
+    # Convert the config setup_requires string into a list
+    setup_requires = setup_requires.strip().split()
 # Note that requires and provides should not be included in the call to
 # ``setup``, since these are now deprecated. See this link for more details:
 # https://groups.google.com/forum/#!topic/astropy-dev/urYO8ckB2uM
@@ -111,7 +111,7 @@ setup(name=PACKAGENAME,
       version=VERSION,
       description=DESCRIPTION,
       scripts=scripts,
-      install_requires=install_requires,
+      setup_requires=setup_requires,
       author=AUTHOR,
       author_email=AUTHOR_EMAIL,
       license=LICENSE,
