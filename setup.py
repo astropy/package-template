@@ -20,6 +20,12 @@ from astropy_helpers.setup_helpers import (
 from astropy_helpers.git_helpers import get_git_devstr
 from astropy_helpers.version_helpers import generate_version_py
 
+try:
+    from astropy_helpers.distutils_helpers import is_distutils_display_option
+except:
+    # For astropy-helpers v0.4.x
+    from astropy_helpers.setup_helpers import is_distutils_display_option
+
 # Get some values from the setup.cfg
 from distutils import config
 conf = config.ConfigParser()
@@ -98,12 +104,19 @@ for root, dirs, files in os.walk(PACKAGENAME):
                     os.path.relpath(root, PACKAGENAME), filename))
 package_info['package_data'][PACKAGENAME].extend(c_files)
 
-setup_requires = metadata.get('requires-dist')
-if setup_requires is None:
-    setup_requires =  ['numpy', 'cython', 'astropy']
+install_requires = metadata.get('requires-dist')
+if install_requires is None:
+    install_requires =  ['numpy', 'cython', 'astropy']
 else:
     # Convert the config setup_requires string into a list
-    setup_requires = setup_requires.strip().split()
+    install_requires = install_requires.strip().split()
+
+# Avoid installing setup_requires dependencies if the user just
+# queries for information
+if is_distutils_display_option():
+    setup_requires = []
+else:
+    setup_requires = ['numpy', 'cython']
 # Note that requires and provides should not be included in the call to
 # ``setup``, since these are now deprecated. See this link for more details:
 # https://groups.google.com/forum/#!topic/astropy-dev/urYO8ckB2uM
@@ -112,6 +125,7 @@ setup(name=PACKAGENAME,
       description=DESCRIPTION,
       scripts=scripts,
       setup_requires=setup_requires,
+      install_requires=install_requires,
       author=AUTHOR,
       author_email=AUTHOR_EMAIL,
       license=LICENSE,
