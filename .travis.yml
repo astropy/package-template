@@ -30,13 +30,14 @@ env:
         - ASTROPY_VERSION=stable
         - SETUP_CMD='test'
         - PIP_DEPENDENCIES=''
+        - TIMEOUT=3600
         # For this package-template, we include examples of Cython modules,
         # so Cython is required for testing. If your package does not include
         # Cython code, you can set CONDA_DEPENDENCIES=''
         - CONDA_DEPENDENCIES='Cython'
     matrix:
         # Make sure that egg_info works without dependencies
-        - SETUP_CMD='egg_info'
+        - SETUP_CMD='egg_info' TIMEOUT=30
         # Try all python versions with the latest numpy
         - SETUP_CMD='test'
 
@@ -99,7 +100,7 @@ install:
     # other dependencies.
 
 script:
-   - python setup.py $SETUP_CMD
+   - timeout $TIMEOUT python setup.py $SETUP_CMD;
 
 after_success:
     # If coveralls.io is set up for this package, uncomment the line
