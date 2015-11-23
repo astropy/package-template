@@ -32,6 +32,7 @@ AUTHOR = metadata.get('author', '')
 AUTHOR_EMAIL = metadata.get('author_email', '')
 LICENSE = metadata.get('license', 'unknown')
 URL = metadata.get('url', 'http://astropy.org')
+PACKAGE_DATA_PATH = metadata.get('package_data_path', 'data/*')
 
 # Get the long description from the package's docstring
 __import__(PACKAGENAME)
@@ -76,7 +77,8 @@ package_info = get_package_info()
 
 # Add the project-global data
 package_info['package_data'].setdefault(PACKAGENAME, [])
-package_info['package_data'][PACKAGENAME].append('data/*.*')
+if PACKAGE_DATA_PATH.lower() != 'none':
+    package_info['package_data'][PACKAGENAME].append(PACKAGE_DATA_PATH)
 
 # Define entry points for command-line scripts
 entry_points = {'console_scripts': []}
