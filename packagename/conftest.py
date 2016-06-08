@@ -36,3 +36,13 @@ from astropy.tests.pytest_plugins import *
 #     TESTED_VERSIONS[packagename] = version
 # except NameError:   # Needed to support Astropy <= 1.0.0
 #     pass
+
+## Uncomment the following lines, if you need to add additional commandline
+## parameters for tests(i.e. --slow to trigger long running tests)
+## To keep astropy's pytest_addoption we have to store a reference first and
+## then execute it in the newly defined function.
+# _pytest_addoption = pytest_addoption
+# def pytest_addoption(parser):
+#     _pytest_addoption(parser)
+#     parser.addoption("--slow", action='store_true',
+#                      help="Execute long-running tests")
