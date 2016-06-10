@@ -5,9 +5,12 @@ be removed in affiliated packages.
 The changes below indicate what file the change was made in so that these can
 be copied over manually if desired.
 
+=======
 1.1.1 (2016-06-03)
 ------------------
 
+- Updated ``setup.cfg`` and ``setup.py`` so that the install requirements and
+  entry points are set in ``setup.cfg``
 - Fixed the import of configparser on Python 3.5. [#172]
 
 - Updated ``ez_setup.py`` to the latest version. [#174]

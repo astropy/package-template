@@ -20,6 +20,12 @@ from astropy_helpers.setup_helpers import (register_commands, get_debug_option,
 from astropy_helpers.git_helpers import get_git_devstr
 from astropy_helpers.version_helpers import generate_version_py
 
+try:
+    from astropy_helpers.distutils_helpers import is_distutils_display_option
+except:
+    # For astropy-helpers v0.4.x
+    from astropy_helpers.setup_helpers import is_distutils_display_option
+
 # Get some values from the setup.cfg
 try:
     from ConfigParser import ConfigParser
@@ -98,15 +104,58 @@ for root, dirs, files in os.walk(PACKAGENAME):
                     os.path.relpath(root, PACKAGENAME), filename))
 package_info['package_data'][PACKAGENAME].extend(c_files)
 
+install_requires = metadata.get('requires-dist')
+if install_requires is None:
+    install_requires = ['numpy', 'cython', 'astropy']
+else:
+    # Convert the config setup_requires string into a list
+    install_requires = install_requires.strip().split()
+
+
+def split_requirements_into_list(keyword):
+    """
+    Split a requirements keyword from the setup.cfg file into a list that setup() will accept.
+
+    Parameters
+    ----------
+    keyword : string
+        Name of requirements keyword (e.g. install_requires)
+
+    Returns
+    -------
+    requirements_list : list of strings
+        List of distutils requirements that can be passed to setup().
+    """
+    requirements = metadata.get(keyword)
+    if requirements is None:
+        requirement_list = []
+    else:
+        # Convert the config setup_requires string into a list
+        requirement_list = requirements.strip().split()
+    return requirement_list
+
+
+# Avoid installing setup_requires dependencies if the user just
+# queries for information
+if is_distutils_display_option():
+    setup_requires = []
+    tests_require = []
+    install_requires = []
+else:
+    setup_requires = split_requirements_into_list('setup_requires')
+    install_requires = split_requirements_into_list('install_requires')
+    tests_require = split_requirements_into_list('tests_require')
+
 # Note that requires and provides should not be included in the call to
 # ``setup``, since these are now deprecated. See this link for more details:
 # https://groups.google.com/forum/#!topic/astropy-dev/urYO8ckB2uM
-
 setup(name=PACKAGENAME,
       version=VERSION,
       description=DESCRIPTION,
       scripts=scripts,
-      install_requires=['astropy'],
+      setup_requires=setup_requires,
+      install_requires=install_requires,
+      tests_require=tests_require,
       author=AUTHOR,
       author_email=AUTHOR_EMAIL,
       license=LICENSE,
@@ -116,5 +165,4 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=True,
       entry_points=entry_points,
-      **package_info
-)
+      **package_info)
