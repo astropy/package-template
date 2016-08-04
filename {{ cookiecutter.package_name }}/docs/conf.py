@@ -181,7 +181,7 @@ if eval(setup_cfg.get('edit_on_github')):
 # -- Resolving issue number to links in changelog -----------------------------
 github_issues_url = 'https://github.com/{0}/issues/'.format(setup_cfg['github_project'])
 
-# Remove the comment from the following section to enable docs nitpick
+# -- Turn on nitpicky mode for sphinx (to warn about references not found) ----
 #
 # nitpicky = True
 # nitpick_ignore = []
