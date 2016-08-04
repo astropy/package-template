@@ -160,7 +160,7 @@ if eval(setup_cfg.get('edit_on_github')):
     edit_on_github_doc_root = "docs"
 
 
-# Remove the comment from the following section to enable docs nitpick
+# -- Turn on nitpicky mode for sphinx (to warn about references not found) ----
 #
 # nitpicky = True
 # nitpick_ignore = []
