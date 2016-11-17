@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import os
 import shutil
 
@@ -10,6 +11,8 @@ def remove_file(filepath):
 
 def remove_dir(filepath):
     shutil.rmtree(os.path.join(PROJECT_DIRECTORY, filepath))
+
+
 
 if __name__ == '__main__':
 
@@ -25,3 +28,9 @@ if __name__ == '__main__':
 
     if '{{ cookiecutter.cextern_folder }}' != 'y':
         remove_dir("cextern")
+
+    if 'cookiecutter.include_test_code' != 'y':
+        remove_dir('{{ cookiecutter.package_slug }}/example_subpkg/')
+        remove_file('{{ cookiecutter.package_slug }}/example_c.pyx')
+        remove_file('{{ cookiecutter.package_slug }}/example_mod.py')
+        remove_file('{{ cookiecutter.package_slug }}/tests/test_example.py')

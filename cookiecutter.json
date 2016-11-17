@@ -1,6 +1,6 @@
 {
     "package_name": "packagename",
-    "package_slug": "{{ cookiecutter.package_slug|lower() }}",
+    "package_slug": "{{ cookiecutter.package_name|lower() }}",
     "short_description": "{{ cookiecutter.package_name|replace('-', ' ')|replace('_', ' ') }}",
     "long_description": "",
     "author_name": "Astropy Developers",
@@ -20,5 +20,6 @@
     "sphinx_theme": "astropy-boostrap",
     "_copy_without_render": [
         "docs/_templates"
-        ]
+    ],
+    "_parent_project": "astropy"
 }
