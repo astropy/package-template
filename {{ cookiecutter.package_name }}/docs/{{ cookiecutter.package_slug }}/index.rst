@@ -7,4 +7,4 @@ This is the documentation for {{ cookiecutter.package_name }}.
 Reference/API
 =============
 
-.. automodapi:: {{ cookiecutter.package_slug }}
+.. automodapi:: {{ cookiecutter.module_name }}

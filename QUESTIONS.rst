@@ -6,7 +6,7 @@ once you have run this command you will be asked a series of questions. Below is
 a description of each of the prompts.
 
 1. ``package_name``: This is a human readable name for your package, like 'Astropy' or 'SunPy'.
-2. ``package_slug``: This is the name of your python package i.e. 'astropy' or 'sunpy'.
+2. ``module_name``: This is the name of your python package i.e. 'astropy' or 'sunpy'.
 3. ``short_description``: This is a one sentence description of your package.
 4. ``long_description``: This is a multi-line description of your package.
 5. ``author_name``: The name or names of the authors.

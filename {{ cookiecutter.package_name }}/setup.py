@@ -30,7 +30,7 @@ conf = ConfigParser()
 conf.read(['setup.cfg'])
 metadata = dict(conf.items('metadata'))
 
-PACKAGENAME = metadata.get('package_name', '{{ cookiecutter.package_slug }}')
+PACKAGENAME = metadata.get('package_name', '{{ cookiecutter.module_name }}')
 DESCRIPTION = metadata.get('description', '{{ cookiecutter.short_description }}')
 AUTHOR = metadata.get('author', '{{ cookiecutter.author_name }}')
 AUTHOR_EMAIL = metadata.get('author_email', '')
