@@ -5,7 +5,7 @@
     "long_description": "",
     "author_name": "Astropy Developers",
     "author_email": "",
-    "license": ["BSD 3-Clause", "GNU GPL v3+", "Apache Software Licence 2.0", "BSD 2-Clause"],
+    "license": ["BSD 3-Clause", "GNU GPL v3+", "Apache Software Licence 2.0", "BSD 2-Clause", "Other"],
     "project_url": "http://astropy.org",
     "include_test_code": "y",
     "include_cextern_folder": "n",
@@ -13,13 +13,12 @@
     "github_project": "astropy/astropy",
     "project_version": "0.0.dev",
     "install_requires": "['astropy']",
-    "entry_points_config": "",
     "use_travis_ci": "y",
     "use_appveyor_ci": "y",
     "use_read_the_docs": "y",
     "sphinx_theme": "astropy-boostrap",
+    "_parent_project": "astropy",
     "_copy_without_render": [
         "docs/_templates"
-    ],
-    "_parent_project": "astropy"
+    ]
 }

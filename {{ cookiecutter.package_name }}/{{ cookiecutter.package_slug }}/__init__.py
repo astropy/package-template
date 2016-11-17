@@ -10,12 +10,10 @@ This is an Astropy affiliated package.
 from ._{{ cookiecutter._parent_project }}_init import *
 # ----------------------------------------------------------------------------
 
-{%- if '{{ cookiecutter.include_test_code }}' != 'y' -%}
-# For egg_info test builds to pass, put package imports here.
-# if not _ASTROPY_SETUP_:
-#     from .example_mod import *
-{%- else -%}
-# For egg_info test builds to pass, put package imports here.
 if not _ASTROPY_SETUP_:
+    # For egg_info test builds to pass, put package imports here.
+{%- if '{{ cookiecutter.include_test_code }}' != 'y' -%}
+    pass
+{%- else -%}
     from .example_mod import *
 {%- endif -%}

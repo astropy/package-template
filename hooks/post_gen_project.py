@@ -34,3 +34,4 @@ if __name__ == '__main__':
         remove_file('{{ cookiecutter.package_slug }}/example_c.pyx')
         remove_file('{{ cookiecutter.package_slug }}/example_mod.py')
         remove_file('{{ cookiecutter.package_slug }}/tests/test_example.py')
+
