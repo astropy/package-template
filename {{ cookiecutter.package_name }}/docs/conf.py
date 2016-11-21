@@ -112,7 +112,7 @@ release = package.__version__
 # name of a builtin theme or the name of a custom theme in html_theme_path.
 #html_theme = None
 {% if cookiecutter.sphinx_theme != "astropy-boostrap" %}
-html_theme = {{ cookiecutter.sphinx_theme }}
+html_theme = "{{ cookiecutter.sphinx_theme }}"
 
 {% else %}
 # Please update these texts to match the name of your package.
