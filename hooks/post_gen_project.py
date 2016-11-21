@@ -29,7 +29,7 @@ if __name__ == '__main__':
     if '{{ cookiecutter.cextern_folder }}' != 'y':
         remove_dir("cextern")
 
-    if 'cookiecutter.include_example_code' != 'y':
+    if '{{ cookiecutter.include_example_code }}' != 'y':
         remove_dir('{{ cookiecutter.module_name }}/example_subpkg/')
         remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
         remove_file('{{ cookiecutter.module_name }}/example_mod.py')
