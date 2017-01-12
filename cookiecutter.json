@@ -16,6 +16,8 @@
     "use_appveyor_ci": "y",
     "use_read_the_docs": "y",
     "sphinx_theme": "astropy-boostrap",
+    "initialize_git_repo": "y",
+    "astropy_helpers_version": "v1.3",
     "_parent_project": "astropy",
     "_install_requires": "['astropy']",
     "_copy_without_render": [
