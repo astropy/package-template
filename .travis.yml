@@ -116,6 +116,12 @@ matrix:
         - python: 3.5
           env: MAIN_CMD='pycodestyle packagename --count' SETUP_CMD=''
 
+before_install:
+    - if [[ $TRAVIS_OS_NAME == osx ]]; then
+          shopt -s expand_aliases;
+          alias timeout='gtimeout';
+      fi
+
 install:
 
     # We now use the ci-helpers package to set up our testing environment.
