@@ -16,7 +16,7 @@ env:
         # overridden underneath. They are defined here in order to save having
         # to repeat them for all configurations.
         - PYTHON_VERSION=3.6
-        - CONDA_DEPENDENCIES='cython astropy'
+        - CONDA_DEPENDENCIES='cython astropy sphinx'
         - PIP_DEPENDENCIES='cookiecutter gitpython'
         - EVENT_TYPE='pull_request push'
 
