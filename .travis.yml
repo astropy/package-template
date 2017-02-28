@@ -16,6 +16,7 @@ env:
         # overridden underneath. They are defined here in order to save having
         # to repeat them for all configurations.
         - PYTHON_VERSION=3.6
+        - CONDA_DEPENDENCIES='cython astropy'
         - PIP_DEPENDENCIES='cookiecutter gitpython'
         - EVENT_TYPE='pull_request push'
 
@@ -25,4 +26,8 @@ install:
     - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
 
 script:
-   - cookiecutter --no-input ./ -o ../testpackage
+   - cookiecutter --no-input ./ -o ../test
+   - cd ../test/packagename
+   - python setup.py egg_info
+   - python setup.py build
+   - python setup.py build_docs
