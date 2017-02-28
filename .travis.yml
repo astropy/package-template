@@ -17,7 +17,7 @@ env:
         # to repeat them for all configurations.
         - PYTHON_VERSION=3.6
         - CONDA_DEPENDENCIES='cython astropy sphinx'
-        - PIP_DEPENDENCIES='cookiecutter gitpython'
+        - PIP_DEPENDENCIES='cookiecutter gitpython astropy_helpers'
         - EVENT_TYPE='pull_request push'
 
 install:
