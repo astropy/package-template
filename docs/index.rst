@@ -33,14 +33,6 @@ To start a package with the package template run::
 This will ask you a series of questions, and result in a directory inside your
 current working directory that has the name of your project.
 
-.. rubric:: Metadata Keywords:
-
-* First matching:
-    1. ``obsrvtry``
-    2. ``telescop``
-    3. Default: ``""``
-* ``waveunit`` Default: `~astropy.units.one`
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
