@@ -1,4 +1,4 @@
-name: package-template
+name: {{ cookiecutter.module_name }}
 
 channels:
     - astropy

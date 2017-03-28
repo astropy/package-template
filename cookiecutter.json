@@ -9,6 +9,7 @@
     "project_url": "http://astropy.org",
     "project_version": "0.0.dev",
     "include_example_code": "y",
+    "include_example_cython_code": "n",
     "include_cextern_folder": "n",
     "edit_on_github_extension": "False",
     "github_project": "astropy/astropy",
@@ -17,7 +18,7 @@
     "use_read_the_docs": "y",
     "sphinx_theme": "astropy-boostrap",
     "initialize_git_repo": "y",
-    "astropy_helpers_version": "v1.3",
+    "astropy_helpers_version": "v1.3.1",
     "_parent_project": "astropy",
     "_install_requires": "['astropy']",
     "_copy_without_render": [

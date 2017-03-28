@@ -31,9 +31,11 @@ if __name__ == '__main__':
 
     if '{{ cookiecutter.include_example_code }}' != 'y':
         remove_dir('{{ cookiecutter.module_name }}/example_subpkg/')
-        remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
         remove_file('{{ cookiecutter.module_name }}/example_mod.py')
         remove_file('{{ cookiecutter.module_name }}/tests/test_example.py')
+
+    if '{{ cookiecutter.include_example_cython_code }}' != 'y':
+        remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
 
     if '{{ cookiecutter.initialize_git_repo }}' == 'y':
         from git import Repo
