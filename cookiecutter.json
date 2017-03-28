@@ -1,6 +1,6 @@
 {
     "package_name": "packagename",
-    "module_name": "{{ cookiecutter.package_name|lower() }}",
+    "module_name": "{{ cookiecutter.package_name|lower()|replace(' ', '_') }}",
     "short_description": "{{ cookiecutter.package_name|replace('-', ' ')|replace('_', ' ') }}",
     "long_description": "",
     "author_name": "Astropy Developers",

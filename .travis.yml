@@ -24,7 +24,7 @@ env:
     matrix:
       - EXTRA_CONTEXT=''
       - EXTRA_CONTEXT='include_example_cython_code=y'
-      - EXTRA_CONTEXT='package_name=Astropy Project' MODULENAME='astropy_project'
+      - EXTRA_CONTEXT="package_name=AstropyProject" MODULENAME='astropyproject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
 
 install:
