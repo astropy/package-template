@@ -39,3 +39,8 @@ script:
    - python setup.py build
    - python setup.py build_docs
    - python setup.py test
+
+
+after_success:
+  - pwd
+  - bash .travis-deploy.sh
