@@ -15,10 +15,17 @@ env:
         # The following versions are the 'default' for tests, unless
         # overridden underneath. They are defined here in order to save having
         # to repeat them for all configurations.
+        - MODULENAME='packagename'
         - PYTHON_VERSION=3.6
         - CONDA_DEPENDENCIES='cython astropy sphinx'
         - PIP_DEPENDENCIES='cookiecutter gitpython'
         - EVENT_TYPE='pull_request push'
+
+    matrix:
+      - EXTRA_CONTEXT=''
+      - EXTRA_CONTEXT='include_example_cython_code=y'
+      - EXTRA_CONTEXT='package_name=Astropy Project' MODULENAME='astropy_project'
+      - EXTRA_CONTEXT='_parent_project=sunpy'
 
 install:
 
@@ -26,8 +33,8 @@ install:
     - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
 
 script:
-   - cookiecutter --no-input ./ -o ../test
-   - cd ../test/packagename
+   - cookiecutter --no-input ./ -o ../test $EXTRA_CONTEXT
+   - cd ../test/$MODULENAME
    - python setup.py egg_info
    - python setup.py build
    - python setup.py build_docs
