@@ -15,7 +15,7 @@ env:
         # The following versions are the 'default' for tests, unless
         # overridden underneath. They are defined here in order to save having
         # to repeat them for all configurations.
-        - MODULENAME='packagename'
+        - FOLDERNAME='packagename'
         - PYTHON_VERSION=3.6
         - CONDA_DEPENDENCIES='cython astropy sphinx'
         - PIP_DEPENDENCIES='cookiecutter gitpython'
@@ -24,7 +24,7 @@ env:
     matrix:
       - EXTRA_CONTEXT=''
       - EXTRA_CONTEXT='include_example_cython_code=y'
-      - EXTRA_CONTEXT="package_name=AstropyProject" MODULENAME='astropyproject'
+      - EXTRA_CONTEXT="package_name=AstropyProject" FOLDERNAME='AstropyProject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
 
 install:
@@ -34,7 +34,8 @@ install:
 
 script:
    - cookiecutter --no-input ./ -o ../test $EXTRA_CONTEXT
-   - cd ../test/$MODULENAME
+   - cd ../test/$FOLDERNAME
    - python setup.py egg_info
    - python setup.py build
    - python setup.py build_docs
+   - python setup.py test
