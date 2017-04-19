@@ -32,7 +32,7 @@ env:
 install:
 
     - git clone git://github.com/astropy/ci-helpers.git
-    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+    - source ci-helpers/travis/setup_conda.sh
 
 script:
    - cookiecutter --no-input ./ -o ../test $EXTRA_CONTEXT
