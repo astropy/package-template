@@ -39,3 +39,10 @@ script:
    - python setup.py build
    - python setup.py build_docs
    - python setup.py test
+
+
+after_success:
+  - pwd
+  - cd ../../package-template
+  - pwd
+  - bash .travis-deploy.sh
