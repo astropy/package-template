@@ -8,11 +8,11 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && -z "$
     echo "  IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
     cd ../test/
     git clone git@github.com:astropy/package-template rendered
-    cp -rf packagename/ rendered/
+    rsync -avz --delete packagename/ rendered/
     cd rendered
     git --version
     git remote update
     git add .
-    git commit "Update rendered version to "$TRAVIS_COMMIT
+    git commit -m "Update rendered version to ""$TRAVIS_COMMIT"
     git push origin master:rendered
 fi
