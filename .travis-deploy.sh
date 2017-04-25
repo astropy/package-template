@@ -6,9 +6,13 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && -z "$
     chmod u=rw,og= ~/.ssh/publish-key
     echo "Host github.com" >> ~/.ssh/config
     echo "  IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
-    cd ../test/packagename
+    cd ../test/
+    git clone git@github.com:astropy/package-template rendered
+    cp -rf packagename/ rendered/
+    cd rendered
     git --version
-    git remote add origin git@github.com:astropy/package-template
     git remote update
-    git push origin master:rendered -f
+    git add .
+    git commit "Update rendered version to "$TRAVIS_COMMIT
+    git push origin master:rendered
 fi
