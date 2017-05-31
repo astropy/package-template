@@ -13,6 +13,14 @@ Such packages can make use of the setup, installation, and documentation
 infrastructure developed for the ``astropy`` core package simply by
 using this template to lay out the package.
 
+For more information, see:
+
+* The `documentation for this package template itself  <http://docs.astropy.org/projects/package-template/en/latest/>`_
+* Astropy `documentation about this template <http://docs.astropy.org/en/latest/development/affiliated-packages.html>`_
+* `The Affiliated Packages section of the Astropy web site <http://affiliated.astropy.org>`_
+* `This template's Github code repository <https://github.com/astropy/package-template>`_
+
+
 Using this package
 ------------------
 
@@ -30,7 +38,7 @@ Once you have cookiecutter installed you can run::
   cookiecutter gh:astropy/package-template
 
 
-Which will ask you a series of questions to configure your package. For more information you can see the `package template documentation <http://docs.astropy.org/en/latest/development/affiliated-packages.html>`__.
+Which will ask you a series of questions to configure your package.
 
 
 Improving the package template
