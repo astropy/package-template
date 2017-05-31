@@ -30,15 +30,15 @@ Once you have cookiecutter installed you can run::
   cookiecutter gh:astropy/package-template
 
 
-Which will ask you a series of questions to configure your package. For more information you can see the `package template documentation <>`__.
+Which will ask you a series of questions to configure your package. For more information you can see the `package template documentation <http://docs.astropy.org/en/latest/development/affiliated-packages.html>`__.
 
 
 Improving the package template
 ------------------------------
 
-If you want to modify this package to add or fix things, the actual folder that
-the user ends up with is the ``{{ cookiecutter.package_name }}`` folder in this
+If you want to modify this package template to add or fix things, the folder that
+the user ends up with is ``{{ cookiecutter.package_name }}`` in this
 repository. Everything in the repository that is not in this folder is not part
 of the template that the user will have rendered.
 
-For further information on writing templates for cookiecutter see `the docs <https://cookiecutter.readthedocs.io/en/latest/first_steps.html>`__
+For further information on writing templates for cookiecutter see `the cookiecutter docs <https://cookiecutter.readthedocs.io/en/latest/first_steps.html>`__.
