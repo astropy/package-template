@@ -21,10 +21,13 @@ For more information, see:
 * `This template's Github code repository <https://github.com/astropy/package-template>`_
 
 
-Using this package
-------------------
+Using this package template
+---------------------------
 
-This package makes use of the `cookiecutter
+Using cookiecutter
+^^^^^^^^^^^^^^^^^^
+
+This package template makes use of the `cookiecutter
 <https://cookiecutter.readthedocs.io/en/latest/index.html>`__ package to make it
 easier to get started with the package template. You will need to `install cookiecutter <https://cookiecutter.readthedocs.io/en/latest/installation.html>`__ which can
 be done easily using conda or pip::
@@ -37,8 +40,18 @@ Once you have cookiecutter installed you can run::
 
   cookiecutter gh:astropy/package-template
 
-
 Which will ask you a series of questions to configure your package.
+
+
+Manually
+^^^^^^^^
+
+The ``rendered`` git branch of this repository contains a version of the
+template populated with placeholders.  This allows the package template to be
+used directly without using cookiecutter, although a number of
+`manual steps  <http://docs.astropy.org/projects/package-template/en/latest/>`_
+are required.  For this reason the cookiecutter approach is recommended.
+
 
 
 Improving the package template
