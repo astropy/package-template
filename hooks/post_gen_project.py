@@ -14,6 +14,11 @@ def remove_dir(filepath):
     shutil.rmtree(os.path.join(PROJECT_DIRECTORY, filepath))
 
 
+def copy_file(original_filepath, new_filepath):
+    shutil.copyfile(os.path.join(PROJECT_DIRECTORY, original_filepath),
+                    os.path.join(PROJECT_DIRECTORY, new_filepath))
+
+
 if __name__ == '__main__':
 
     if '{{ cookiecutter.use_travis_ci }}' != 'y':
@@ -53,9 +58,12 @@ if __name__ == '__main__':
                     "https://github.com/astropy/astropy-helpers.git",
                     "{{ cookiecutter.astropy_helpers_version }}")
                 new_repo.submodules[0].update()
+                copy_file('astropy_helpers/ah_bootstrap.py', 'ah_bootstrap.py')
+                new_repo.git.add('ah_bootstrap.py')
                 new_repo.index.commit(
                     "Initialize astropy_helpers at version {{ cookiecutter.astropy_helpers_version }}"
                 )
+
 
         except ImportError:
             print(
