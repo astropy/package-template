@@ -4,6 +4,7 @@ include CHANGES.rst
 include ez_setup.py
 include ah_bootstrap.py
 include setup.cfg
+include {{ cookiecutter.module_name }}/tests/coveragerc
 
 recursive-include {{ cookiecutter.module_name }} *.pyx *.c *.pxd
 recursive-include docs *
