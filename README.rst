@@ -35,6 +35,8 @@ be done easily using conda or pip::
   conda install cookiecutter
 
   pip install cookiecutter
+  
+(The conda method only works if `conda-forge` is in your default channels. Use ``conda config --add channels conda-forge`` to add this channel.)
 
 Once you have cookiecutter installed you can run::
 
