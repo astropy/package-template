@@ -34,7 +34,7 @@ be done easily using conda or pip::
 
   conda install -c conda-forge cookiecutter gitpython
 
-  pip install cookiecutter
+  pip install cookiecutter gitpython
 
 
 Once you have cookiecutter installed you can run::
