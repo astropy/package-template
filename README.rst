@@ -32,9 +32,10 @@ This package template makes use of the `cookiecutter
 easier to get started with the package template. You will need to `install cookiecutter <https://cookiecutter.readthedocs.io/en/latest/installation.html>`__ which can
 be done easily using conda or pip::
 
-  conda install cookiecutter
+  conda install -c conda-forge cookiecutter gitpython
 
   pip install cookiecutter
+
 
 Once you have cookiecutter installed you can run::
 
