@@ -6,8 +6,10 @@ from astropy.tests.pytest_plugins import *
 
 ## Uncomment the following line to treat all DeprecationWarnings as
 ## exceptions. For Astropy v2.0 or later, there are 2 additional keywords,
-## as follow.
-## To ignore some modules that produce deprecation warnings on import, add:
+## as follow (although default should work for most cases).
+## To ignore some packages that produce deprecation warnings on import
+## (in addition to 'compiler', 'scipy', 'pygments', 'ipykernel', and
+## 'setuptools'), add:
 ##     modules_to_ignore_on_import=['module_1', 'module_2']
 ## To ignore some specific deprecation warning messages for Python version
 ## MAJOR.MINOR or later, add:
