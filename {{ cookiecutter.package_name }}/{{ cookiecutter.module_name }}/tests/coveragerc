@@ -1,7 +1,7 @@
 [run]
 source = {packagename}
 omit =
-   {packagename}/_astropy_init*
+   {packagename}/_{{ cookiecutter._parent_project }}_init*
    {packagename}/conftest*
    {packagename}/cython_version*
    {packagename}/setup_package*

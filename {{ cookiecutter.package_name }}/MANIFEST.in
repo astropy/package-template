@@ -4,8 +4,9 @@ include CHANGES.rst
 include ez_setup.py
 include ah_bootstrap.py
 include setup.cfg
+include {{ cookiecutter.module_name }}/tests/coveragerc
 
-recursive-include packagename *.pyx *.c *.pxd
+recursive-include {{ cookiecutter.module_name }} *.pyx *.c *.pxd
 recursive-include docs *
 recursive-include licenses *
 recursive-include cextern *
@@ -28,7 +29,7 @@ recursive-include astropy_helpers/licenses *
 include astropy_helpers/ez_setup.py
 include astropy_helpers/ah_bootstrap.py
 
-recursive-include astropy_helpers/astropy_helpers *.py *.pyx *.c *.h
+recursive-include astropy_helpers/astropy_helpers *.py *.pyx *.c *.h *.rst
 recursive-include astropy_helpers/astropy_helpers.egg-info *
 # include the sphinx stuff with "*" because there are css/html/rst/etc.
 recursive-include astropy_helpers/astropy_helpers/sphinx *
