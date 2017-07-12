@@ -13,6 +13,7 @@
     "include_cextern_folder": "n",
     "edit_on_github_extension": "False",
     "github_project": "astropy/astropy",
+    "install_requires": "astropy",
     "use_travis_ci": "y",
     "use_appveyor_ci": "y",
     "use_read_the_docs": "y",

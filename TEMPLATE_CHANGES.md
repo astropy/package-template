@@ -15,6 +15,8 @@ be copied over manually if desired.
 - Updated ``setup.cfg`` and ``setup.py`` so that the install requirements
   are defined in ``setup.cfg``. [#208]
 
+- Allow specification of multiple install requirements. [#226]
+
 1.1.2 (2016-07-02)
 ------------------
 
