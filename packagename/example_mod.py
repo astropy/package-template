@@ -1,4 +1,14 @@
 import numpy as np
+from astropy import config as _config
+
+
+class Conf(_config.ConfigNamespace):
+    """Configuration parameters. See `astropy.config`."""
+    pkg_cfg_item = _config.ConfigItem(
+        'foo', 'Example package configurable item')
+
+
+conf = Conf()
 
 
 def primes(imax):
