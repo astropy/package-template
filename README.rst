@@ -1,17 +1,14 @@
-Astropy affiliated package template
-===================================
+Astropy package template
+========================
 
 .. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
-This is the template for affiliated packages of the Astropy project.
+This is a package template provided by the Astropy project.
 
-Astropy affiliated packages are astronomy-related Python packages that
-have requested to be part of the Astropy project’s community.
-Such packages can make use of the setup, installation, and documentation
-infrastructure developed for the ``astropy`` core package simply by
-using this template to lay out the package.
+Using this template, packages can make use of the setup, installation, and documentation
+infrastructure developed for the ``astropy`` core and affiliated packages.
 
 For more information, see:
 
@@ -28,9 +25,11 @@ Using cookiecutter
 ^^^^^^^^^^^^^^^^^^
 
 This package template makes use of the `cookiecutter
-<https://cookiecutter.readthedocs.io/en/latest/index.html>`__ package to make it
-easier to get started with the package template. You will need to `install cookiecutter <https://cookiecutter.readthedocs.io/en/latest/installation.html>`__ which can
-be done easily using conda or pip::
+<https://cookiecutter.readthedocs.io/en/latest/index.html>`__ package to
+make it easier to get started with the package template. You will need to
+`install cookiecutter
+<https://cookiecutter.readthedocs.io/en/latest/installation.html>`__ which
+can be done easily using conda or pip::
 
   conda install -c conda-forge cookiecutter gitpython
 
