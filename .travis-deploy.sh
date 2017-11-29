@@ -17,5 +17,19 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     rsync -avz --delete --exclude .git/ ../packagename/ ./
     git add -A
     git commit -m "Update rendered version to ""$TRAVIS_COMMIT"
+
+    # Add astropy_helpers manually at the version in the cookiecutter template
+    git submodule add https://github.com/astropy/astropy-helpers astropy_helpers || true
+    git submodule update --init
+    cd astropy_helpers
+    # debug
+    cat ../../pacakge-template/cookiecutter.json
+    # parse the json with jq to get the helpers version
+    git checkout $(jq -r ".astropy_helpers_version" ../../pacakge-template/cookiecutter.json)
+    cp ah_bootstrap.py ../
+    cd ..
+    git add astropy_helpers ah_bootstrap.py
+    # we might not have changes to commit
+    git commit "Update astropy_helpers" || true
     git push origin rendered
 fi
