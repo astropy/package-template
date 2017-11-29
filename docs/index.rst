@@ -1,22 +1,24 @@
 Welcome to Astropy Package Template's documentation!
 ====================================================
 
-The Astropy package template is designed to help quickly create new Python packages within the Astropy ecosystem.
+The Astropy package template is designed to help quickly create new Python
+packages within the Astropy ecosystem.
 
 Getting Started
 ---------------
 
 The Astropy Package template uses the `Cookiecutter
 <http://cookiecutter.readthedocs.io/>`_ project to make it easier to get
-started. To use the package template you need cookiecutter installed, depending
-on how you have Python installed it can be obtained through either pip or
-conda::
+started. To use the package template you need cookiecutter installed. The
+package template also optionally makes use of 'gitpython' to setup the
+``astropy_helpers`` submodule. Depending on how you have Python installed these
+packages can be obtained through either pip or conda::
 
-  pip install cookiecutter
+  pip install cookiecutter gitpython
 
 or::
 
-  conda install -c conda-forge cookiecutter
+  conda install -c conda-forge cookiecutter gitpython
 
 
 Cookiecutter works by taking a template (in this case the Astropy Package
@@ -28,7 +30,7 @@ to use.
 
 To start a package with the package template run::
 
-  cookiecutter gh:astropy/package-template
+  cookiecutter -c cookiecutter gh:astropy/package-template
 
 This will ask you a series of questions, and result in a directory inside your
 current working directory that has the name of your project.
