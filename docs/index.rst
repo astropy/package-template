@@ -46,8 +46,8 @@ rendered the template read :ref:`next-steps`.
    :caption: Contents:
 
    options
-   updating
    nextsteps
+   updating
 
 
 

@@ -22,23 +22,27 @@ settings configured to your package and then pull the changes into your package.
    to make this process easier, and possibly even automated.
 
 
-1. **Render the template**: Putting in the same settings as the first time the
+#. **Render the template**: Putting in the same settings as the first time the
    template was rendered (or using ``--replay``) render the template to a
    temporary folder::
 
    $ cookiecutter [--replay] gh:astropy/package-template -o /tmp
 
-2. **Make a new branch**::
+#. **Make a new branch**::
 
    $ git checkout -b update_template
 
-3. **Copy the template over your package**: (replacing 'packagename' with your package name)::
+#. **Copy the template over your package**: (replacing 'packagename' with your package name)::
 
    $ cp -r /tmp/packagename ./
 
-4. **Git diff the patch**::
+#. **Use git diff to see the changes**::
 
    $ git diff
+
+#. **Edit the files** until the changes shown by `` git diff`` are the ones you want to have in your package.
+
+#. **Merge the changes** Either by a Pull Request or by merging the ``update_template`` branch into your master branch.
 
 
 Using git Update
