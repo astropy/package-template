@@ -1,3 +1,5 @@
+.. _package-template:
+
 Welcome to Astropy Package Template's documentation!
 ====================================================
 
