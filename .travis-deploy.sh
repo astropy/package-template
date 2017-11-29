@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eva
+set -evax
 
 if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK = 'render' ]]; then
     openssl aes-256-cbc -K $encrypted_c554857c6215_key -iv $encrypted_c554857c6215_iv -in github_deploy_key.enc -out ~/.ssh/publish-key -d
@@ -31,8 +31,9 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     cp ah_bootstrap.py ../
     cp ez_setup.py ../
     cd ..
-    git add astropy_helpers ah_bootstrap.py
+    git add astropy_helpers ah_bootstrap.py ez_setup.py
+    git status
     # we might not have changes to commit
-    git commit "Update astropy_helpers to ""$helpers_version" || true
+    git commit -m "Update astropy_helpers to ""$helpers_version" || true
     git push origin rendered
 fi
