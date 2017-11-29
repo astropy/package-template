@@ -6,6 +6,9 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     chmod u=rw,og= ~/.ssh/publish-key
     echo "Host github.com" >> ~/.ssh/config
     echo "  IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
+
+    base_dir=$(pwd)
+
     cd ../test/
     git clone git@github.com:astropy/package-template rendered
     cd rendered
@@ -22,14 +25,14 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     git submodule add https://github.com/astropy/astropy-helpers astropy_helpers || true
     git submodule update --init
     cd astropy_helpers
-    # debug
-    cat ../../pacakge-template/cookiecutter.json
+    helpers_version=$(jq -r ".astropy_helpers_version" $base_dir/cookiecutter.json)
     # parse the json with jq to get the helpers version
-    git checkout $(jq -r ".astropy_helpers_version" ../../pacakge-template/cookiecutter.json)
+    git checkout $helpers_version
     cp ah_bootstrap.py ../
+    cp ez_setup.py ../
     cd ..
     git add astropy_helpers ah_bootstrap.py
     # we might not have changes to commit
-    git commit "Update astropy_helpers" || true
+    git commit "Update astropy_helpers to ""$helpers_version" || true
     git push origin rendered
 fi
