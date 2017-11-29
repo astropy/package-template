@@ -32,7 +32,6 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     cp ez_setup.py ../
     cd ..
     git add astropy_helpers ah_bootstrap.py ez_setup.py
-    git status
     # we might not have changes to commit
     git commit -m "Update astropy_helpers to ""$helpers_version" || true
     git push origin rendered
