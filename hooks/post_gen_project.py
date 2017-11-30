@@ -30,8 +30,9 @@ def process_licence(licence_name):
         shutil.copyfile(os.path.join(PROJECT_DIRECTORY, 'licenses', license_files[licence_name]),
                         os.path.join(PROJECT_DIRECTORY, 'licenses', 'LICENSE.rst'))
 
-    for licence_file in license_files.values():
-        os.remove(os.path.join(PROJECT_DIRECTORY, 'licenses', licence_file))
+    if licence_name != "Other":
+        for licence_file in license_files.values():
+            os.remove(os.path.join(PROJECT_DIRECTORY, 'licenses', licence_file))
 
 
 if __name__ == '__main__':
