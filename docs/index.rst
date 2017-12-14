@@ -39,9 +39,9 @@ To start a package with the package template run::
 
   cookiecutter -c cookiecutter gh:astropy/package-template
 
-This will ask you a series of questions, and result in a directory inside your
-current working directory that has the name of your project. Once you have
-rendered the template read :ref:`next-steps`.
+This prompt you for a series of :ref:`options<options>`,current working
+directory that has the name of your project. Once you have rendered the template
+read :ref:`next-steps`.
 
 .. toctree::
    :maxdepth: 2

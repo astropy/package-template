@@ -28,13 +28,17 @@ settings configured to your package and then pull the changes into your package.
 
    $ cookiecutter [--replay] gh:astropy/package-template -o /tmp
 
+   .. note::
+
+      You should choose 'n' for the "initialize_git_repo" question.
+
 #. **Make a new branch**::
 
    $ git checkout -b update_template
 
 #. **Copy the template over your package**: (replacing 'packagename' with your package name)::
 
-   $ cp -r /tmp/packagename ./
+   $ cp -r /tmp/packagename/* ./
 
 #. **Use git diff to see the changes**::
 

@@ -15,12 +15,18 @@ Travis CI
 #########
 
 You should register your package on https://travis-ci.org and modify the
-``.travis.yml`` file to make the build pass. This will continuously test your
-package for each commit, even pull requests against your main repository will be
+``.travis.yml`` file to your needs. The default ``.travis.yml`` file contains a
+large number of builds, against various versions of Python and Astropy and
+numpy, you should choose the ones relevant to your project. Full documentation
+of the ``.travis.yml`` file can be found on the
+`Travis CI <https://docs.travis-ci.com/user/for-beginners/>`__ website.
+
+Continuous Integration services like Travis CI, continuously test your package
+for each commit, even pull requests against your main repository will be
 automatically tested, so that you notice when something breaks. For further
 information see `here
 <https://github.com/astropy/astropy/wiki/Continuous-Integration>`__ and for
-lot's of example ``.travis.yml`` build configurations see `here
+lots of example ``.travis.yml`` build configurations see `here
 <https://github.com/astropy/astropy/wiki/travis-ci-test-status>`__. Generally
 you should aim to always have your ``master`` branch work with the latest stable
 as well as the latest development version of astropy (i.e. the astropy git
@@ -31,13 +37,16 @@ may need to limit the versions your package covers.
 Appveyor
 ########
 
-Appveyor provides testing on the windows platform, if you want to enable this
+Appveyor provides testing on the Windows platform, if you want to enable this
 you should register and enable your project at https://www.appveyor.com/. The
 appveyor build is controlled by the ``appveyor.yml`` file included in the
 template (by default).
 
 Coveralls
 #########
+
+Coveralls is a web interface to monitoring what lines of code in your project
+are executed by your test suite.
 
 If you register your package with coveralls.io, you will need to uncomment the
 coveralls line in the ``.travis.yml`` file to enable upload of your coverage
@@ -53,36 +62,12 @@ following entries in "Advanced Settings" for your package on `Read the Docs
 <https://readthedocs.org>`_ should work:
 
 - Activate ``Install your project inside a virtualenv using setup.py install``
-- Edit ``.rtd-environment.yml`` with your package requirements.
+- Edit ``.rtd-environment.yml`` with your package requirements (this file is
+  used by conda on RTD to install the requirements for your package).
 - Activate ``Give the virtual environment access to the global site-packages
   dir.``
 
 All other settings can stay on their default value.
-
-If you need to mock any Python packages or C libraries that can not be installed
-and built by Read the Docs, you should include the following mocking patch
-before the ``Project information`` section of the ``docs/conf.py`` file::
-
-  class Mock(object):
-      def __init__(self, *args, **kwargs):
-          pass
-
-      def __call__(self, *args, **kwargs):
-          return Mock()
-
-      @classmethod
-      def __getattr__(cls, name):
-          if name in ('__file__', '__path__'):
-              return '/dev/null'
-          elif name[0] == name[0].upper():
-              return type(name, (), {})
-          else:
-              return Mock()
-
-  MOCK_MODULES = ['<name of package to mock>', '<name of package to mock>']
-  for mod_name in MOCK_MODULES:
-      sys.modules[mod_name] = Mock()
-
 
 Customizing the package
 -----------------------
