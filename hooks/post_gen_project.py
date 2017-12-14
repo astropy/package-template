@@ -64,8 +64,10 @@ if __name__ == '__main__':
                     "Initialize astropy_helpers at version {{ cookiecutter.astropy_helpers_version }}"
                 )
 
-
         except ImportError:
             print(
                 "gitpython is not installed so the repository will not be initialised "
                 "and astropy_helpers not downloaded.")
+
+    if '{{ cookiecutter._parent_project }}' == 'astropy':
+        remove_file('{{ cookiecutter.module_name }}/config.py')

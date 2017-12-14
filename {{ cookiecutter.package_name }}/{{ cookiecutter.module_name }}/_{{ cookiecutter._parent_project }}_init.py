@@ -129,10 +129,12 @@ if not _ASTROPY_SETUP_:  # noqa
         if os.path.isfile(config_template):
             try:
                 update_default_config(
-                    __package__, config_dir, version=__version__)
+                    __package__, config_dir, version=__version__,
+                    rootname='{{ cookiecutter._parent_project }}')
             except TypeError as orig_error:
                 try:
-                    update_default_config(__package__, config_dir)
+                    update_default_config(__package__, config_dir,
+                                          rootname='{{ cookiecutter._parent_project }}')
                 except ConfigurationDefaultMissingError as e:
                     wmsg = (e.args[0] +
                             " Cannot install default profile. If you are "
