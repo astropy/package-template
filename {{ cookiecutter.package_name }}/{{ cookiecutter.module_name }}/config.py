@@ -2,7 +2,7 @@ import astropy.config as astropyconfig
 
 
 class ConfigNamespace(astropyconfig.ConfigNamespace):
-    rootname = '{{ cookiecutter._parent_project }}'
+    pass
 
 
 class ConfigItem(astropyconfig.ConfigItem):
