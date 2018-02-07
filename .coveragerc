@@ -1,5 +1,5 @@
 [run]
-source = {packagename}
+source = nei
 omit =
    {packagename}/_astropy_init*
    {packagename}/conftest*
@@ -16,6 +16,7 @@ omit =
 exclude_lines =
    # Have to re-enable the standard pragma
    pragma: no cover
+   coveralls: ignore
 
    # Don't complain about packages we have installed
    except ImportError
