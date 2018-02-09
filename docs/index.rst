@@ -32,14 +32,14 @@ Cookiecutter works by taking a template (in this case the Astropy Package
 Template) and asking you a series of :ref:`questions <options>` to create a set
 of files and folders where your answers to the questions are pre-filled into the
 correct places. The package template uses this to allow you to specify things
-like your projects name as well as choose what parts and features of the
+like your project's name as well as choose what parts and features of the
 template you want to use.
 
 To start a package with the package template run::
 
   cookiecutter -c cookiecutter gh:astropy/package-template
 
-This prompt you for a series of :ref:`options<options>`,current working
+This prompt you for a series of :ref:`options<options>`, current working
 directory that has the name of your project. Once you have rendered the template
 read :ref:`next-steps`.
 
