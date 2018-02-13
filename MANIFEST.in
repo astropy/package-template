@@ -6,7 +6,7 @@ include ah_bootstrap.py
 include setup.cfg
 include nei/tests/coveragerc
 
-recursive-include packagename *.pyx *.c *.pxd
+recursive-include nei *.pyx *.c *.pxd
 recursive-include docs *
 recursive-include licenses *
 recursive-include cextern *
