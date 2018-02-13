@@ -1,4 +1,4 @@
-name: packagename
+name: nei
 
 channels:
     - astropy
@@ -8,5 +8,8 @@ dependencies:
     - Cython
     - matplotlib
     - numpy
+    - scipy
+    - coverage
+    - pytest
 #   - pip:
 #       - dependency_from_pip
