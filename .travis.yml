@@ -28,7 +28,7 @@ env:
         # overridden underneath. They are defined here in order to save having
         # to repeat them for all configurations.
         - PYTHON_VERSION=3.6
-        - NUMPY_VERSION=stable
+        - NUMPY_VERSION=1.14
         - ASTROPY_VERSION=stable
         - MAIN_CMD='python setup.py'
         - SETUP_CMD='test'
@@ -79,12 +79,10 @@ matrix:
         - os: linux
           env: SETUP_CMD='build_docs -w'
 
-        # Now try Astropy dev with the latest Python and LTS with Python 2.7 and 3.x.
+        # Now try Astropy dev with the latest Python 3.x.
         - os: linux
           env: ASTROPY_VERSION=development
                EVENT_TYPE='pull_request push cron'
-        - os: linux
-          env: PYTHON_VERSION=2.7 ASTROPY_VERSION=lts
         - os: linux
           env: ASTROPY_VERSION=lts
 
@@ -92,8 +90,6 @@ matrix:
         # the Numpy developers have taken care of testing Numpy with different
         # versions of Python, we can vary Python and Numpy versions at the same
         # time.
-        - os: linux
-          env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.13
         - os: linux
           env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.14
 
