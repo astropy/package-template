@@ -1,52 +1,58 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2
+
 jobs:
-  build:
+  32bit:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.4
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
+      - image: quay.io/pypa/manylinux1_i686
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
       - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
+          name: Install dependencies
+          command: /opt/python/cp36-cp36m/bin/pip install numpy scipy pytest-astropy pytest-xdist Cython jinja2
       - run:
-          name: run tests
+          name: Run tests
+          command: PYTHONHASHSEED=42 /opt/python/cp36-cp36m/bin/python setup.py test --parallel=4
+  image-tests-mpl153:
+    docker:
+      - image: astropy/image-tests-py35-mpl153:1.0
+    steps:
+      - checkout
+      - run:
+          name: Run tests
           command: |
-            . venv/bin/activate
+            pip3 install coveralls
+            python3 setup.py test -P visualization --remote-data=astropy -a "--mpl"
+            coveralls || true
+  image-tests-mpl202:
+    docker:
+      - image: astropy/image-tests-py35-mpl202:1.0
+    steps:
+      - checkout
+      - run:
+          name: Run tests
+          command: |
+            pip3 install coveralls
+            python3 setup.py test -P visualization --remote-data=astropy -a "--mpl"
+            coveralls || true
+  image-tests-mpl212:
+    docker:
+      - image: astropy/image-tests-py35-mpl212:1.0
+    steps:
+      - checkout
+      - run:
+          name: Run tests
+          command: |
+            pip3 install coveralls
+            python3 setup.py test -P visualization --remote-data=astropy -a "--mpl"
+            coveralls || true
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - 32bit
+      - image-tests-mpl153
+      - image-tests-mpl202
+- image-tests-mpl212
             python manage.py test
       - store_artifacts:
           path: test-reports
