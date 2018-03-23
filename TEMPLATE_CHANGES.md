@@ -17,6 +17,8 @@ be copied over manually if desired.
 
 - Allow specification of multiple install requirements. [#226]
 
+- Allow Python version check at installation and import time. [#302]
+
 1.1.2 (2016-07-02)
 ------------------
 
