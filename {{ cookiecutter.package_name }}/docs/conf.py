@@ -111,17 +111,16 @@ release = package.__version__
 # a list of builtin themes. To override the custom theme, set this to the
 # name of a builtin theme or the name of a custom theme in html_theme_path.
 #html_theme = None
-{% if cookiecutter.sphinx_theme != "astropy-boostrap" %}
-html_theme = "{{ cookiecutter.sphinx_theme }}"
 
-{% else %}
+{% if cookiecutter.sphinx_theme == "astropy-boostrap" %}
 # Please update these texts to match the name of your package.
 html_theme_options = {
     'logotext1': 'package',  # white,  semi-bold
     'logotext2': '-template',  # orange, light
     'logotext3': ':docs'   # white,  light
     }
-
+{% else %}
+html_theme = "{{ cookiecutter.sphinx_theme }}"
 {% endif %}
 
 # Custom sidebar templates, maps document names to template names.
