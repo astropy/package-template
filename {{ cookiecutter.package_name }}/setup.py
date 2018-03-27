@@ -10,7 +10,7 @@ import sys
 # happen before importing ah_bootstrap.
 {% if cookiecutter.__minimum_python_version__ %}
 if sys.version_info < tuple((int(val) for val in {{ cookiecutter.__minimum_python_version__ }}.split('.'))):
-    sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {{ cookiecutter.__minimum_python_version__ }} or later\n")
+    sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format({{ cookiecutter.__minimum_python_version__ }}))
     sys.exit(1)
 {% endif %}
 
@@ -146,7 +146,7 @@ setup(name=PACKAGENAME,
       use_2to3=False,
       entry_points=entry_points,
 {% if cookiecutter.__minimum_python_version__ %}
-      python_requires='>={{ cookiecutter.__minimum_python_version__ }}',
+      python_requires='>={}'.format({{ cookiecutter.__minimum_python_version__ }}),
 {% endif %}
       **package_info
 )

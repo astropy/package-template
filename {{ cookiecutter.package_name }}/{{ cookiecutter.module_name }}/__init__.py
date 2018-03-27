@@ -13,7 +13,7 @@ import sys
 class UnsupportedPythonError(Exception):
     pass
 if sys.version_info < tuple((int(val) for val in {{ cookiecutter.__minimum_python_version__ }}.split('.'))):
-    raise UnsupportedPythonError("{{ cookiecutter.module_name }} does not support Python < {{ cookiecutter.__minimum_python_version__ }}")
+    raise UnsupportedPythonError("{{ cookiecutter.module_name }} does not support Python < {}".format({{ cookiecutter.__minimum_python_version__ }}))
 {% endif %}
 
 if not _ASTROPY_SETUP_:
