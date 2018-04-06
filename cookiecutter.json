@@ -25,5 +25,5 @@
     ],
     "support_python2": "n",
     "astropy_helpers_version": "{% if cookiecutter.support_python2 == 'y' %}v2.0.6{% else %}v3.0.1{% endif %}",
-    "__minimum_python_version__": ""
+    "minimum_python_version": "{% if cookiecutter.support_python2 == 'n'%}3.5{% endif %}"
 }
