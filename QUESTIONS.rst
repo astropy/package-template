@@ -22,4 +22,5 @@ a description of each of the prompts.
 15. ``use_appveyor_ci``: If 'y' the template will include an example ``appveyor.yml`` file for the Appveyor CI service.
 16. ``use_read_the_docs``: If 'y' the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
 17. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
-18. ``__minimum_python_version__``: Version string of minimum supported Python version. For example, "3.5" or "2.7". Leave as "" to skip this check.
+18. ``support_python2``: If 'y' the template will include the Python 2 compatible ``astropy_helpers`` LTS version, otherwise it uses the latest one.
+19. ``__minimum_python_version__``: Version string of minimum supported Python version. For example, "3.5" or "2.7". Leave as "" to skip this check.

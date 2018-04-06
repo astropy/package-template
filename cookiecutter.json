@@ -18,11 +18,12 @@
     "use_read_the_docs": "y",
     "sphinx_theme": "astropy-boostrap",
     "initialize_git_repo": "y",
-    "astropy_helpers_version": "v2.0.2",
     "_parent_project": "astropy",
     "_install_requires": "astropy",
     "_copy_without_render": [
         "docs/_templates"
     ],
+    "support_python2": "n",
+    "astropy_helpers_version": "{% if cookiecutter.support_python2 == 'y' %}v2.0.6{% else %}v3.0.1{% endif %}",
     "__minimum_python_version__": ""
 }
