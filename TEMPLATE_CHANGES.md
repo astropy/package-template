@@ -20,7 +20,7 @@ be copied over manually if desired.
 - Allow Python version check at installation and import time. [#302]
 
 - Adding ``support_python2`` option to distinguish with version of
-  astropy_helpers to be used. [#305]
+  astropy_helpers to be used. [#306]
 
 
 1.1.2 (2016-07-02)
