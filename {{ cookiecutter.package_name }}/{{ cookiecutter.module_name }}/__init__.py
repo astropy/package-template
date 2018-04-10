@@ -8,12 +8,12 @@ from ._{{ cookiecutter._parent_project }}_init import *
 
 # Enforce Python version check during package import.
 # This is the same check as the one at the top of setup.py
-{% if cookiecutter.__minimum_python_version__ %}
+{% if cookiecutter.minimum_python_version %}
 import sys
 class UnsupportedPythonError(Exception):
     pass
-if sys.version_info < tuple((int(val) for val in {{ cookiecutter.__minimum_python_version__ }}.split('.'))):
-    raise UnsupportedPythonError("{{ cookiecutter.module_name }} does not support Python < {}".format({{ cookiecutter.__minimum_python_version__ }}))
+if sys.version_info < tuple((int(val) for val in "{{ cookiecutter.minimum_python_version }}".split('.'))):
+    raise UnsupportedPythonError("{{ cookiecutter.module_name }} does not support Python < {}".format({{ cookiecutter.minimum_python_version }}))
 {% endif %}
 
 if not _ASTROPY_SETUP_:
