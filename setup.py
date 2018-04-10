@@ -9,10 +9,6 @@ import sys
 # This is the same check as packagename/__init__.py but this one has to
 # happen before importing ah_bootstrap.
 
-if sys.version_info < tuple((int(val) for val in "3.5".split('.'))):
-    sys.stderr.write("ERROR: packagename requires Python {} or later\n".format(3.5))
-    sys.exit(1)
-
 
 import ah_bootstrap
 from setuptools import setup
@@ -145,8 +141,6 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=False,
       entry_points=entry_points,
-
-      python_requires='>={}'.format(3.5),
 
       **package_info
 )
