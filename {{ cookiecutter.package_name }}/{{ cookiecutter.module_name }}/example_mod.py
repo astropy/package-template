@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def primes(imax):
     """
     Returns prime numbers up to imax.
