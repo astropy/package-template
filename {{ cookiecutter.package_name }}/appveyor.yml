@@ -11,10 +11,16 @@ environment:
                         # of 32 bit and 64 bit builds are needed, move this
                         # to the matrix section.
 
+      {% if cookiecutter.include_example_cython_code == 'y' %}
       # For this package-template, we include examples of Cython modules,
       # so Cython is required for testing. If your package does not include
       # Cython code, you can set CONDA_DEPENDENCIES=''
-      CONDA_DEPENDENCIES: "Cython"
+      CONDA_DEPENDENCIES='Cython'
+      {% else %}
+      # List other runtime dependencies for the package that are available as
+      # conda packages here.
+      CONDA_DEPENDENCIES=''
+      {% endif %}
 
       # Conda packages for affiliated packages are hosted in channel
       # "astropy" while builds for astropy LTS with recent numpy versions
