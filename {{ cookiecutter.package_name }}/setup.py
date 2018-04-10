@@ -9,7 +9,7 @@ import sys
 # This is the same check as packagename/__init__.py but this one has to
 # happen before importing ah_bootstrap.
 {% if cookiecutter.minimum_python_version %}
-if sys.version_info < tuple((int(val) for val in {{ cookiecutter.minimum_python_version }}.split('.'))):
+if sys.version_info < tuple((int(val) for val in "{{ cookiecutter.minimum_python_version }}".split('.'))):
     sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format({{ cookiecutter.minimum_python_version }}))
     sys.exit(1)
 {% endif %}

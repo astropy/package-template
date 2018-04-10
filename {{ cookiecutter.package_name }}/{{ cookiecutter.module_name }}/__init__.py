@@ -12,7 +12,7 @@ from ._{{ cookiecutter._parent_project }}_init import *
 import sys
 class UnsupportedPythonError(Exception):
     pass
-if sys.version_info < tuple((int(val) for val in {{ cookiecutter.minimum_python_version }}.split('.'))):
+if sys.version_info < tuple((int(val) for val in "{{ cookiecutter.minimum_python_version }}".split('.'))):
     raise UnsupportedPythonError("{{ cookiecutter.module_name }} does not support Python < {}".format({{ cookiecutter.minimum_python_version }}))
 {% endif %}
 
