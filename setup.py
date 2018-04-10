@@ -5,15 +5,14 @@ import glob
 import os
 import sys
 
-# Uncomment to enforce Python version check during package import.
-# Also uncomment python_requires below in setup().
-# Replace "packagename" in error message with your package name.
+# Enforce Python version check during package import.
 # This is the same check as packagename/__init__.py but this one has to
 # happen before importing ah_bootstrap.
-#__minimum_python_version__ = '3.5'
-#if sys.version_info < tuple((int(val) for val in __minimum_python_version__.split('.'))):
-#    sys.stderr.write("ERROR: packagename requires Python {} or later\n".format(__minimum_python_version__))
-#    sys.exit(1)
+
+if sys.version_info < tuple((int(val) for val in "3.5".split('.'))):
+    sys.stderr.write("ERROR: packagename requires Python {} or later\n".format(3.5))
+    sys.exit(1)
+
 
 import ah_bootstrap
 from setuptools import setup
@@ -146,6 +145,8 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=False,
       entry_points=entry_points,
-#     python_requires='>=' + __minimum_python_version__,
+
+      python_requires='>={}'.format(3.5),
+
       **package_info
 )
