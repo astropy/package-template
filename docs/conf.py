@@ -80,21 +80,9 @@ rst_epilog = """
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 
-try:
-    import astropy_helpers.sphinx
-    html_theme_path = astropy_helpers.sphinx.get_html_theme_path()
-# this is only needed until https://github.com/astropy/astropy-helpers/pull/290
-# is merged.
-except AttributeError:
-    import astropy_helpers.sphinx
-    theme_dir = os.path.join(os.path.abspath(
-        os.path.dirname(astropy_helpers.sphinx.__file__)), 'themes')
-    html_theme_path = [theme_dir]
-
+import astropy_sphinx_theme
+html_theme_path = astropy_sphinx_theme.get_html_theme_path()
 html_theme = 'bootstrap-astropy'
-
-html_favicon = os.path.join(html_theme_path[0], html_theme, 'static',
-                            'astropy_logo.ico')
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
