@@ -41,13 +41,13 @@ def primes(imax):
 
 def do_primes(n, usecython=False):
     if usecython:
-        {% if cookiecutter.include_example_cython_code != 'y' %}
+{% if cookiecutter.include_example_cython_code != 'y' %}
         raise Exception("This template does not have the example C code included.")
-        {% else %}
+{% else %}
         from .example_c import primes as cprimes
         print('Using cython-based primes')
         return cprimes(n)
-        {% endif %}
+{% endif %}
     else:
         print('Using pure python primes')
         return primes(n)
