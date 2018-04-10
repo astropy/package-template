@@ -186,6 +186,20 @@ github_issues_url = 'https://github.com/{0}/issues/'.format(setup_cfg['github_pr
 # nitpicky = True
 # nitpick_ignore = []
 #
+# Some warnings are impossible to suppress, and you can list specific references
+# that should be ignored in a nitpick-exceptions file which should be inside
+# the docs/ directory. The format of the file should be:
+#
+# <type> <class>
+#
+# for example:
+#
+# py:class astropy.io.votable.tree.Element
+# py:class astropy.io.votable.tree.SimpleElement
+# py:class astropy.io.votable.tree.SimpleElementWithContent
+#
+# Uncomment the following lines to enable the exceptions:
+#
 # for line in open('nitpick-exceptions'):
 #     if line.strip() == "" or line.startswith("#"):
 #         continue
