@@ -13,7 +13,7 @@ recommended.
 Setting Up Continuous Integration
 ---------------------------------
 
-`Continuous Integration 
+`Continuous Integration
 <https://github.com/astropy/astropy/wiki/Continuous-Integration>`__ (CI)
 services, like Travis CI, continuously test your package
 for each commit. Every pull requests against your main repository will be
@@ -21,7 +21,6 @@ automatically tested, and failing tests will be flagged by these services.
 
 Travis CI
 #########
-
 
 You should register your package on https://travis-ci.org and modify the
 ``.travis.yml`` file to your needs. The default ``.travis.yml`` file contains a
@@ -52,20 +51,20 @@ Coveralls
 Coveralls is a web interface to monitoring what lines of code in your project
 are executed by your test suite.
 
-If you register your package with `coveralls.io <https://coveralls.io/>`_, you 
+If you register your package with `coveralls.io <https://coveralls.io/>`_, you
 will need to uncomment the coveralls line in the ``.travis.yml`` file to enable
 upload of your coverage statistics to coveralls.
 
 Read the Docs
 #############
 
-In addition to testing the code, it is often useful to build documentation 
-continuously as the code is developed. Read the Docs is a web site that 
-provides exactly this service.  If you want the documentation for your 
+In addition to testing the code, it is often useful to build documentation
+continuously as the code is developed. Read the Docs is a web site that
+provides exactly this service.  If you want the documentation for your
 project to be hosted by `Read the Docs
-<https://readthedocs.org>`_, then you need to setup an account there. The
+<https://readthedocs.org>`__, then you need to setup an account there. The
 following entries in "Advanced Settings" for your package on `Read the Docs
-<https://readthedocs.org>`_ should work:
+<https://readthedocs.org>`__ should work:
 
 - Select ``Install your project inside a virtualenv using setup.py install``
 - Edit ``.rtd-environment.yml`` with your package requirements (this file is
@@ -78,10 +77,9 @@ All other settings can stay on their default value.
 Customizing the package
 -----------------------
 
-
 Once you have run cookiecutter you can edit the files in the folder to further
 customize your package. This section of the documentation lists some ways you
-might want to do this.  
+might want to do this.
 
 Customizing the documentation CSS
 #################################
