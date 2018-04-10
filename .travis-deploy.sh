@@ -25,7 +25,7 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     git submodule add https://github.com/astropy/astropy-helpers astropy_helpers || true
     git submodule update --init
     cd astropy_helpers
-    helpers_version=$(jq -r ".astropy_helpers_version" $base_dir/cookiecutter.json)
+    helpers_version=$(jq -r ".cookiecutter.astropy_helpers_version" $HOME/.cookiecutter_replay/package-template.json)
     # parse the json with jq to get the helpers version
     git checkout $helpers_version
     cp ah_bootstrap.py ../
