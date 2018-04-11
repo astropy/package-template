@@ -21,6 +21,8 @@ env:
         - PIP_DEPENDENCIES='cookiecutter gitpython pytest-astropy astropy-sphinx-theme'
         - EVENT_TYPE='pull_request push'
         - TASK='test'
+        - EXTRA_CONTEXT=''
+        - FLAGS=''
 
     matrix:
       # Extra context is a way to override options that the user normally
@@ -32,8 +34,7 @@ env:
       - EXTRA_CONTEXT="package_name=AstropyProject" FOLDERNAME='AstropyProject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
       - EXTRA_CONTEXT='minimum_python_version=3.5'
-      - TASK='render' EXTRA_CONTEXT='include_cextern_folder=y include_example_cython_code=y initialize_git_repo=n support_python2=y'
-
+      - TASK='render' FLAGS='--config-file rendered.yml --no-input'
 install:
 
     - git clone --depth 1 git://github.com/astropy/ci-helpers.git
@@ -41,7 +42,7 @@ install:
 
 script:
    - cd docs ; make html ; cd ..
-   - cookiecutter --no-input ./ -o ../test $EXTRA_CONTEXT
+   - cookiecutter --no-input ./ -o ../test $EXTRA_CONTEXT $FLAGS
    - cd ../test/$FOLDERNAME
    - if [[ $TASK == 'test' ]]; then python setup.py egg_info; fi
    - if [[ $TASK == 'test' ]]; then python setup.py build; fi
