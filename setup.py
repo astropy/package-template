@@ -5,10 +5,11 @@ import glob
 import os
 import sys
 
-# Enforce Python version check during package import.
-# This is the same check as packagename/__init__.py but this one has to
-# happen before importing ah_bootstrap.
-
+# Enforce Python version check - this is the same check as in __init__.py but
+# this one has to happen before importing ah_bootstrap.
+if sys.version_info < tuple((int(val) for val in "2.7".split('.'))):
+    sys.stderr.write("ERROR: packagename requires Python {} or later\n".format(2.7))
+    sys.exit(1)
 
 import ah_bootstrap
 from setuptools import setup
@@ -36,7 +37,7 @@ conf.read(['setup.cfg'])
 metadata = dict(conf.items('metadata'))
 
 PACKAGENAME = metadata.get('package_name', 'packagename')
-DESCRIPTION = metadata.get('description', 'packagename')
+DESCRIPTION = metadata.get('description', 'Astropy Package Template')
 AUTHOR = metadata.get('author', 'Astropy Developers')
 AUTHOR_EMAIL = metadata.get('author_email', '')
 LICENSE = metadata.get('license', 'unknown')
@@ -141,6 +142,6 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=False,
       entry_points=entry_points,
-
+      python_requires='>={}'.format(2.7),
       **package_info
 )
