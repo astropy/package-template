@@ -142,6 +142,6 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=False,
       entry_points=entry_points,
-      python_requires='>={}'.format(2.7),
+      python_requires='>={}'.format("2.7"),
       **package_info
 )
