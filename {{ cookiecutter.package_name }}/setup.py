@@ -5,14 +5,11 @@ import glob
 import os
 import sys
 
-# Enforce Python version check during package import.
-# This is the same check as packagename/__init__.py but this one has to
-# happen before importing ah_bootstrap.
-{% if cookiecutter.minimum_python_version %}
+# Enforce Python version check - this is the same check as in __init__.py but
+# this one has to happen before importing ah_bootstrap.
 if sys.version_info < tuple((int(val) for val in "{{ cookiecutter.minimum_python_version }}".split('.'))):
     sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format({{ cookiecutter.minimum_python_version }}))
     sys.exit(1)
-{% endif %}
 
 import ah_bootstrap
 from setuptools import setup
@@ -145,8 +142,6 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=False,
       entry_points=entry_points,
-{% if cookiecutter.minimum_python_version %}
       python_requires='>={}'.format({{ cookiecutter.minimum_python_version }}),
-{% endif %}
       **package_info
 )
