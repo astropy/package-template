@@ -32,7 +32,7 @@ env:
       - EXTRA_CONTEXT="package_name=AstropyProject" FOLDERNAME='AstropyProject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
       - EXTRA_CONTEXT='minimum_python_version=3.5'
-      - TASK='render' EXTRA_CONTEXT='include_cextern_folder=y include_example_cython_code=y initialize_git_repo=n support_python2=y'
+      - TASK='render' EXTRA_CONTEXT='short_description="Astropy Package Template" long_description="This is a rendered version of the cookiecutter Astropy package template, which you can find `here <https://github.com/astropy/package-template>`_. You can also read the `documentation <http://docs.astropy.org/projects/package-template>`_ for more details." include_cextern_folder=y include_example_cython_code=y initialize_git_repo=n support_python2=y'
 
 install:
 
