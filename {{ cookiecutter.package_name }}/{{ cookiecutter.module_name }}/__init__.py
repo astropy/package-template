@@ -10,7 +10,7 @@ from ._{{ cookiecutter._parent_project }}_init import *
 # This is the same check as the one at the top of setup.py
 import sys
 
-__minimum_python_version__ == "{{ cookiecutter.minimum_python_version }}"
+__minimum_python_version__ = "{{ cookiecutter.minimum_python_version }}"
 
 class UnsupportedPythonError(Exception):
     pass

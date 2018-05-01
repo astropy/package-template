@@ -21,7 +21,7 @@ AUTHOR = metadata.get('author', '{{ cookiecutter.author_name|escape }}')
 AUTHOR_EMAIL = metadata.get('author_email', '')
 LICENSE = metadata.get('license', 'unknown')
 URL = metadata.get('url', '{{ cookiecutter.project_url }}')
-__minimum_python_version__ = ("minimum_python_version", "{{ cookiecutter.minimum_python_version }}")
+__minimum_python_version__ = metadata.get("minimum_python_version", "{{ cookiecutter.minimum_python_version }}")
 
 # Enforce Python version check - this is the same check as in __init__.py but
 # this one has to happen before importing ah_bootstrap.
