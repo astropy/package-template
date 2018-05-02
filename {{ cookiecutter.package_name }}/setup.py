@@ -5,11 +5,15 @@ import glob
 import os
 import sys
 
+{% if cookiecutter.minimum_python_version.startswith("2") %}
 # Get some values from the setup.cfg
 try:
-    from ConfigParser import ConfigParser
-except ImportError:
     from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
+{% else %}
+from configparser import ConfigParser
+{% endif %}
 
 conf = ConfigParser()
 conf.read(['setup.cfg'])
