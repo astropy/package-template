@@ -5,10 +5,12 @@ import glob
 import os
 import sys
 
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
 
-from configparser import ConfigParser
-
-
+# Get some values from the setup.cfg
 conf = ConfigParser()
 conf.read(['setup.cfg'])
 metadata = dict(conf.items('metadata'))
@@ -19,7 +21,7 @@ AUTHOR = metadata.get('author', 'Astropy Developers')
 AUTHOR_EMAIL = metadata.get('author_email', '')
 LICENSE = metadata.get('license', 'unknown')
 URL = metadata.get('url', 'http://astropy.org')
-__minimum_python_version__ = metadata.get("minimum_python_version", "3.6")
+__minimum_python_version__ = metadata.get("minimum_python_version", "2.7")
 
 # Enforce Python version check - this is the same check as in __init__.py but
 # this one has to happen before importing ah_bootstrap.
@@ -27,15 +29,16 @@ if sys.version_info < tuple((int(val) for val in __minimum_python_version__.spli
     sys.stderr.write("ERROR: packagename requires Python {} or later\n".format(__minimum_python_version__))
     sys.exit(1)
 
-
 # Import ah_bootstrap after the python version validation
 
 import ah_bootstrap
 from setuptools import setup
 
-
-import builtins
-
+# A dirty hack to get around some early import/configurations ambiguities
+if sys.version_info[0] >= 3:
+    import builtins
+else:
+    import __builtin__ as builtins
 builtins._ASTROPY_SETUP_ = True
 
 from astropy_helpers.setup_helpers import (register_commands, get_debug_option,
