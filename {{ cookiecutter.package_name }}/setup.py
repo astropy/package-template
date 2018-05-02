@@ -5,32 +5,15 @@ import glob
 import os
 import sys
 
-# Enforce Python version check - this is the same check as in __init__.py but
-# this one has to happen before importing ah_bootstrap.
-if sys.version_info < tuple((int(val) for val in "{{ cookiecutter.minimum_python_version }}".split('.'))):
-    sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format({{ cookiecutter.minimum_python_version }}))
-    sys.exit(1)
-
-import ah_bootstrap
-from setuptools import setup
-
-# A dirty hack to get around some early import/configurations ambiguities
-if sys.version_info[0] >= 3:
-    import builtins
-else:
-    import __builtin__ as builtins
-builtins._ASTROPY_SETUP_ = True
-
-from astropy_helpers.setup_helpers import (register_commands, get_debug_option,
-                                           get_package_info)
-from astropy_helpers.git_helpers import get_git_devstr
-from astropy_helpers.version_helpers import generate_version_py
-
+{% if cookiecutter.minimum_python_version.startswith("2") %}
 # Get some values from the setup.cfg
 try:
-    from ConfigParser import ConfigParser
-except ImportError:
     from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
+{% else %}
+from configparser import ConfigParser
+{% endif %}
 
 conf = ConfigParser()
 conf.read(['setup.cfg'])
@@ -42,6 +25,37 @@ AUTHOR = metadata.get('author', '{{ cookiecutter.author_name|escape }}')
 AUTHOR_EMAIL = metadata.get('author_email', '')
 LICENSE = metadata.get('license', 'unknown')
 URL = metadata.get('url', '{{ cookiecutter.project_url }}')
+__minimum_python_version__ = metadata.get("minimum_python_version", "{{ cookiecutter.minimum_python_version }}")
+
+# Enforce Python version check - this is the same check as in __init__.py but
+# this one has to happen before importing ah_bootstrap.
+if sys.version_info < tuple((int(val) for val in __minimum_python_version__.split('.'))):
+    sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format(__minimum_python_version__))
+    sys.exit(1)
+
+
+# Import ah_bootstrap after the python version validation
+
+import ah_bootstrap
+from setuptools import setup
+
+{% if cookiecutter.minimum_python_version.startswith("2") %}
+# A dirty hack to get around some early import/configurations ambiguities
+if sys.version_info[0] >= 3:
+    import builtins
+else:
+    import __builtin__ as builtins
+
+{% else %}
+import builtins
+{% endif %}
+builtins._ASTROPY_SETUP_ = True
+
+from astropy_helpers.setup_helpers import (register_commands, get_debug_option,
+                                           get_package_info)
+from astropy_helpers.git_helpers import get_git_devstr
+from astropy_helpers.version_helpers import generate_version_py
+
 
 # order of priority for long_description:
 #   (1) set in setup.cfg,
@@ -142,6 +156,6 @@ setup(name=PACKAGENAME,
       zip_safe=False,
       use_2to3=False,
       entry_points=entry_points,
-      python_requires='>={}'.format("{{ cookiecutter.minimum_python_version }}"),
+      python_requires='>={}'.format(__minimum_python_version__),
       **package_info
 )
