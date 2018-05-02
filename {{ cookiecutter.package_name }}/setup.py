@@ -4,17 +4,16 @@
 import glob
 import os
 import sys
-
 {% if cookiecutter.minimum_python_version.startswith("2") %}
-# Get some values from the setup.cfg
 try:
     from configparser import ConfigParser
 except ImportError:
     from ConfigParser import ConfigParser
-{% else %}
+{%- else %}
 from configparser import ConfigParser
-{% endif %}
+{%- endif %}
 
+# Get some values from the setup.cfg
 conf = ConfigParser()
 conf.read(['setup.cfg'])
 metadata = dict(conf.items('metadata'))
@@ -33,22 +32,19 @@ if sys.version_info < tuple((int(val) for val in __minimum_python_version__.spli
     sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format(__minimum_python_version__))
     sys.exit(1)
 
-
 # Import ah_bootstrap after the python version validation
 
 import ah_bootstrap
 from setuptools import setup
-
 {% if cookiecutter.minimum_python_version.startswith("2") %}
 # A dirty hack to get around some early import/configurations ambiguities
 if sys.version_info[0] >= 3:
     import builtins
 else:
     import __builtin__ as builtins
-
-{% else %}
+{%- else %}
 import builtins
-{% endif %}
+{%- endif %}
 builtins._ASTROPY_SETUP_ = True
 
 from astropy_helpers.setup_helpers import (register_commands, get_debug_option,
