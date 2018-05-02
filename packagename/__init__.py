@@ -10,11 +10,13 @@ from ._astropy_init import *
 # This is the same check as the one at the top of setup.py
 import sys
 
+__minimum_python_version__ = "3.6"
+
 class UnsupportedPythonError(Exception):
     pass
 
-if sys.version_info < tuple((int(val) for val in "2.7".split('.'))):
-    raise UnsupportedPythonError("packagename does not support Python < {}".format(2.7))
+if sys.version_info < tuple((int(val) for val in __minimum_python_version__.split('.'))):
+    raise UnsupportedPythonError("packagename does not support Python < {}".format(__minimum_python_version__))
 
 if not _ASTROPY_SETUP_:
     # For egg_info test builds to pass, put package imports here.
