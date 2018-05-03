@@ -16,7 +16,7 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     git config --global user.name "Travis CI"
     git config --global user.email "travis@travis.ci"
     git remote update
-    git checkout rendered
+    git checkout master
     rsync -avz --delete --exclude .git/ ../packagename/ ./
     git add -A
 
@@ -33,5 +33,5 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     git add astropy_helpers ah_bootstrap.py ez_setup.py
 
     git commit -m "Update rendered version to ""$TRAVIS_COMMIT"
-    git push origin rendered
+    git push origin master
 fi
