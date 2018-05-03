@@ -11,4 +11,8 @@ This is a rendered version of the cookiecutter Astropy package template, which y
 License
 -------
 
-This project is Copyright (c) Astropy Developers and licensed under the terms of the Other license. See the licenses folder for more information.
+This project is Copyright (c) Astropy Developers and licensed under
+the terms of the Other license. This package is based upon
+the [Astropy package template](https://github.com/astropy/package-template)
+which is licensed under the BSD 3-clause licence. See the licenses folder for
+more information.
