@@ -69,7 +69,7 @@ env:
         {%- elif  cookiecutter.minimum_python_version == "3.5" %}
         - PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
         - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
-        {%- elif  cookiecutter.minimum_python_version == "3.5" %}
+        {%- elif  cookiecutter.minimum_python_version == "3.6" %}
         - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
         {%- endif %}
 
