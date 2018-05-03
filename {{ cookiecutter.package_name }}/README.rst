@@ -5,7 +5,7 @@
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
-{{ cookiecutter.long_description }}
+{{ cookiecutter.long_description|wordwrap(break_long_words=False) }}
 
 
 License
