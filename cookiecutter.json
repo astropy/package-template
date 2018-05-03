@@ -16,7 +16,7 @@
     "use_travis_ci": "y",
     "use_appveyor_ci": "y",
     "use_read_the_docs": "y",
-    "sphinx_theme": "astropy-boostrap",
+    "sphinx_theme": "astropy-bootstrap",
     "initialize_git_repo": "y",
     "_parent_project": "astropy",
     "_install_requires": "astropy",
