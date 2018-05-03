@@ -40,7 +40,7 @@ template you want to use.
 
 To start a package with the package template run::
 
-  cookiecutter -c cookiecutter gh:astropy/package-template
+  cookiecutter gh:astropy/package-template
 
 This will prompt you with a series of questions about your project. See
 the :ref:`options` page for more details on the various options.
