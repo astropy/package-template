@@ -62,10 +62,17 @@ env:
 
     matrix:
         # Make sure that egg_info works without dependencies
+        {%- if cookiecutter.minimum_python_version == "2.7" %}
         - PYTHON_VERSION=2.7 SETUP_CMD='egg_info'
         - PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
+        - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+        {%- elif  cookiecutter.minimum_python_version == "3.5" %}
         - PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
         - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+        {%- elif  cookiecutter.minimum_python_version == "3.5" %}
+        - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+        {%- endif %}
+
 
 matrix:
 
@@ -90,8 +97,10 @@ matrix:
         - os: linux
           env: ASTROPY_VERSION=development
                EVENT_TYPE='pull_request push cron'
+        {%- if cookiecutter.minimum_python_version == "2.7" %}
         - os: linux
           env: PYTHON_VERSION=2.7 ASTROPY_VERSION=lts
+        {%- endif %}
         - os: linux
           env: ASTROPY_VERSION=lts
 
