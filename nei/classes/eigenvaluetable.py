@@ -19,8 +19,12 @@ from numpy import linalg as LA
 from scipy.io import FortranFile
 import astropy.units as u
 from .. import __path__
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
-class EigenData:
+class EigenData2:
     """A class to contain eigenvalue and eigenvector information on the
     ionization and recombination rates for an element."""
 
@@ -37,17 +41,18 @@ class EigenData:
         # 1. Read ionization and recombination rates
         #
         data_dir = __path__[0] + '/data/ionizrecombrates/chianti_8.07/'
-        filename = data_dir + 'ionizationrate.dat'
-        rates = FortranFile(filename, 'r')
-        
+        filename = data_dir + 'ionrecomb_rate.pkl'
+        rates = pickle.load( open( filename, "r" ) )
+
         ntemp = rates.read_ints(np.int32)
         atomic_numb = 8
         nstates = atomic_numb + 1
-        
-        self._temperature_grid = rates.read_reals(np.float64)
-        c_ori = rates.read_reals(np.float64).reshape((30, 30, ntemp))
-        r_ori = rates.read_reals(np.float64).reshape((30, 30, ntemp))
-        
+
+        self._temperature_grid = rates['Tearr']
+        ntemp = len(self._temperature_grid)
+        c_ori = rates['c_out']
+        r_ori = rates['r_out']
+
         #
         # Ionization and recombination rate for the current element
         #
@@ -69,24 +74,24 @@ class EigenData:
         #
         # Compute eigenvalues and eigenvectors
         #
-        self._ionization_rate = np.ndarray(shape=(ntemp, nstates), 
+        self._ionization_rate = np.ndarray(shape=(ntemp, nstates),
                                            dtype=np.float64)
 
-        self._recombination_rate = np.ndarray(shape=(ntemp, nstates), 
+        self._recombination_rate = np.ndarray(shape=(ntemp, nstates),
                                               dtype=np.float64)
-        
-        self._equilibrium_states = np.ndarray(shape=(ntemp, nstates), 
+
+        self._equilibrium_states = np.ndarray(shape=(ntemp, nstates),
                                               dtype=np.float64)
-        
-        self._eigenvalues = np.ndarray(shape=(ntemp, nstates), 
+
+        self._eigenvalues = np.ndarray(shape=(ntemp, nstates),
                                        dtype=np.float64)
-        
-        self._eigenvectors = np.ndarray(shape=(ntemp, nstates, nstates), 
+
+        self._eigenvectors = np.ndarray(shape=(ntemp, nstates, nstates),
                                         dtype=np.float64)
-        
-        self._eigenvectors_inverse = np.ndarray(shape=(ntemp, nstates, nstates), 
+
+        self._eigenvectors_inverse = np.ndarray(shape=(ntemp, nstates, nstates),
                                                 dtype=np.float64)
-        
+
         #
         # Save ionization and recombination rates
         #
@@ -107,7 +112,7 @@ class EigenData:
             # Ionization and recombination rate at Te(ite)
             carr = c_rate[:, ite]
             rarr = r_rate[:, ite]
-            
+
             # Equilibirum
             eqi = self._function_eqi(carr, rarr, self._atomic_numb)
 
@@ -141,7 +146,7 @@ class EigenData:
             #print('----------------------------------------------------------')
             #print(f'Temperature = ', temperature[ite])
             #print('(a) Check line by line:')
-            
+
             #for ion in range(nstates):
                 #u = np.copy(v[:, ion])
                 #lam = np.copy(la[ion])
@@ -155,7 +160,7 @@ class EigenData:
             # Save eigenvalues and eigenvectors into arrays
             for j in range(nstates):
                 self._eigenvalues[ite, j] = la[j]
-                self.equilibrium_state[ite, j] = eqi[j]
+                self._equilibrium_state[ite, j] = eqi[j]
                 for i in range(nstates):
                     self._eigenvectors[ite, i, j] = v[i, j]
                     self._eigenvectors_inverse[ite, i, j] = v_inverse[i, j]
@@ -237,7 +242,7 @@ class EigenData:
         f = np.zeros(nstates + 1)
         c = np.zeros(nstates + 1)
         r = np.zeros(nstates + 1)
-        
+
         # The start index is 1.
         for i in range(nstates):
             c[i+1] = ioniz_rate[i]
@@ -255,7 +260,7 @@ class EigenData:
             f[2] = c[1]*f[1]/r[2]
             conce[0:1] = f[1:2]
             return conce
-   
+
         #
         # For other elements:
         #
@@ -272,7 +277,7 @@ class EigenData:
         # f(i+1) = -(c(i-1)*f(i-1) - (c(i)+r(i)*f(i)))/r(i+1)
         for k in range(2,natom):
             f[k+1] = (-c[k-1]*f[k-1] + (c[k]+r[k])*f[k])/r[k+1]
-        
+
         # f(natom+1) = c(natom)*f(natom)/r(natom+1)
         f[natom+1] = c[natom]*f[natom]/r[natom+1]
         #
