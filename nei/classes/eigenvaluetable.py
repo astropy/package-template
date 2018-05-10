@@ -19,10 +19,7 @@ from numpy import linalg as LA
 from scipy.io import FortranFile
 import astropy.units as u
 from .. import __path__
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import h5py
 
 class EigenData2:
     """A class to contain eigenvalue and eigenvector information on the
@@ -41,17 +38,17 @@ class EigenData2:
         # 1. Read ionization and recombination rates
         #
         data_dir = __path__[0] + '/data/ionizrecombrates/chianti_8.07/'
-        filename = data_dir + 'ionrecomb_rate.pkl'
-        rates = pickle.load( open( filename, "r" ) )
+        filename = data_dir + 'ionrecomb_rate.h5'
+        f = h5py.File(filename, 'r')
 
-        ntemp = rates.read_ints(np.int32)
         atomic_numb = 8
         nstates = atomic_numb + 1
 
-        self._temperature_grid = rates['Tearr']
+        self._temperature_grid = f['te_grid'][:]
         ntemp = len(self._temperature_grid)
-        c_ori = rates['c_out']
-        r_ori = rates['r_out']
+        c_ori = f['ioniz_rate'][:]
+        r_ori = f['recomb_rate'][:]
+        f.close()
 
         #
         # Ionization and recombination rate for the current element
