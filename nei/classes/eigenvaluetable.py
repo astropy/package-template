@@ -305,5 +305,5 @@ class EigenData2:
         # f(natom+1) = c(natom)*f(natom)/r(natom+1)
         f[natom+1] = c[natom]*f[natom]/r[natom+1]
         #
-        conce[0:nstates-1] = f[1:nstates]
+        conce[0:nstates] = f[1:nstates+1]
         return conce
