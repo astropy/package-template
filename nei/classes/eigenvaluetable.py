@@ -159,19 +159,12 @@ class EigenData2:
             la = la[idx]
             v = v[:, idx]
 
-            #print('----------------------------------------------------------')
-            #print(f'Temperature = ', temperature[ite])
-            #print('(a) Check line by line:')
-
-            #for ion in range(nstates):
-                #u = np.copy(v[:, ion])
-                #lam = np.copy(la[ion])
-                #print(f'eig=', lam)
-                #print(f'u=', u)
-                #print(f'Au-lamu:', np.dot(A, u)-lam*u)
-
             # Compute inverse of eigenvectors
             v_inverse = LA.inv(v)
+
+            # transpose the order to as same as the Fortran Version
+            v = v.transpose()
+            v_inverse = v_inverse.transpose()
 
             # Save eigenvalues and eigenvectors into arrays
             for j in range(nstates):
