@@ -1,21 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Name
-    Rate_eigenvalue_180402
-Purpose:
-    Get ionization rate and recombination rate from ChiantiPy,
-    and calculate eigenvalues using scipy.
-Author:
-    Chengcai
-Update:
-    Created on April 2 10:55:12 2018
-    @author: chshen
-    2018-04-04
-    rerange outputs.
-    2018-05-10
-    read hdf5 files: ionizrecombrates.h5.
-"""
+"""The EigenData2 class."""
+
 import warnings
 import numpy as np
 from numpy import linalg as LA
@@ -26,12 +12,35 @@ from .. import __path__
 import h5py
 
 class EigenData2:
-    """A class to contain eigenvalue and eigenvector information on the
-    ionization and recombination rates for an element.
-    Input arguments:
-        (1) element = 'H': Input the element symbol. The defaut value
-    is for Hydrogen.
-        (2) temperature = None: Input temperature in unit of K.
+    """
+    A class to obtain eigenvalue tables used in NEI calculations.
+
+    Parameters
+    ----------
+    element : `str` or `int`
+        A string representing a element symbol. The defaut value
+        is for Hydrogen.
+
+    temperature: `float`
+        The temperary to get ionization and recombination rates.
+        In unit of K.
+
+    Raises:
+    ----------
+
+    Examples:
+    ----------
+    To get the table for element 'Helium' at Te=5.0e5K:
+    >>>table=nei.EigenData2(element=2, temperature=5.0e+5)
+
+    Output eigenvals:
+    >>>table.eigenvalues
+    array([ -1.12343827e-08,  -9.00005970e-10,   8.58945565e-30])
+
+    Output equilibrium states:
+    >>>table.equilibrium_state
+    array([  9.57162006e-09,   1.26564673e-04,   9.99873426e-01])
+
     """
 
     def __init__(self, element='H', temperature=None):
