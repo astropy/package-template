@@ -19,10 +19,12 @@ tests = {
 
 }
 
+test_names = tests.keys()
+
 
 class TestNEI:
 
-    @pytest.mark.parametrize('test_name', tests.keys())
+    @pytest.mark.parametrize('test_name', test_names)
     def test_instantiate_NEI(self, test_name):
         try:
             instance = NEI(**tests[test_name])
@@ -34,3 +36,10 @@ class TestNEI:
         assert isinstance(instance.T_e_input, u.Quantity)
         assert isinstance(instance.n_H, u.Quantity)
         assert isinstance(instance.time_input, u.Quantity)
+
+        instance._initialize_simulation()
+
+#    @pytest.mark.parametrize('test_name', tests_names)
+#    def test_initialize_simulation(self, test_name):
+#        try:
+#            self.instan

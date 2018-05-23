@@ -311,27 +311,31 @@ class NEI:
         ):
         raise NotImplementedError
 
+    @property
+    def results(self):
+        try:
+            return self._results
+        except Exception:
+            raise AttributeError("The simulation has not yet been performed.")
+
+    @property
+    def results(self):
+        try:
+            return self._final
+        except Exception:
+            raise AttributeError("The simulation has not yet been performed.")
+
     def _initialize_simulation(self):
         self._results = {}
         for element in self.elements:
-            nstates = atomic_number(element) + 1
-            self._results[element] = np.array(nstates, self.max_steps)
+            nstates = pl.atomic.atomic_number(element) + 1
+            self._results[element] = np.ndarray([nstates, self.max_steps])
             self._results[element][0:nstates, 0] = self.initial.ionic_fractions[element]
-
 
     def simulate(self):
         """Perform a non-equilibrium ionization simulation."""
 
         self._initialize_simulation()
-
-#        try:
-#            self.time_advance()
-#        except Exception:
-#            raise
-#        else:
-#            ...
-#        finally:
-#        ...
 
     def save(self, filename="nei.h5"):
         ...
