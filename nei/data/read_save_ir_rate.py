@@ -15,9 +15,9 @@ import time as systime
 #import matplotlib.pyplot as plt
 
 # element name list: (...'cu', 'zn')
-elem_list = ['h','he','li','be','b','c','n','o','f','ne', \
-      'na','mg','al','si','p','s','cl','ar', \
-      'k','ca','sc','ti','v','cr','mn','fe','co','ni']
+elem_list = ['h', 'he', 'li', 'be', 'b', 'c', 'n', 'o', 'f', 'ne',
+             'na', 'mg', 'al', 'si', 'p', 's', 'cl', 'ar',
+             'k', 'ca', 'sc', 'ti', 'v', 'cr', 'mn', 'fe', 'co', 'ni']
 
 # Define temperature list
 te_log_s = 4.0
