@@ -24,20 +24,36 @@ test_names = tests.keys()
 
 class TestNEI:
 
+    @classmethod
+    def setup_class(cls):
+        cls.instances = {}
+
     @pytest.mark.parametrize('test_name', test_names)
-    def test_instantiate_NEI(self, test_name):
+    def test_instantiate(self, test_name):
         try:
             instance = NEI(**tests[test_name])
         except Exception:
             raise Exception(f"Problem with test {test_name}")
 
+        self.instances[test_name] = instance
+
+    @pytest.mark.parametrize('test_name', test_names)
+    def test_initial(self, test_name):
+        instance = self.instances[test_name]
         assert isinstance(instance.initial, IonizationStates)
         assert isinstance(instance.abundances, dict)
         assert isinstance(instance.T_e_input, u.Quantity)
         assert isinstance(instance.n_H, u.Quantity)
         assert isinstance(instance.time_input, u.Quantity)
 
-        instance._initialize_simulation()
+    @pytest.mark.parametrize('test_name', test_names)
+    def test_initialize_simulation(self, test_name):
+        try:
+            self.instances[test_name]._initialize_simulation()
+        except Exception as exc:
+            raise Exception(f"Unable to initialize simulation for test {test_name}")
+
+
 
 #    @pytest.mark.parametrize('test_name', tests_names)
 #    def test_initialize_simulation(self, test_name):
