@@ -109,7 +109,7 @@ release = package.__version__
 {% if cookiecutter.sphinx_theme == "astropy-bootstrap" %}
 html_theme_options = {
     'logotext1': '{{ cookiecutter.package_name }}',  # white,  semi-bold
-    'logotext2': 'lookinconfdotpy',  # orange, light
+    'logotext2': '',  # orange, light
     'logotext3': ':docs'   # white,  light
     }
 {% else %}
