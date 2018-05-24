@@ -5,6 +5,24 @@ import astropy.units as u
 import plasmapy as pl
 import collections
 from scipy import interpolate
+from .eigenvaluetable import EigenData2
+
+class Results:
+    """Contains results from a non-equilibrium ionization simulation."""
+    def __init__(self, initial_states, max_steps=1000):
+
+        self.times = np.ndarray((max_steps)) * u.s
+        self.T_e = np.ndarray((max_steps)) * u.K
+        self.n_e = np.ndarray((max_steps)) * u.m ** -3
+
+        self.ionic_fractions = {}
+        self.number_densities = {}
+        for element in initial_states.elements:
+            nstates = pl.atomic.atomic_number(element) + 1
+            self.ionic_fractions[element] = np.full((nstates, max_steps), np.nan)
+            self.number_densities[element] = np.full((nstates, max_steps), np.nan) * u.m ** -3
+
+        # TODO: Add initial ionic fractions and number densities
 
 class NEI:
     r"""
@@ -284,6 +302,14 @@ class NEI:
             raise TypeError
 
     @property
+    def EigenDataDict(self):
+        return self._EigenDataDict
+
+    @EigenDataDict.setter
+    def EigenDataDict(self):
+        self._EigenDataDict = {element: EigenData2(element) for element in self.elements}
+
+    @property
     def initial(self) -> pl.atomic.IonizationStates:
         """
         The ~plasmapy.atomic.IonizationStates instance representing the
@@ -302,7 +328,17 @@ class NEI:
             raise TypeError("Expecting an IonizationStates instance.")
 
     def equilibrate(self, T_e=None):
-        raise NotImplementedError
+        if T_e is None:
+            T_e = self.T_e_input
+
+        try:
+            T_e = T_e.to(u.K)
+        except Exception:
+            raise ValueError
+
+        self._initial.ionic_fractions = {
+            element: self.EigenDataDict[element].equilibrium_state(T_e)
+        }
 
     def time_advance(
             self,
@@ -319,18 +355,21 @@ class NEI:
             raise AttributeError("The simulation has not yet been performed.")
 
     @property
-    def results(self):
+    def final(self):
         try:
             return self._final
         except Exception:
             raise AttributeError("The simulation has not yet been performed.")
 
     def _initialize_simulation(self):
-        self._results = {}
-        for element in self.elements:
-            nstates = pl.atomic.atomic_number(element) + 1
-            self._results[element] = np.ndarray([nstates, self.max_steps])
-            self._results[element][0:nstates, 0] = self.initial.ionic_fractions[element]
+
+        self._results = Results(
+            initial_states=self.initial,
+            max_steps=self.max_steps,
+        )
+
+    def _finalize_simulation(self):
+        ...
 
     def simulate(self):
         """Perform a non-equilibrium ionization simulation."""
