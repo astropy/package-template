@@ -31,15 +31,18 @@ class EigenData2:
     Examples:
     ----------
     To get the table for element 'Helium' at Te=5.0e5K:
-    >>>table=nei.EigenData2(element=2, temperature=5.0e+5)
+
+    >>> table=EigenData2(element=2, temperature=5.0e5)
 
     Output eigenvals:
-    >>>table.eigenvalues
-    array([ -1.12343827e-08,  -9.00005970e-10,   8.58945565e-30])
+
+    >>> table.eigenvalues
+    array([-1.12343827e-08, -9.00005970e-10, 8.58945565e-30])
 
     Output equilibrium states:
-    >>>table.equilibrium_state
-    array([  9.57162006e-09,   1.26564673e-04,   9.99873426e-01])
+
+    >>> table.equilibrium_state
+    array([9.57162006e-09, 1.26564673e-04, 9.99873426e-01])
 
     """
 
@@ -252,10 +255,13 @@ class EigenData2:
             raise AttributeError("The temperature has not been set.")
 
     @property
-    def equilibrium_state(self):
+    def equilibrium_state(self, T_e=None):
         """Returns the equilibrium charge state distribution for the
         temperature specified in the class."""
-        if self.temperature:
+        if T_e is not None:
+            te_index = self._get_temperature_index(T_e)
+            return self._equilibrium_states[te_index]
+        elif self.temperature is not None:
             return self._equilibrium_states[self._te_index, :]
         else:
             raise AttributeError("The temperature has not been set.")
