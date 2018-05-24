@@ -5,3 +5,4 @@ astropy (>= 2.1)
 matplotlib (>= 2.0)
 flake8
 coveralls
+pytest

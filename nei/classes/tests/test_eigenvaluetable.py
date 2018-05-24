@@ -16,12 +16,12 @@ natom = 8
 #------------------------------------------------------------------------------
 # function: Time-Advance solover
 #------------------------------------------------------------------------------
-def func_solver_eigenval(natom, te, ne, dt, f0):
+def func_solver_eigenval(natom, te, ne, dt, f0, table):
     """
         The testing function for performing time_advance calculations.
     """
-    table = nei.EigenData2(element=natom,
-                           temperature=te)
+
+    table.temperature=te
     evals = table.eigenvalues # find eigenvalues on the chosen Te node
     evect = table.eigenvectors
     evect_invers = table.eigenvector_inverses
@@ -64,11 +64,11 @@ def test_equlibrium_state_vs_chiantipy(natom=8):
     eqi_ch = ch.ioneq(natom)
     eqi_ch.calculate(temperatures)
     conce = eqi_ch.Ioneq
-    for i in range(2):
 
+    table_sta = nei.EigenData2(element=natom)
+    for i in range(2):
         ch_conce = conce[:, i]
-        table_sta = nei.EigenData2(element=natom,
-                                       temperature=temperatures[i])
+        table_sta.temperature=temperatures[i]
         table_conce = table_sta.equilibrium_state
         assert ch_conce.all() == table_conce.all()
 
@@ -92,8 +92,9 @@ def test_reachequlibrium_state(natom=8):
 
     # Start from any ionizaiont states, e.g., Te = 4.0d4 K,
     time = 0
-    table_sta = nei.EigenData2(element=natom, temperature=4.0e+4)
-    f0 = table_sta.equilibrium_state
+    table = nei.EigenData2(element=natom)
+    table.temperature = 4.0e4
+    f0 = table.equilibrium_state
 
     print('START test_reachequlibrium_state:')
     print(f'time_sta = ', time)
@@ -102,14 +103,14 @@ def test_reachequlibrium_state(natom=8):
 
     # After time + dt:
     dt = 1.0e+7
-    ft = func_solver_eigenval(natom, te0, ne0, time+dt, f0)
+    ft = func_solver_eigenval(natom, te0, ne0, time+dt, f0, table)
 
     print(f'time_end = ', time+dt)
     print(f'NEI:', ft)
     print(f'Sum(ft) = ', np.sum(ft))
 
-    table_end = nei.EigenData2(element=natom, temperature=te0)
-    print(f'EI :', table_end.equilibrium_state)
+    table.temperature = te0
+    print(f'EI :', table.equilibrium_state)
     print("End Test.\n")
 
 def test_reachequlibrium_state_multisteps(natom=8):
@@ -130,8 +131,9 @@ def test_reachequlibrium_state_multisteps(natom=8):
 
     # Start from any ionizaiont states, e.g., Te = 4.0d4 K,
     time = 0
-    table_sta = nei.EigenData2(element=natom, temperature=4.0e+4)
-    f0 = table_sta.equilibrium_state
+    table = nei.EigenData2(element=natom)
+    table.temperature=4.0e+4
+    f0 = table.equilibrium_state
 
     print('START test_reachequlibrium_state_multisteps:')
     print(f'time_sta = ', time)
@@ -143,7 +145,7 @@ def test_reachequlibrium_state_multisteps(natom=8):
 
     # Enter the time loop:
     for it in range(100):
-        ft = func_solver_eigenval(natom, te0, ne0, time+dt, f0)
+        ft = func_solver_eigenval(natom, te0, ne0, time+dt, f0, table)
         f0 = np.copy(ft)
         time = time+dt
 
@@ -151,8 +153,8 @@ def test_reachequlibrium_state_multisteps(natom=8):
     print(f'NEI:', ft)
     print(f'Sum(ft) = ', np.sum(ft))
 
-    table_end = nei.EigenData2(element=natom, temperature=te0)
-    print(f"EI :", table_end.equilibrium_state)
+    table.temperature=te0
+    print(f"EI :", table.equilibrium_state)
     print("End Test.\n")
 
 def test_element_range():
@@ -165,14 +167,3 @@ def test_element_range():
         element_symbol = atomic.atomic_symbol(int(i))
         eigen = nei.EigenData2(element=element_symbol)
         print(f'Element: ', element_symbol)
-
-def test_temperature_range():
-    """
-    Function test_temperature_range:
-        This function is used to test Te inputs.
-    """
-    logte_array = np.linspace(2.0, 8.0, 50, endpoint=True)
-    for i in logte_array:
-        te = 10.0**(i)
-        eigen = nei.EigenData2(temperature=te)
-        print(f'Te: ', te)

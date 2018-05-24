@@ -21,18 +21,20 @@ class EigenData2:
         A string representing a element symbol. The defaut value
         is for Hydrogen.
 
-    temperature: `float`
-        The temperary to get ionization and recombination rates.
-        In unit of K.
-
     Raises:
     ----------
+
+    Properties:
+        temperature: `float`
+            The temperary is set to get the relative rates and eigen values.
+            In unit of K.
 
     Examples:
     ----------
     To get the table for element 'Helium' at Te=5.0e5K:
 
-    >>> table=EigenData2(element=2, temperature=5.0e5)
+    >>>table=nei.EigenData2(element=2)
+    >>>table.temperature=5.0e5
 
     Output eigenvals:
 
@@ -46,11 +48,11 @@ class EigenData2:
 
     """
 
-    def __init__(self, element='H', temperature=None):
+    def __init__(self, element='H'):
         """Read in the """
 
         self._element = element
-        self._temperature = temperature
+        self._temperature = None
 
         #
         # 1. Read ionization and recombination rates
@@ -85,10 +87,6 @@ class EigenData2:
         self._ntemp = ntemp
         self._atomic_numb = atomic_numb
         self._nstates = nstates
-
-        # Get the current temperature index in the list of temperature gird
-        if self._temperature:
-            self._te_index = self._get_temperature_index(temperature)
 
         #
         # Compute eigenvalues and eigenvectors
@@ -177,6 +175,7 @@ class EigenData2:
                     self._eigenvectors[ite, i, j] = v[i, j]
                     self._eigenvector_inverses[ite, i, j] = v_inverse[i, j]
 
+
     #---------------------------------------------------------------------------
     #   The following Functions is used to obtain the eigen values and relative
     #   def properties.
@@ -220,7 +219,7 @@ class EigenData2:
         to be used by this class"""
         # TODO: Add checks for the temperature
         self._temperature = T_e
-        self._index = self._get_temperature_index(T_e)
+        self._te_index = self._get_temperature_index(T_e)
 
     @property
     def temperature_grid(self):
@@ -262,6 +261,17 @@ class EigenData2:
             te_index = self._get_temperature_index(T_e)
             return self._equilibrium_states[te_index]
         elif self.temperature is not None:
+            return self._equilibrium_states[self._te_index, :]
+        else:
+            raise AttributeError("The temperature has not been set.")
+
+    def eqi(self, T_e=None):
+        """Returns the equilibrium charge state distribution for the
+        temperature specified in the class."""
+        if T_e:
+            T_e_index = self._get_temperature_index(T_e)
+            return self._equilibrium_states[T_e_index, :]
+        if self.temperature:
             return self._equilibrium_states[self._te_index, :]
         else:
             raise AttributeError("The temperature has not been set.")
