@@ -345,6 +345,13 @@ class NEI:
             dt=None,
             T_e=None,
         ):
+
+        # Calculate the temperature index
+#
+#        index = ...
+#        for element in self.elements:
+#            self.EigenDataDict[element][index]
+
         raise NotImplementedError
 
     @property
