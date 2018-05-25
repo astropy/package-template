@@ -46,7 +46,7 @@ Which will ask you a series of questions to configure your package.
 Manually
 ^^^^^^^^
 
-The ``rendered`` git branch of this repository contains a version of the
+The ``master`` git branch of this repository contains a version of the
 template populated with placeholders.  This allows the package template to be
 used directly without using cookiecutter, although a number of
 `manual steps  <http://docs.astropy.org/projects/package-template/en/latest/>`_
