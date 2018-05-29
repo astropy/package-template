@@ -130,7 +130,8 @@ class NEI:
 
             for element in self.initial.elements:
                 self.EigenDataDict[element].temperature = T_e_init.value
-                self.initial.ionic_fractions[element] = self.EigenDataDict[element].eqi(T_e_init.value)
+                self.initial.ionic_fractions[element] = \
+                    self.EigenDataDict[element].equilibrium_state(T_e_init.value)
 
         except Exception:
             raise ValueError("Unable to create initial conditions.")
@@ -364,6 +365,43 @@ class NEI:
 #            self.EigenDataDict[element][index]
 
         raise NotImplementedError
+
+    # ------------------------------------------------------------------------------
+    # function: Time-Advance solover
+    # ------------------------------------------------------------------------------
+    #def func_solver_eigenval(natom, te, ne, dt, f0, table):
+    #    """
+    #        The testing function for performing time_advance calculations.
+    #    """
+
+    # !! Change the following to use table.eigen*(T_e=...)
+
+    #    table.temperature = te
+    #    evals = table.eigenvalues  # find eigenvalues on the chosen Te node
+    #    evect = table.eigenvectors
+    #    evect_invers = table.eigenvector_inverses
+
+    #    # define the temperary diagonal matrix
+    #    diagona_evals = np.zeros((natom + 1, natom + 1))
+    #    for ii in range(0, natom + 1):
+    #        diagona_evals[ii, ii] = np.exp(evals[ii] * dt * ne)
+
+    #    # matirx operation
+    #    matrix_1 = np.dot(diagona_evals, evect)
+    #    matrix_2 = np.dot(evect_invers, matrix_1)
+
+    #    # get ions fraction at (time+dt)
+    #    ft = np.dot(f0, matrix_2)
+
+    #    # re-check the smallest value
+    #    minconce = 1.0e-15
+    #    for ii in np.arange(0, natom + 1, dtype=np.int):
+    #        if (abs(ft[ii]) <= minconce):
+    #            ft[ii] = 0.0
+    #    return ft
+
+
+
 
     @property
     def results(self):
