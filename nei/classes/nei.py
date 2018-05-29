@@ -22,6 +22,11 @@ class Results:
             self.ionic_fractions[element] = np.full((nstates, max_steps), np.nan)
             self.number_densities[element] = np.full((nstates, max_steps), np.nan) * u.m ** -3
 
+            #print(self.ionic_fractions[element])
+            print(initial_states.ionic_fractions)
+
+            self.ionic_fractions[element][:,0] == initial_states.ionic_fractions[element][:]
+
         # TODO: Add initial ionic fractions and number densities
 
 class NEI:
@@ -107,14 +112,12 @@ class NEI:
         self.scaling_factor = scaling_factor  # set this up
 
         try:
-            T_e_initial = self.electron_temperature(self.time_start)
+            T_e_init = self.electron_temperature(self.time_start)
 
         except Exception:
             raise ValueError(str(self.time_start))
 
         try:
-
-            T_e_init = self.electron_temperature(self.time_start)
 
             self.initial = pl.atomic.IonizationStates(
                 inputs=inputs,
@@ -122,6 +125,13 @@ class NEI:
                 T_e=T_e_init,
                 n_H=n_H,
             )
+
+            self._EigenDataDict = {element: EigenData2(element) for element in self.elements}
+
+            for element in self.initial.elements:
+                self.EigenDataDict[element].temperature = T_e_init.value
+                self.initial.ionic_fractions[element] = self.EigenDataDict[element].eqi(T_e_init.value)
+
         except Exception:
             raise ValueError("Unable to create initial conditions.")
 
@@ -339,6 +349,7 @@ class NEI:
         self._initial.ionic_fractions = {
             element: self.EigenDataDict[element].equilibrium_state(T_e)
         }
+        pass
 
     def time_advance(
             self,
