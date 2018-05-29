@@ -311,7 +311,7 @@ class EigenData2:
         if (natom <= 1):
             f[1] = 1.0/(1.0 + c[1]/r[2])
             f[2] = c[1]*f[1]/r[2]
-            conce[0:1] = f[1:2]
+            conce[0:2] = f[1:3]
             return conce
 
         #
