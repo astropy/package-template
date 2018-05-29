@@ -55,7 +55,28 @@ class TestNEI:
 
 
 
-#    @pytest.mark.parametrize('test_name', tests_names)
-#    def test_initialize_simulation(self, test_name):
-#        try:
-#            self.instan
+def test_nei():
+
+    try:
+        IonizationStates(['H', 'He'])
+    except Exception:
+        print('sdfasd')
+
+
+#    nei=NEI(['H', 'He'])
+
+    nei = NEI(
+        ['H', 'He'],
+        T_e=1e6*u.K,
+        n_H=1e9*u.cm**-3,
+        abundances={'H': 1, 'He': 0.1}
+    )
+
+    nei.simulate()
+
+    for element in nei.elements:
+        assert np.isclose(np.sum(nei.initial.ionic_fractions[element]), 1)
+        assert np.allclose(nei.abundances[element], nei.initial.abundances[element])
+
+        assert np.allclose(nei.results.ionic_fractions[element][:, 0],
+                           nei.initial.ionic_fractions[element])
