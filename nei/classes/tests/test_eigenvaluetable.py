@@ -21,10 +21,10 @@ def func_solver_eigenval(natom, te, ne, dt, f0, table):
         The testing function for performing time_advance calculations.
     """
 
-    table.temperature=te
-    evals = table.eigenvalues # find eigenvalues on the chosen Te node
-    evect = table.eigenvectors
-    evect_invers = table.eigenvector_inverses
+    common_index = table._get_temperature_index(te)
+    evals = table.eigenvalues(T_e_index=common_index) # find eigenvalues on the chosen Te node
+    evect = table.eigenvectors(T_e_index=common_index)
+    evect_invers = table.eigenvector_inverses(T_e_index=common_index)
 
     # define the temperary diagonal matrix
     diagona_evals = np.zeros((natom+1, natom+1))
@@ -68,10 +68,8 @@ def test_equlibrium_state_vs_chiantipy(natom=8):
     table_sta = nei.EigenData2(element=natom)
     for i in range(2):
         ch_conce = conce[:, i]
-        table_sta.temperature=temperatures[i]
-        table_conce = table_sta.equilibrium_state
+        table_conce = table_sta.equilibrium_state(T_e=temperatures[i])
         assert ch_conce.all() == table_conce.all()
-
     return
 
 def test_reachequlibrium_state(natom=8):
@@ -93,8 +91,7 @@ def test_reachequlibrium_state(natom=8):
     # Start from any ionizaiont states, e.g., Te = 4.0d4 K,
     time = 0
     table = nei.EigenData2(element=natom)
-    table.temperature = 4.0e4
-    f0 = table.equilibrium_state
+    f0 = table.equilibrium_state(T_e=4.0e4)
 
     print('START test_reachequlibrium_state:')
     print(f'time_sta = ', time)
@@ -109,8 +106,7 @@ def test_reachequlibrium_state(natom=8):
     print(f'NEI:', ft)
     print(f'Sum(ft) = ', np.sum(ft))
 
-    table.temperature = te0
-    print(f'EI :', table.equilibrium_state)
+    print(f'EI :', table.equilibrium_state(T_e=te0))
     print("End Test.\n")
 
 def test_reachequlibrium_state_multisteps(natom=8):
@@ -132,8 +128,7 @@ def test_reachequlibrium_state_multisteps(natom=8):
     # Start from any ionizaiont states, e.g., Te = 4.0d4 K,
     time = 0
     table = nei.EigenData2(element=natom)
-    table.temperature=4.0e+4
-    f0 = table.equilibrium_state
+    f0 = table.equilibrium_state(T_e=4.0e+4)
 
     print('START test_reachequlibrium_state_multisteps:')
     print(f'time_sta = ', time)
@@ -153,8 +148,7 @@ def test_reachequlibrium_state_multisteps(natom=8):
     print(f'NEI:', ft)
     print(f'Sum(ft) = ', np.sum(ft))
 
-    table.temperature=te0
-    print(f"EI :", table.equilibrium_state)
+    print(f"EI :", table.equilibrium_state(T_e=te0))
     print("End Test.\n")
 
 def test_element_range():
