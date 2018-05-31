@@ -7,16 +7,25 @@ import collections
 from scipy import interpolate
 from .eigenvaluetable import EigenData2
 
+
+def _get_electron_density(ionic_fractions, abundances, n_H):
+    try:
+        ...
+
+    except Exception:
+        raise ValueError("Unable to get electron density")
+
+
 class Results:
     """Contains results from a non-equilibrium ionization simulation."""
     def __init__(self, initial_states, max_steps=1000):
 
         self.times = np.ndarray((max_steps)) * u.s
-        self.T_e = np.ndarray((max_steps)) * u.K
-        self.n_e = np.ndarray((max_steps)) * u.m ** -3
+        self._T_e = np.ndarray((max_steps)) * u.K
+        self._n_e = np.ndarray((max_steps)) * u.m ** -3
 
-        self.ionic_fractions = {}
-        self.number_densities = {}
+        self._ionic_fractions = {}
+        self._number_densities = {}
         for element in initial_states.elements:
             nstates = pl.atomic.atomic_number(element) + 1
             self.ionic_fractions[element] = np.full((nstates, max_steps), np.nan)
@@ -25,13 +34,27 @@ class Results:
             #print(self.ionic_fractions[element])
             print(initial_states.ionic_fractions)
 
-            self.ionic_fractions[element][:,0] == initial_states.ionic_fractions[element][:]
+            self._ionic_fractions[element][:,0] == initial_states.ionic_fractions[element][:]
 
         # TODO: Add initial ionic fractions and number densities
 
+    @property
+    def T_e(self):
+        return self._T_e
+
+    @property
+    def n_e(self):
+        return self._n_e
+
+    @property
+    def ionic_fractions(self):
+        return self._ionic_fractions
+
+
+
 class NEI:
     r"""
-    Perform a non-equilibrium ionization simulation.
+    Perform and analyze a non-equilibrium ionization simulation.
 
     Parameters
     ----------
@@ -352,57 +375,6 @@ class NEI:
         }
         pass
 
-    def time_advance(
-            self,
-            dt=None,
-            T_e=None,
-        ):
-
-        # Calculate the temperature index
-#
-#        index = ...
-#        for element in self.elements:
-#            self.EigenDataDict[element][index]
-
-        raise NotImplementedError
-
-    # ------------------------------------------------------------------------------
-    # function: Time-Advance solover
-    # ------------------------------------------------------------------------------
-    #def func_solver_eigenval(natom, te, ne, dt, f0, table):
-    #    """
-    #        The testing function for performing time_advance calculations.
-    #    """
-
-    # !! Change the following to use table.eigen*(T_e=...)
-
-    #    table.temperature = te
-    #    evals = table.eigenvalues  # find eigenvalues on the chosen Te node
-    #    evect = table.eigenvectors
-    #    evect_invers = table.eigenvector_inverses
-
-    #    # define the temperary diagonal matrix
-    #    diagona_evals = np.zeros((natom + 1, natom + 1))
-    #    for ii in range(0, natom + 1):
-    #        diagona_evals[ii, ii] = np.exp(evals[ii] * dt * ne)
-
-    #    # matirx operation
-    #    matrix_1 = np.dot(diagona_evals, evect)
-    #    matrix_2 = np.dot(evect_invers, matrix_1)
-
-    #    # get ions fraction at (time+dt)
-    #    ft = np.dot(f0, matrix_2)
-
-    #    # re-check the smallest value
-    #    minconce = 1.0e-15
-    #    for ii in np.arange(0, natom + 1, dtype=np.int):
-    #        if (abs(ft[ii]) <= minconce):
-    #            ft[ii] = 0.0
-    #    return ft
-
-
-
-
     @property
     def results(self):
         try:
@@ -428,9 +400,92 @@ class NEI:
         ...
 
     def simulate(self):
-        """Perform a non-equilibrium ionization simulation."""
+        """
+        Perform a non-equilibrium ionization simulation.
+        """
 
-        self._initialize_simulation()
+        # Preliminaries
+
+        elements = self.elements
+        max_steps = self.max_steps
+
+        # Set up all of the dictionaries and arrays that will be used to store the results
+
+        nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in elements}
+
+        ionic_fractions = {
+            elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
+            for elem in elements}
+
+        number_densities = {
+            elem: np.full((nstates[elem], max_steps), np.nan) * u.cm ** -3
+            for elem in elements
+        }
+
+        n_e = np.full(max_steps, np.nan) * u.cm ** -3
+        T_e = np.full(max_steps, np.nan) * u.K
+        time = np.full(max_steps, np.nan) * u.s
+        time[0] = self.time_start
+
+        # Set the initial conditions
+
+        for elem in elements:
+            ionic_fractions[elem][:, 0] = self.initial.ionic_fractions[elem]
+
+        for step in range(max_steps):
+            T_e[step] = self.electron_temperature(step)
+
+        #self._results =
+
+        def time_advance(
+                self,
+                dt=None,
+                T_e=None,
+        ):
+
+
+
+            # Calculate the temperature index
+            #
+            #        index = ...
+            #        for element in self.elements:
+            #            self.EigenDataDict[element][index]
+
+            raise NotImplementedError
+
+        # ------------------------------------------------------------------------------
+        # function: Time-Advance solover
+        # ------------------------------------------------------------------------------
+        # def func_solver_eigenval(natom, te, ne, dt, f0, table):
+        #    """
+        #        The testing function for performing time_advance calculations.
+        #    """
+
+        # !! Change the following to use table.eigen*(T_e=...)
+
+        #    table.temperature = te
+        #    evals = table.eigenvalues  # find eigenvalues on the chosen Te node
+        #    evect = table.eigenvectors
+        #    evect_invers = table.eigenvector_inverses
+
+        #    # define the temperary diagonal matrix
+        #    diagona_evals = np.zeros((natom + 1, natom + 1))
+        #    for ii in range(0, natom + 1):
+        #        diagona_evals[ii, ii] = np.exp(evals[ii] * dt * ne)
+
+        #    # matirx operation
+        #    matrix_1 = np.dot(diagona_evals, evect)
+        #    matrix_2 = np.dot(evect_invers, matrix_1)
+
+        #    # get ions fraction at (time+dt)
+        #    ft = np.dot(f0, matrix_2)
+
+        #    # re-check the smallest value
+        #    minconce = 1.0e-15
+        #    for ii in np.arange(0, natom + 1, dtype=np.int):
+        #        if (abs(ft[ii]) <= minconce):
+        #            ft[ii] = 0.0
+        #    return ft
 
     def save(self, filename="nei.h5"):
         ...
