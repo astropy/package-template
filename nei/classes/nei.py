@@ -6,61 +6,22 @@ import plasmapy as pl
 import collections
 from scipy import interpolate
 from .eigenvaluetable import EigenData2
+from .ionization_states import IonizationStates
 
 
 class NEIError(Exception):
     pass
 
 
-def _get_electron_density(ionic_fractions, abundances, n_H):
-    try:
-        ...
-
-    except Exception:
-        raise ValueError("Unable to get electron density")
-
 
 class Results:
-    """Contains results from a non-equilibrium ionization simulation."""
+    """
+    Store results from a non-equilibrium ionization simulation.
+    """
+    def __init__(self, initial, n_H_init, T_e_init, max_steps):
 
-    def __init__(self, initial_states, max_steps=1000):
-
-        self.times = np.ndarray((max_steps)) * u.s
-        self.T_e = np.ndarray((max_steps)) * u.K
-        self.n_e = np.ndarray((max_steps)) * u.m ** -3
-
-        self._ionic_fractions = {}
-        self._number_densities = {}
-        for element in initial_states.elements:
-            nstates = pl.atomic.atomic_number(element) + 1
-            self.ionic_fractions[element] = np.full((nstates, max_steps), np.nan)
-            self.number_densities[element] = np.full((nstates, max_steps), np.nan) * u.m ** -3
-
-            #print(self.ionic_fractions[element])
-            print(initial_states.ionic_fractions)
-
-            self._ionic_fractions[element][:,0] == initial_states.ionic_fractions[element][:]
-
-        # TODO: Add initial ionic fractions and number densities
-
-    @property
-    def T_e(self):
-        return self._T_e
-
-    @property
-    def n_e(self):
-        return self._n_e
-
-    @property
-    def ionic_fractions(self):
-        return self._ionic_fractions
-
-class Results2:
-
-    def __init__(self, initial, max_steps=1000):
-
-        elements = initial.elements
-        abundances = initial.abundances
+        self._elements = initial.elements
+        self._abundances = initial.abundances
 
         self._ionic_fractions = {
             elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
@@ -69,7 +30,13 @@ class Results2:
 
         self._n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in elements}
 
+    @property
+    def elements(self):
+        return self._elements
 
+    @property
+    def abundances(self):
+        return self._abundances
 
     @property
     def ionic_fractions(self):
@@ -83,6 +50,9 @@ class Results2:
     def n_e(self):
         return self._n_e
 
+    @property
+    def time(self):
+        return self._time
 
 
 class NEI:
@@ -167,7 +137,7 @@ class NEI:
             T_e_init = self.electron_temperature(self.time_start)
             n_H_init = self.hydrogen_number_density(self.time_start)
 
-            self.initial = pl.atomic.IonizationStates(
+            self.initial = IonizationStates(
                 inputs=inputs,
                 abundances=abundances,
                 T_e=T_e_init,
@@ -413,7 +383,7 @@ class NEI:
         self._EigenDataDict = {element: EigenData2(element) for element in self.elements}
 
     @property
-    def initial(self) -> pl.atomic.IonizationStates:
+    def initial(self):
         """
         The ~plasmapy.atomic.IonizationStates instance representing the
         initial conditions of the simulation.
@@ -421,8 +391,8 @@ class NEI:
         return self._initial
 
     @initial.setter
-    def initial(self, initial_states: Optional[pl.atomic.IonizationStates]):
-        if isinstance(initial_states, pl.atomic.IonizationStates):
+    def initial(self, initial_states: Optional[IonizationStates]):
+        if isinstance(initial_states, IonizationStates):
             self._initial = initial_states
             self._elements = initial_states.elements
         elif initial_states is None:

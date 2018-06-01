@@ -1,5 +1,5 @@
 import astropy.units as u
-from plasmapy.atomic import IonizationStates, particle_symbol
+from ..ionization_states import IonizationStates, particle_symbol
 from ..nei import NEI
 import numpy as np
 import pytest
@@ -149,3 +149,13 @@ class TestNEI:
     # Test that ionization fractions that were calculated to be in
     # equilibrium remain in equilibrium after (1) a single long time
     # step, and (2) a bunch of smaller time steps.
+
+
+class TestResults:
+
+    @classmethod
+    def setup_class(cls):
+        cls.instances = {}
+
+    def test_instantiation(self):
+        ...
