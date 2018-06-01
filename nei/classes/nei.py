@@ -8,27 +8,117 @@ from scipy import interpolate
 from .eigenvaluetable import EigenData2
 from .ionization_states import IonizationStates
 
+# TODO: Change it so that instead of n_H, we just use a density scale.
+# This would make an element's number density equal to a number density
+# scale times the abundance.  This would be the same as n_H as long as
+# abundances['H'] == 1.
+
 
 class NEIError(Exception):
     pass
 
+#def _get_n_elem(n, abundances):
+#    """
+#    Calculate the number density for each element, including of neutrals
+#    and all ions.
+
+#    Parameters
+#    ----------
+#    n: ~astropy.units.Quantity
+#        The number density to scale the
+
+#    abundances: dict
+#        The abundances of each element relative to hydrogen
+
+#    """
+#    return {elem: n_H * relative_abundances[elem] for elem in elements}
 
 
-class Results:
+#def _get_n_e(n_elem, ionic_fractions, elements):
+#    n_e = 0.0 * u.cm ** -3
+#    for elem in elements:
+#        n_e += n_elem[elem] * ionic_fractions[elem] * np.arange(len(n_elem))
+#    return n_e
+
+
+class Simulation:
     """
     Store results from a non-equilibrium ionization simulation.
     """
-    def __init__(self, initial, n_H_init, T_e_init, max_steps):
+    def __init__(self, initial, n_H_init, T_e_init, max_steps, time_start):
 
         self._elements = initial.elements
         self._abundances = initial.abundances
+        self._max_steps = max_steps
+
+        self._nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in self.elements}
 
         self._ionic_fractions = {
-            elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
-            for elem in elements
+            elem: np.full((self.nstates[elem], max_steps), np.nan, dtype=np.float64)
+            for elem in self.elements
         }
 
-        self._n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in elements}
+        self._number_densities = {
+            elem: np.full((self.nstates[elem], max_steps), np.nan, dtype=np.float64) * u.cm ** -3
+            for elem in self.elements
+        }
+
+        self._n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in self.elements}
+        self._n_e = np.full(max_steps, np.nan) * u.cm ** -3
+        self._T_e = np.full(max_steps, np.nan) * u.K
+        self._time = np.full(max_steps, np.nan) * u.s
+
+        self._index = 0
+
+        self._assign(
+            new_time=time_start,
+            new_ionic_fractions=initial.ionic_fractions,
+            new_n = n_H_init,
+            new_T_e = T_e_init,
+        )
+
+    def _assign(self, new_time, new_ionic_fractions, new_n, new_T_e):
+
+        try:
+            self._T_e[self._index] = new_T_e
+
+            for elem in self.elements:
+                self._ionic_fractions[elem][:, self._index] = new_ionic_fractions[elem][:]
+
+            # Calculate elemental and ionic number densities
+            n_elem = {elem: new_n * self.abundances[elem] for elem in self.elements}
+            number_densities = {
+                elem: n_elem[elem] * new_ionic_fractions[elem]
+                for elem in self.elements
+            }
+
+            # Calculate the electron number density
+            n_e = 0.0 * u.cm ** -3
+            for elem in self.elements:
+                integer_charges = np.linspace(0, self.nstates[elem]-1, self.nstates[elem])
+                n_e += np.sum(number_densities[elem] * integer_charges)
+
+            # Assign densities
+            self._n_e[self._index] = n_e
+            for elem in self.elements:
+                self._n_elem[elem][self._index] = n_elem[elem]
+                self._number_densities[elem][:, self._index] = number_densities[elem]
+
+        except Exception as exc:
+            raise NEIError(
+                f"Unable to assign parameters to Simulation instance "
+                f"for index {self._index} at time = {new_time}."
+            ) from exc
+        finally:
+            self._index += 1
+
+    @property
+    def max_steps(self):
+        return self._max_steps
+
+    @property
+    def nstates(self):
+        return self._nstates
 
     @property
     def elements(self):
@@ -43,12 +133,20 @@ class Results:
         return self._ionic_fractions
 
     @property
+    def number_densities(self):
+        return self._number_densities
+
+    @property
     def n_elem(self):
         return self._n_elem
 
     @property
     def n_e(self):
         return self._n_e
+
+    @property
+    def T_e(self):
+        return self._T_e
 
     @property
     def time(self):
@@ -207,13 +305,13 @@ class NEI:
             self._time_input = None
         elif isinstance(times, u.Quantity):
             if times.isscalar:
-                raise ValueError("time_input must be an array")
+                raise ValueError("time_input must be an array.")
             try:
                 times = times.to(u.s)
             except u.UnitConversionError:
-                raise u.UnitsError("time_input must have units of seconds") from None
+                raise u.UnitsError("time_input must have units of seconds.") from None
             if not np.all(times[1:] > times[:-1]):
-                raise ValueError("time_input must monotonically increase")
+                raise ValueError("time_input must monotonically increase.")
             self._time_input = times
         else:
             raise TypeError("Invalid time_input.")
@@ -249,12 +347,7 @@ class NEI:
     @time_max.setter
     def time_max(self, time):
         if time is None:
-            self._time_max = None
-#        if time is None:
-#            if self.time_input is not None:
-#                self._time_max = self.time_input[-1]
-#            else:
-#                self._time_max = None
+            self._time_max = self.time_input[-1] if self.time_input is not None else None
         elif isinstance(time, u.Quantity):
             if not time.isscalar:
                 raise ValueError("time_max must be a scalar")
@@ -324,7 +417,6 @@ class NEI:
         except (AttributeError, u.UnitsError):
             raise NEIError("Invalid time in electron_temperature.")
         return self._electron_temperature(time).to(u.K)
-
 
     @property
     def n_H_input(self) -> u.Quantity:
@@ -400,19 +492,19 @@ class NEI:
         else:
             raise TypeError("Expecting an IonizationStates instance.")
 
-    def equilibrate(self, T_e=None):
-        if T_e is None:
-            T_e = self.T_e_input
+#    def equilibrate(self, T_e=None):
+#        if T_e is None:
+#            T_e = self.T_e_input
 
-        try:
-            T_e = T_e.to(u.K)
-        except Exception:
-            raise ValueError
+#        try:
+#            T_e = T_e.to(u.K)
+#        except Exception:
+#            raise ValueError
 
-        self._initial.ionic_fractions = {
-            element: self.EigenDataDict[element].equilibrium_state(T_e)
-        }
-        pass
+#        self._initial.ionic_fractions = {
+#            element: self.EigenDataDict[element].equilibrium_state(T_e)
+#        }
+#        pass
 
     @property
     def results(self):
@@ -423,7 +515,7 @@ class NEI:
 
     @results.setter
     def results(self, value):
-        if isinstance(value, Results):
+        if isinstance(value, Simulation):
             self._results = value
         else:
             raise TypeError
@@ -437,12 +529,15 @@ class NEI:
 
     def _initialize_simulation(self):
 
-        self._results = Results(
-            initial_states=self.initial,
+        self._results = Simulation(
+            initial=self.initial,
+            n_H_init=self.hydrogen_number_density(self.time_start),
+            T_e_init=self.electron_temperature(self.time_start),
             max_steps=self.max_steps,
+            time_start=self.time_start,
         )
 
-    def _finalize_simulation(self):
+    def time_advance(self):
         ...
 
     def simulate(self):
@@ -450,70 +545,90 @@ class NEI:
         Perform a non-equilibrium ionization simulation.
         """
 
+        self._initialize_simulation()
+
+
+
+
+        self._finalize_simulation()
+
+#        relative_abundances = {
+#            elem: self.abundances[elem] / self.abundances['H']
+#            for elem in elements
+#        }
+
+#        nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in elements}
+
+#        self._results = Simulation(
+#            initial=self.initial,
+#            nstates=nstates,
+#            n_H_init=self.hydrogen_number_density(self.time_start),
+#            T_e_init=self.electron_temperature(self.time_start),
+#        )
+
         # Preliminaries to shorten code
 
-        elements = self.elements
-        max_steps = self.max_steps
-        nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in elements}
+#        elements = self.elements
+#        max_steps = self.max_steps
 
         # Set up all of the dictionaries and arrays that will be used to
         # store the results
 
-        ionic_fractions = {
-            elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
-            for elem in elements
-        }
+#        ionic_fractions = {
+#            elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
+#            for elem in elements
+#        }
 
-        number_densities = {
-            elem: np.full((nstates[elem], max_steps), np.nan) * u.cm ** -3
-            for elem in elements
-        }
+#        number_densities = {
+#            elem: np.full((nstates[elem], max_steps), np.nan) * u.cm ** -3
+#            for elem in elements
+#        }
 
-        n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in elements}
-        n_H = self._n_H_input  # assume constant for now
-        n_e = np.full(max_steps, np.nan) * u.cm ** -3
-        T_e = np.full(max_steps, np.nan) * u.K
-        time = np.full(max_steps, np.nan) * u.s
+#        n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in elements}
+#        n_H = self._n_H_input  # assume constant for now
+#        n_e = np.full(max_steps, np.nan) * u.cm ** -3
+#        T_e = np.full(max_steps, np.nan) * u.K
+#        time = np.full(max_steps, np.nan) * u.s
 
         # We will need the abundances relative to hydrogen in order to
         # calculate element number densities relative to hydrogen's
         # number density.
 
-        relative_abundances = {
-            elem: self.abundances[elem] / self.abundances['H']
-            for elem in elements
-        }
-
         # Set the initial conditions
 
-        time[0] = self.time_start
-        for elem in elements:
-            ionic_fractions[elem][:, 0] = self.initial.ionic_fractions[elem]
-            number_densities[elem][:, 0] = \
-                self.hydrogen_number_density(self.time_start) \
-                * relative_abundances[elem] \
-                * ionic_fractions[elem][:, 0]
+#        time[0] = self.time_start
+#        for elem in elements:
+#            ionic_fractions[elem][:, 0] = self.initial.ionic_fractions[elem]
+#            number_densities[elem][:, 0] = \
+#                self.hydrogen_number_density(self.time_start) \
+#                * relative_abundances[elem] \
+#                * ionic_fractions[elem][:, 0]
+
+
+    def _finalize_simulation(self):
+        ...
+
 
 
         # Do the time advance
 
 
-        for step in range(max_steps):
+#        for step in range(max_steps):
 
 
 
-            T_e[step] = self.electron_temperature(time[step])
+#            T_e[step] = self.electron_temperature(time[step])
 
 
 
-        print(T_e)
+#        print(T_e)
 
 
-        def time_advance(
-                self,
-                dt=None,
-                T_e=None,
-        ):
+#        def time_advance(
+#                self,
+#                dt=None,
+#                T_e=None,
+#        ):
 
 
 
@@ -523,7 +638,7 @@ class NEI:
             #        for element in self.elements:
             #            self.EigenDataDict[element][index]
 
-            raise NotImplementedError
+            #raise NotImplementedError
 
         # ------------------------------------------------------------------------------
         # function: Time-Advance solover
@@ -559,5 +674,5 @@ class NEI:
         #            ft[ii] = 0.0
         #    return ft
 
-    def save(self, filename="nei.h5"):
-        ...
+    #def save(self, filename="nei.h5"):
+    #    ...
