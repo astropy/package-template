@@ -13,6 +13,13 @@ from .ionization_states import IonizationStates
 # scale times the abundance.  This would be the same as n_H as long as
 # abundances['H'] == 1.
 
+# TODO: Allow this to keep track of velocity and position too, and
+# eventually to have density and temperature be able to be functions of
+# position.  (and more complicated expressions for density and
+# temperature too)
+
+# TODO: Expand Simulation docstring
+
 
 class NEIError(Exception):
     pass
@@ -31,19 +38,19 @@ class Simulation:
         self._nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in self.elements}
 
         self._ionic_fractions = {
-            elem: np.full((self.nstates[elem], max_steps), np.nan, dtype=np.float64)
+            elem: np.full((self.nstates[elem], max_steps + 1), np.nan, dtype=np.float64)
             for elem in self.elements
         }
 
         self._number_densities = {
-            elem: np.full((self.nstates[elem], max_steps), np.nan, dtype=np.float64) * u.cm ** -3
+            elem: np.full((self.nstates[elem], max_steps + 1), np.nan, dtype=np.float64) * u.cm ** -3
             for elem in self.elements
         }
 
-        self._n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in self.elements}
-        self._n_e = np.full(max_steps, np.nan) * u.cm ** -3
-        self._T_e = np.full(max_steps, np.nan) * u.K
-        self._time = np.full(max_steps, np.nan) * u.s
+        self._n_elem = {elem: np.full(max_steps + 1, np.nan) * u.cm ** -3 for elem in self.elements}
+        self._n_e = np.full(max_steps + 1, np.nan) * u.cm ** -3
+        self._T_e = np.full(max_steps + 1, np.nan) * u.K
+        self._time = np.full(max_steps + 1, np.nan) * u.s
 
         self._index = 0
 
@@ -57,6 +64,7 @@ class Simulation:
     def _assign(self, new_time, new_ionic_fractions, new_n, new_T_e):
 
         try:
+            self._time[self._index] = new_time
             self._T_e[self._index] = new_T_e
 
             for elem in self.elements:
@@ -84,7 +92,9 @@ class Simulation:
         except Exception as exc:
             raise NEIError(
                 f"Unable to assign parameters to Simulation instance "
-                f"for index {self._index} at time = {new_time}."
+                f"for index {self._index} at time = {new_time}.  The "
+                f"parameters are new_n = {new_n}, new_T_e = {new_T_e}, "
+                f"and new_ionic_fractions = {new_ionic_fractions}."
             ) from exc
         finally:
             self._index += 1
@@ -339,6 +349,24 @@ class NEI:
         else:
             raise TypeError("Invalid time_max.") from None
 
+    def _check_time(self, time):
+        try:
+            time_s = time.to(u.s)
+        except Exception as exc:
+            raise NEIError(f"{time} is not a valid time.")
+        if np.isnan(time_s):
+            raise NEIError(f"time is not a number.")
+
+        if time_s < self.time_start:
+            raise NEIError(
+                f"time = {time} is less than time_start = "
+                f"{self.time_start}.")
+        elif self._time_max is not None and time_s > self.time_max:
+            raise NEIError(
+                f"time = {time} is greater than time_max = "
+                f"{self.time_max}"
+            )
+
     @property
     def max_steps(self):
         return self._max_steps
@@ -389,11 +417,16 @@ class NEI:
             raise TypeError("Invalid T_e")
 
     def electron_temperature(self, time):
-        try:
-            time = time.to(u.s)
-        except (AttributeError, u.UnitsError):
-            raise NEIError("Invalid time in electron_temperature.")
-        return self._electron_temperature(time).to(u.K)
+        self._check_time(time)
+        time = time.to(u.s)
+        T_e = self._electron_temperature(time).to(u.K)
+
+        if np.isnan(T_e):
+            raise NEIError(f"Finding T_e = {T_e} at time = {time}.")
+        elif T_e < 0 * u.K:
+            raise
+        else:
+            return T_e
 
     @property
     def n_H_input(self) -> u.Quantity:
@@ -500,8 +533,8 @@ class NEI:
             time_start=self.time_start,
         )
 
-    def time_advance(self):
-        ...
+    def get_timestep(self):
+        self._dt = 1 * u.s
 
     def simulate(self):
         """
@@ -511,12 +544,62 @@ class NEI:
         self._initialize_simulation()
 
         for step in range(self.max_steps):
+
+            self.get_timestep()
             self.time_advance()
 
         self._finalize_simulation()
 
     def _finalize_simulation(self):
         ...
+
+    def time_advance(self):
+
+        # TODO: Fully implement units into this.
+
+        step = self.results._index
+        T_e = self.results.T_e[step - 1].value
+        n_e = self.results.n_e[step - 1].value
+        dt = self._dt.value
+
+        new_ionic_fractions = {}
+
+        try:
+            for elem in self.elements:
+                nstates = self.results.nstates[elem]
+                f0 = self.results._ionic_fractions[elem][:, self.results._index - 1]
+                evals = self.EigenDataDict[elem].eigenvalues(T_e=T_e)
+                evect = self.EigenDataDict[elem].eigenvectors(T_e=T_e)
+                evect_inverse = self.EigenDataDict[elem].eigenvector_inverses(T_e=T_e)
+
+                diagonal_evals = np.zeros((nstates, nstates), dtype=np.float64)
+                for ii in range(0, nstates):
+                    diagonal_evals[ii, ii] = np.exp(evals[ii] * dt * n_e)
+
+                matrix_1 = np.dot(diagonal_evals, evect)
+                matrix_2 = np.dot(evect_inverse, matrix_1)
+
+                ft = np.dot(f0, matrix_2)
+
+                # Can probably simplify this with np.where
+                minconce = 1.0e-15
+                for ii in np.arange(0, nstates, dtype=np.int):
+                    if (abs(ft[ii]) <= minconce):
+                        ft[ii] = 0.0
+
+                new_ionic_fractions[elem] = ft
+
+        except Exception as exc:
+            raise NEIError(f"Unable to do time advance for {elem}") from exc
+        else:
+
+            new_time = self.results.time[0] + self._dt
+            self.results._assign(
+                new_time=new_time,
+                new_ionic_fractions=new_ionic_fractions,
+                new_T_e=self.electron_temperature(new_time),
+                new_n=self.hydrogen_number_density(new_time),
+            )
 
 
         # ------------------------------------------------------------------------------
