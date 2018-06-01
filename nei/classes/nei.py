@@ -8,6 +8,10 @@ from scipy import interpolate
 from .eigenvaluetable import EigenData2
 
 
+class NEIError(Exception):
+    pass
+
+
 def _get_electron_density(ionic_fractions, abundances, n_H):
     try:
         ...
@@ -18,11 +22,12 @@ def _get_electron_density(ionic_fractions, abundances, n_H):
 
 class Results:
     """Contains results from a non-equilibrium ionization simulation."""
+
     def __init__(self, initial_states, max_steps=1000):
 
         self.times = np.ndarray((max_steps)) * u.s
-        self._T_e = np.ndarray((max_steps)) * u.K
-        self._n_e = np.ndarray((max_steps)) * u.m ** -3
+        self.T_e = np.ndarray((max_steps)) * u.K
+        self.n_e = np.ndarray((max_steps)) * u.m ** -3
 
         self._ionic_fractions = {}
         self._number_densities = {}
@@ -49,6 +54,34 @@ class Results:
     @property
     def ionic_fractions(self):
         return self._ionic_fractions
+
+class Results2:
+
+    def __init__(self, initial, max_steps=1000):
+
+        elements = initial.elements
+        abundances = initial.abundances
+
+        self._ionic_fractions = {
+            elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
+            for elem in elements
+        }
+
+        self._n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in elements}
+
+
+
+    @property
+    def ionic_fractions(self):
+        return self._ionic_fractions
+
+    @property
+    def n_elem(self):
+        return self._n_elem
+
+    @property
+    def n_e(self):
+        return self._n_e
 
 
 
@@ -89,8 +122,6 @@ class NEI:
     >>> scale_factor = [1.0, 0.1]
     >>> time_input = np.array([0, 10]) * u.min
 
-    #    >>> nei = NEI(inputs, T_e=T_e, n_H=n_H,scaling_factor=scale_factor, time_input=time_input)
-
     The initial conditions can be accessed using the initial attribute.
 
     #>>> nei.initial['H']
@@ -113,63 +144,64 @@ class NEI:
             self,
             inputs,
             abundances: Union[Dict, str] = None,
-            number_densities: u.Quantity = None,
+#            number_densities: u.Quantity = None,
             T_e: Union[Callable, u.Quantity] = None,
             n_H: Union[Callable, u.Quantity] = None,
-            scaling_factor: Union[Callable, np.ndarray] = None,
+#            scaling_factor: Union[Callable, np.ndarray] = None,
             time_input: u.Quantity = None,
             time_start: Optional[u.Quantity] = None,
             time_max: Optional[u.Quantity] = None,
             max_steps: Union[int, np.integer] = 1000,
+            tol = 1e-15,
     ):
 
-        self.time_input = time_input
-        self.time_start = time_start
-        self.time_max = time_max
-        self.max_steps = max_steps
-        self.T_e_input = T_e
-        self.n_H = n_H  # finish implementing this  # have this be density normalization instead?
-        self.abundances = abundances  # set this up
-        self.number_densities = number_densities  # set this up  # as a function of time?
-         # instead of scaling_factor, allow input of density vs. time
-        self.scaling_factor = scaling_factor  # set this up
-
         try:
+
+            self.time_input = time_input
+            self.time_start = time_start
+            self.time_max = time_max
+            self.T_e_input = T_e
+            self.n_H_input = n_H
+            self.max_steps = max_steps
+
             T_e_init = self.electron_temperature(self.time_start)
-
-        except Exception:
-            raise ValueError(str(self.time_start))
-
-        try:
+            n_H_init = self.hydrogen_number_density(self.time_start)
 
             self.initial = pl.atomic.IonizationStates(
                 inputs=inputs,
                 abundances=abundances,
                 T_e=T_e_init,
-                n_H=n_H,
+                n_H=n_H_init,
+                tol = tol
             )
+
+            self.tol = tol
+            self.elements = self.initial.elements
+
+            if 'H' not in self.elements:
+                raise NEIError("Must have H in elements")
+
+            self.abundances = self.initial.abundances
 
             self._EigenDataDict = {element: EigenData2(element) for element in self.elements}
 
-            for element in self.initial.elements:
-                self.EigenDataDict[element].temperature = T_e_init.value
-                self.initial.ionic_fractions[element] = \
-                    self.EigenDataDict[element].equilibrium_state(T_e_init.value)
+            if self.T_e_input is not None and not isinstance(inputs, dict):
+                for element in self.initial.elements:
+                    self.initial.ionic_fractions[element] = \
+                        self.EigenDataDict[element].equilibrium_state(T_e_init.value)
 
         except Exception:
-            raise ValueError("Unable to create initial conditions.")
-
-        try:
-            self.elements = self.initial.elements
-        except Exception:
-            raise ValueError("Unable to set elements")
-
-        try:
-
-            self.abundances = self.initial.abundances
-        except Exception:
-            raise ValueError('Unable to set abundances')
-
+            raise NEIError(
+                f"Unable to create NEI instance for:\n"
+                f"     inputs = {inputs}\n"
+                f" abundances = {abundances}\n"
+                f"        T_e = {T_e}\n"
+                f"        n_H = {n_H}\n"
+                f" time_input = {time_input}\n"
+                f" time_start = {time_start}\n"
+                f"   time_max = {time_max}\n"
+                f"  max_steps = {max_steps}\n"
+            )
 
     @property
     def elements(self):
@@ -186,6 +218,14 @@ class NEI:
     @abundances.setter
     def abundances(self, abund):
         self._abundances = abund
+
+    @property
+    def tol(self):
+        return self._tol
+
+    @tol.setter
+    def tol(self, value):
+        self._tol = value
 
     @property
     def time_input(self):
@@ -215,10 +255,7 @@ class NEI:
     @time_start.setter
     def time_start(self, time):
         if time is None:
-            if self.time_input is not None:
-                self._time_start = self.time_input[0]
-            else:
-                self._time_start = 0.0 * u.s
+            self._time_start = 0.0 * u.s
         elif isinstance(time, u.Quantity):
             if not time.isscalar:
                 raise ValueError("time_start must be a scalar")
@@ -229,7 +266,7 @@ class NEI:
             if hasattr(self, '_time_max') \
                     and self._time_max is not None and self._time_max<=time:
                 raise ValueError("time_start must be less than time_max")
-            if self.time_input.min() > time:
+            if self.time_input is not None and self.time_input.min() > time:
                 raise ValueError("time_start must be less than min(time_input)")
             self._time_start = time
         else:
@@ -242,10 +279,12 @@ class NEI:
     @time_max.setter
     def time_max(self, time):
         if time is None:
-            if self.time_input is not None:
-                self._time_max = self.time_input[-1]
-            else:
-                self._time_max = None
+            self._time_max = None
+#        if time is None:
+#            if self.time_input is not None:
+#                self._time_max = self.time_input[-1]
+#            else:
+#                self._time_max = None
         elif isinstance(time, u.Quantity):
             if not time.isscalar:
                 raise ValueError("time_max must be a scalar")
@@ -313,27 +352,57 @@ class NEI:
         try:
             time = time.to(u.s)
         except (AttributeError, u.UnitsError):
-            raise ValueError("Invalid time in electron_temperature.")
+            raise NEIError("Invalid time in electron_temperature.")
         return self._electron_temperature(time).to(u.K)
 
+
     @property
-    def n_H(self):
+    def n_H_input(self) -> u.Quantity:
+        """The hydrogen number density."""
         if 'H' in self.elements:
-            return self._n_H
+            return self._n_H_input
         else:
             raise ValueError
 
-    @n_H.setter
-    def n_H(self, n):
-        if n is None:
-            self._n_H = None
-        elif isinstance(n, u.Quantity):
+    @n_H_input.setter
+    def n_H_input(self, n_H):
+        if isinstance(n_H, u.Quantity):
             try:
-                self._n_H = n.to(u.m ** -3)
-            except Exception:
-                raise ValueError
+                n_H = n_H.to(u.cm ** -3)
+            except u.UnitConversionError:
+                raise u.UnitsError("Invalid hydrogen density.")
+            if n_H.isscalar:
+                self._n_H_input = n_H
+                self.hydrogen_number_density = lambda time: n_H
+            else:
+                if self._time_input is None:
+                    raise TypeError("Must define time_input prior to n_H for an array.")
+                time_input = self.time_input
+                if len(time_input) != len(n_H):
+                    raise ValueError("len(n_H) is not equal to len(time_input).")
+                f = interpolate.interp1d(time_input.value, n_H.value)
+                self._hydrogen_number_density = lambda time: f(time.value) * u.cm ** -3
+                self._n_H_input = n_H
+        elif callable(n_H):
+            if self.time_start is not None:
+                try:
+                    n_H(self.time_start).to(u.cm ** -3)
+                    n_H(self.time_max).to(u.cm ** -3)
+                except Exception:
+                    raise ValueError("Invalid hydrogen number density function.")
+            self._n_H_input = n_H
+            self._hydrogen_number_density = n_H
+        elif n_H is None:
+            self._hydrogen_number_density = lambda: None
         else:
-            raise TypeError
+            raise TypeError("Invalid n_H.")
+
+    def hydrogen_number_density(self, time):
+        try:
+            time = time.to(u.s)
+        except (AttributeError, u.UnitsError):
+            raise NEIError("Invalid time in hydrogen_density")
+        return self._hydrogen_number_density(time)
 
     @property
     def EigenDataDict(self):
@@ -382,6 +451,13 @@ class NEI:
         except Exception:
             raise AttributeError("The simulation has not yet been performed.")
 
+    @results.setter
+    def results(self, value):
+        if isinstance(value, Results):
+            self._results = value
+        else:
+            raise TypeError
+
     @property
     def final(self):
         try:
@@ -404,38 +480,64 @@ class NEI:
         Perform a non-equilibrium ionization simulation.
         """
 
-        # Preliminaries
+        # Preliminaries to shorten code
 
         elements = self.elements
         max_steps = self.max_steps
-
-        # Set up all of the dictionaries and arrays that will be used to store the results
-
         nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in elements}
+
+        # Set up all of the dictionaries and arrays that will be used to
+        # store the results
 
         ionic_fractions = {
             elem: np.full((nstates[elem], max_steps), np.nan, dtype=np.float64)
-            for elem in elements}
+            for elem in elements
+        }
 
         number_densities = {
             elem: np.full((nstates[elem], max_steps), np.nan) * u.cm ** -3
             for elem in elements
         }
 
+        n_elem = {elem: np.full(max_steps, np.nan) * u.cm ** -3 for elem in elements}
+        n_H = self._n_H_input  # assume constant for now
         n_e = np.full(max_steps, np.nan) * u.cm ** -3
         T_e = np.full(max_steps, np.nan) * u.K
         time = np.full(max_steps, np.nan) * u.s
-        time[0] = self.time_start
+
+        # We will need the abundances relative to hydrogen in order to
+        # calculate element number densities relative to hydrogen's
+        # number density.
+
+        relative_abundances = {
+            elem: self.abundances[elem] / self.abundances['H']
+            for elem in elements
+        }
 
         # Set the initial conditions
 
+        time[0] = self.time_start
         for elem in elements:
             ionic_fractions[elem][:, 0] = self.initial.ionic_fractions[elem]
+            number_densities[elem][:, 0] = \
+                self.hydrogen_number_density(self.time_start) \
+                * relative_abundances[elem] \
+                * ionic_fractions[elem][:, 0]
+
+
+        # Do the time advance
+
 
         for step in range(max_steps):
-            T_e[step] = self.electron_temperature(step)
 
-        #self._results =
+
+
+            T_e[step] = self.electron_temperature(time[step])
+
+
+
+        print(T_e)
+
 
         def time_advance(
                 self,
