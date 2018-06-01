@@ -22,7 +22,7 @@ tests = {
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
-        'max_steps': 5,
+        'max_steps': 3,
     },
 
     'T_e constant': {
@@ -33,7 +33,7 @@ tests = {
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
-        'max_steps': 5,
+        'max_steps': 2,
     },
 
     'n_e constant': {
@@ -44,7 +44,7 @@ tests = {
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
-        'max_steps': 5,
+        'max_steps': 2,
     },
 
     'T_e function': {
@@ -53,7 +53,7 @@ tests = {
         'T_e': lambda time: 1e4 * (1 + time/u.s) * u.K,
         'n_H': 1e15 * u.cm **-3,
         'time_max': 800 * u.s,
-        'max_steps': 5,
+        'max_steps': 2,
     },
 
     'n_H function': {
@@ -64,12 +64,13 @@ tests = {
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
 
-    }
+    },
 
 }
 
 test_names = list(tests.keys())
 
+test_names = ['basic']
 
 class TestNEI:
 
@@ -124,6 +125,19 @@ class TestNEI:
         else:
             assert expected == actual
 
+#    @pytest.mark.parametrize(
+#        'test_name',
+#        [test_name for test_name in test_names
+#         if isinstance(tests[test_name]['T_e'], u.Quantity)
+#         and not tests[test_name]['T_e'].isscalar
+#         ],
+#    )
+#    def test_electron_temperature_array(self):
+#        ...
+
+
+
+
     @pytest.mark.parametrize(
         'test_name',
         [test_name for test_name in test_names if isinstance(tests[test_name]['inputs'], dict)],
@@ -140,22 +154,22 @@ class TestNEI:
 
     @pytest.mark.parametrize('test_name', test_names)
     def test_simulate(self, test_name):
-        instance = self.instances[test_name]
         try:
-            instance.simulate()
+            self.instances[test_name].simulate()
         except Exception as exc:
-            raise ValueError("Unable to simulate.") from exc
+            raise ValueError("Unable to simulate for test: {test_name}") from exc
+
+    @pytest.mark.parametrize('test_name', test_names)
+    def test_initial_results(self, test_name):
+        initial = self.instances[test_name].initial
+        results = self.instances[test_name].results
+
+        assert initial.elements == results.elements
+        assert initial.abundances == results.abundances
+
+        for elem in initial.elements:
+            assert np.allclose(results.ionic_fractions[elem][:, 0], initial.ionic_fractions[elem])
 
     # Test that ionization fractions that were calculated to be in
     # equilibrium remain in equilibrium after (1) a single long time
     # step, and (2) a bunch of smaller time steps.
-
-
-class TestResults:
-
-    @classmethod
-    def setup_class(cls):
-        cls.instances = {}
-
-    def test_instantiation(self):
-        ...
