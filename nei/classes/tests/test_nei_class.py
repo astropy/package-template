@@ -1,6 +1,7 @@
 import astropy.units as u
 from ..ionization_states import IonizationStates, particle_symbol
 from ..nei import NEI
+from ..eigenvaluetable import EigenData2
 import numpy as np
 import pytest
 
@@ -9,7 +10,7 @@ abundances = {'H': 1, 'He': 0.1}
 
 time_array = np.array([-3, 90]) * u.s
 T_e_array = np.array([4e4, 6e4]) * u.K
-n_H_array = np.array([1e9, 5e8]) * u.cm ** -3
+n_array = np.array([1e9, 5e8]) * u.cm ** -3
 
 
 tests = {
@@ -18,59 +19,94 @@ tests = {
         'inputs': inputs_dict,
         'abundances': abundances,
         'T_e': T_e_array,
-        'n_H': n_H_array,
+        'n': n_array,
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
         'max_steps': 3,
+        'adapt_dt': False,
+        'dt': 100 * u.s,
+        'verbose': True,
     },
 
     'T_e constant': {
         'inputs': inputs_dict,
         'abundances': abundances,
         'T_e': 1 * u.MK,
-        'n_H': n_H_array,
+        'n': n_array,
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
         'max_steps': 2,
+        'adapt_dt': False,
+        'dt': 100 * u.s,
+        'verbose': True,
     },
 
     'n_e constant': {
         'inputs': inputs_dict,
         'abundances': abundances,
         'T_e': T_e_array,
-        'n_H': 1e9 * u.cm ** -3,
+        'n': 1e9 * u.cm ** -3,
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
         'max_steps': 2,
+        'adapt_dt': False,
+        'dt': 100 * u.s,
+        'verbose': True,
     },
 
     'T_e function': {
         'inputs': inputs_dict,
         'abundances': abundances,
         'T_e': lambda time: 1e4 * (1 + time/u.s) * u.K,
-        'n_H': 1e15 * u.cm **-3,
+        'n': 1e15 * u.cm **-3,
         'time_max': 800 * u.s,
         'max_steps': 2,
+        'adapt_dt': False,
+        'dt': 100 * u.s,
+        'verbose': True,
     },
 
-    'n_H function': {
+    'n function': {
         'inputs': inputs_dict,
         'abundances': abundances,
         'T_e': 6e4 * u.K,
-        'n_H': lambda time: 1e9 * (1 + time/u.s) * u.cm ** -3,
+        'n': lambda time: 1e9 * (1 + time/u.s) * u.cm ** -3,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
-
+        'adapt_dt': False,
+        'dt': 100 * u.s,
+        'verbose': True,
     },
 
+    'equil test cool': {
+        'inputs': ['H', 'He', 'C', 'N', 'O', 'Fe'],
+        'abundances': {'H': 1, 'He': 0.1, 'C': 1e-4, 'N': 1e-4, 'O': 1e-4, 'Fe': 1e-4},
+        'T_e': 10001.0 * u.K,
+        'n': 1e13 * u.cm ** -3,
+        'time_max': 1e6 * u.s,
+        'tol': 1e-9,
+        'adapt_dt': False,
+        'dt': 100 * u.s,
+        'verbose': True,
+    },
+
+    'equil test hot': {
+        'inputs': ['H', 'He', 'C', 'N', 'O', 'Fe'],
+        'abundances': {'H': 1, 'He': 0.1, 'C': 1e-4, 'N': 1e-4, 'O': 1e-4, 'Fe': 1e-4, 'S': 2e-6},
+        'T_e': 7e6 * u.K,
+        'n': 1e9 * u.cm ** -3,
+        'time_max': 1e8 * u.s,
+        'dt': 100 * u.s,
+        'adapt_dt': False,
+        'verbose': True,
+    }
 }
 
 test_names = list(tests.keys())
 
-test_names = ['basic']
 
 class TestNEI:
 
@@ -108,9 +144,9 @@ class TestNEI:
         assert isinstance(instance.initial, IonizationStates)
 
     @pytest.mark.parametrize('test_name', test_names)
-    def test_n_H_input(self, test_name):
-        actual = self.instances[test_name].n_H_input
-        expected = tests[test_name]['n_H']
+    def test_n_input(self, test_name):
+        actual = self.instances[test_name].n_input
+        expected = tests[test_name]['n']
         if isinstance(expected, u.Quantity) and not expected.isscalar:
             assert all(expected == actual)
         else:
@@ -153,11 +189,25 @@ class TestNEI:
             )
 
     @pytest.mark.parametrize('test_name', test_names)
+    def test_equilibration_one_very_long_step(self, test_name):
+        """
+        Test that
+        """
+        ...
+
+
+    @pytest.mark.parametrize('test_name', test_names)
+    def test_equilibration_ten_long_steps(self, test_name):
+        ...
+
+
+
+    @pytest.mark.parametrize('test_name', test_names)
     def test_simulate(self, test_name):
         try:
             self.instances[test_name].simulate()
         except Exception as exc:
-            raise ValueError("Unable to simulate for test: {test_name}") from exc
+            raise ValueError(f"Unable to simulate for test: {test_name}") from exc
 
     @pytest.mark.parametrize('test_name', test_names)
     def test_initial_results(self, test_name):
