@@ -8,11 +8,6 @@ from scipy import interpolate
 from .eigenvaluetable import EigenData2
 from .ionization_states import IonizationStates
 
-# TODO: Change it so that instead of n_H, we just use a density scale.
-# This would make an element's number density equal to a number density
-# scale times the abundance.  This would be the same as n_H as long as
-# abundances['H'] == 1.
-
 # TODO: Allow this to keep track of velocity and position too, and
 # eventually to have density and temperature be able to be functions of
 # position.  (and more complicated expressions for density and
@@ -29,7 +24,7 @@ class Simulation:
     """
     Store results from a non-equilibrium ionization simulation.
     """
-    def __init__(self, initial, n_H_init, T_e_init, max_steps, time_start):
+    def __init__(self, initial, n_init, T_e_init, max_steps, time_start):
 
         self._elements = initial.elements
         self._abundances = initial.abundances
@@ -57,7 +52,7 @@ class Simulation:
         self._assign(
             new_time=time_start,
             new_ionic_fractions=initial.ionic_fractions,
-            new_n = n_H_init,
+            new_n = n_init,
             new_T_e = T_e_init,
         )
 
@@ -149,20 +144,41 @@ class NEI:
     inputs
 
     T_e: `~astropy.units.Quantity` or `callable`
-        The electron temperature, which may be a constant
+        The electron temperature, which may be a constant, an array of
+        temperatures corresponding to the times in `time_input`, or a
+        function that yields the temperature as a function of time.
 
-    n_H: `~astropy.units.Quantity`
-        The initial number density of hydrogen (including protons and
-        neutrals).
+    n: `~astropy.units.Quantity` or `callable`
+        The number density multiplicative factor.  The number density of
+        each element will be `n` times the abundance given in
+        `abundances`.  For example, if `abundance['H'] = 1`, then this
+        will correspond to the number density of hydrogen (including
+        neutral hydrogen and protons).  This factor may be a constant,
+        an array of number densities over time, or a function that
+        yields a number density as a function of time.
 
-    scaling_factor: `~astropy.units.Quantity` or `callable`
-        The density scaling factor
+    time_input: ~astropy.units.Quantity, optional
+        An array containing the times associated with `n` and `T_e` in
+        units of time.
 
-    time
+    time_start: ~astropy.units.Quantity, optional
+        The start time for the simulation.  If density and/or
+        temperature are given by arrays, then this argument must be
+        greater than `time_input[0]`.  If this argument is not supplied,
+        then `time_start` defaults to `time_input[0]` (if given) and
+        zero seconds otherwise.
 
-    abundances
+    time_max: ~astropy.units.Quantity
+        The maximum time for the simulation.  If density and/or
+        temperature are given by arrays, then this argument must be less
+        than `time_input[-1]`.
 
-    number_densities
+    verbose: bool, optional
+        A flag stating whether or not to print out information for every
+        time step. Setting `verbose` to `True` is useful for testing.
+        Defaults to `False`.
+
+    abundances: dict
 
     Examples
     --------
@@ -171,10 +187,9 @@ class NEI:
     >>> import astropy.units as u
 
     >>> inputs = {'H': [0.9, 0.1], 'He': [0.9, 0.099, 0.001]}
-    >>> n_H = 1e9 * u.m ** -3
+    >>> n = 1e9 * u.m ** -3
     >>> abundances = {'H': 1, 'He': 0.085}
     >>> T_e = np.array([5000, 50000]) * u.K
-    >>> scale_factor = [1.0, 0.1]
     >>> time_input = np.array([0, 10]) * u.min
 
     The initial conditions can be accessed using the initial attribute.
@@ -199,15 +214,17 @@ class NEI:
             self,
             inputs,
             abundances: Union[Dict, str] = None,
-#            number_densities: u.Quantity = None,
             T_e: Union[Callable, u.Quantity] = None,
-            n_H: Union[Callable, u.Quantity] = None,
-#            scaling_factor: Union[Callable, np.ndarray] = None,
+            n: Union[Callable, u.Quantity] = None,
             time_input: u.Quantity = None,
-            time_start: Optional[u.Quantity] = None,
-            time_max: Optional[u.Quantity] = None,
+            time_start: u.Quantity = None,
+            time_max: u.Quantity = None,
             max_steps: Union[int, np.integer] = 1000,
-            tol = 1e-15,
+            tol: Union[int, float] = 1e-15,
+            dt: u.Quantity = None,
+            adapt_dt: bool = None,
+            safety_factor: Union[int, float] = 1,
+            verbose: bool = False,
     ):
 
         try:
@@ -216,17 +233,22 @@ class NEI:
             self.time_start = time_start
             self.time_max = time_max
             self.T_e_input = T_e
-            self.n_H_input = n_H
+            self.n_input = n
             self.max_steps = max_steps
+            self.dt_input = dt
+            self._dt = dt
+            self.adapt_dt = adapt_dt
+            self.safety_factor = safety_factor
+            self.verbose = verbose
 
             T_e_init = self.electron_temperature(self.time_start)
-            n_H_init = self.hydrogen_number_density(self.time_start)
+            n_init = self.hydrogen_number_density(self.time_start)
 
             self.initial = IonizationStates(
                 inputs=inputs,
                 abundances=abundances,
                 T_e=T_e_init,
-                n_H=n_H_init,
+                n_H=n_init,  # TODO: Update n_H in IonizationState(s)
                 tol = tol
             )
 
@@ -251,12 +273,68 @@ class NEI:
                 f"     inputs = {inputs}\n"
                 f" abundances = {abundances}\n"
                 f"        T_e = {T_e}\n"
-                f"        n_H = {n_H}\n"
+                f"          n = {n}\n"
                 f" time_input = {time_input}\n"
                 f" time_start = {time_start}\n"
                 f"   time_max = {time_max}\n"
                 f"  max_steps = {max_steps}\n"
             )
+
+    def equil_ionic_fractions(self, T_e=None, time=None) -> dict:
+        """
+        Return the equilibrium ionic fractions for a temperature or at
+        a given time.
+
+        Parameters
+        ----------
+        T_e: ~astropy.units.Quantity, optional
+            The electron temperature in units that can be converted to
+            kelvin.
+
+        time: ~astropy.units.Quantity, optional
+            The time in units that can be converted to seconds.
+
+        Returns
+        -------
+        equil_ionfracs: dict
+            The equilibrium ionic fractions for the elements contained
+            within this class
+
+        Notes
+        -----
+        Only one of `T_e` and `time` may be included as an argument.  If
+        neither `T_e` or `time` is provided and the temperature for the
+        simulation is given by a constant, the this method will assume
+        that `T_e` is the temperature of the simulation.
+
+        """
+
+        if T_e is not None and time is not None:
+            raise NEIError("Only one of T_e and time may be used as an argument.")
+
+        if T_e is None and time is None:
+            if self.T_e_input.isscalar:
+                T_e = self.T_e_input
+            else:
+                raise NEIError
+
+        try:
+            T_e = T_e.to(u.K) if T_e is not None else None
+            time = time.to(u.s) if time is not None else None
+        except Exception as exc:
+            raise NEIError("Invalid input to equilibrium_ionic_fractions.")
+
+        if time is not None:
+            T_e = self.electron_temperature(time)
+
+        if not T_e.isscalar:
+            raise NEIError("Need scalar input for equilibrium_ionic_fractions.")
+
+        equil_ionfracs = {}
+        for element in self.elements:
+            equil_ionfracs[element] = self.EigenDataDict[element].equilibrium_state(T_e.value)
+
+        return equil_ionfracs
 
     @property
     def elements(self):
@@ -264,6 +342,7 @@ class NEI:
 
     @elements.setter
     def elements(self, elements):
+        # TODO: Update this
         self._elements = elements
 
     @property
@@ -349,6 +428,60 @@ class NEI:
         else:
             raise TypeError("Invalid time_max.") from None
 
+    @property
+    def dt_input(self):
+        return self._dt
+
+    @dt_input.setter
+    def dt_input(self, dt: Optional[u.Quantity]):
+        if dt is None:
+            self._dt_input = None
+            self._dt = None
+        elif isinstance(dt, u.Quantity):
+            try:
+                dt = dt.to(u.s)
+                if dt > 0 * u.s:
+                    self._dt_input = dt
+            except (AttributeError, u.UnitConversionError):
+                raise NEIError("Invalid dt.")
+
+    @property
+    def adapt_dt(self):
+        return self._adapt_dt
+
+    @adapt_dt.setter
+    def adapt_dt(self, choice: Optional[bool]):
+        if choice is None:
+            self._adapt_dt = True if self.dt_input is None else False
+        elif choice is True or choice is False:
+            self._adapt_dt = choice
+        else:
+            raise TypeError("Invalid value for adapt_dt")
+
+    @property
+    def safety_factor(self):
+        return self._safety_factor
+
+    @safety_factor.setter
+    def safety_factor(self, value):
+        if not isinstance(value, (float, np.float64, np.float32, np.integer, int)):
+            raise TypeError
+        if 1e-3 <= value <= 1e3:
+            self._safety_factor = value
+        else:
+            raise NEIError("Invalid safety factor.")
+
+    @property
+    def verbose(self):
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, choice):
+        if choice is True or choice is False:
+            self._verbose = choice
+        else:
+            raise TypeError("Invalid choice for verbose.")
+
     def _check_time(self, time):
         try:
             time_s = time.to(u.s)
@@ -417,57 +550,60 @@ class NEI:
             raise TypeError("Invalid T_e")
 
     def electron_temperature(self, time):
-        self._check_time(time)
-        time = time.to(u.s)
-        T_e = self._electron_temperature(time).to(u.K)
+        try:
+            self._check_time(time)
+            time = time.to(u.s)
+            T_e = self._electron_temperature(time).to(u.K)
 
-        if np.isnan(T_e):
-            raise NEIError(f"Finding T_e = {T_e} at time = {time}.")
-        elif T_e < 0 * u.K:
-            raise
-        else:
-            return T_e
+            if np.isnan(T_e):
+                raise NEIError(f"Finding T_e = {T_e} at time = {time}.")
+            elif T_e < 0 * u.K:
+                raise
+            else:
+                return T_e
+        except Exception as exc:
+            raise NEIError(f"Unable to calculate electron temperature for time {time}")
 
     @property
-    def n_H_input(self) -> u.Quantity:
+    def n_input(self) -> u.Quantity:
         """The hydrogen number density."""
         if 'H' in self.elements:
-            return self._n_H_input
+            return self._n_input
         else:
             raise ValueError
 
-    @n_H_input.setter
-    def n_H_input(self, n_H):
-        if isinstance(n_H, u.Quantity):
+    @n_input.setter
+    def n_input(self, n):
+        if isinstance(n, u.Quantity):
             try:
-                n_H = n_H.to(u.cm ** -3)
+                n = n.to(u.cm ** -3)
             except u.UnitConversionError:
                 raise u.UnitsError("Invalid hydrogen density.")
-            if n_H.isscalar:
-                self._n_H_input = n_H
-                self.hydrogen_number_density = lambda time: n_H
+            if n.isscalar:
+                self._n_input = n
+                self.hydrogen_number_density = lambda time: n
             else:
                 if self._time_input is None:
-                    raise TypeError("Must define time_input prior to n_H for an array.")
+                    raise TypeError("Must define time_input prior to n for an array.")
                 time_input = self.time_input
-                if len(time_input) != len(n_H):
-                    raise ValueError("len(n_H) is not equal to len(time_input).")
-                f = interpolate.interp1d(time_input.value, n_H.value)
+                if len(time_input) != len(n):
+                    raise ValueError("len(n) is not equal to len(time_input).")
+                f = interpolate.interp1d(time_input.value, n.value)
                 self._hydrogen_number_density = lambda time: f(time.value) * u.cm ** -3
-                self._n_H_input = n_H
-        elif callable(n_H):
+                self._n_input = n
+        elif callable(n):
             if self.time_start is not None:
                 try:
-                    n_H(self.time_start).to(u.cm ** -3)
-                    n_H(self.time_max).to(u.cm ** -3)
+                    n(self.time_start).to(u.cm ** -3)
+                    n(self.time_max).to(u.cm ** -3)
                 except Exception:
                     raise ValueError("Invalid hydrogen number density function.")
-            self._n_H_input = n_H
-            self._hydrogen_number_density = n_H
-        elif n_H is None:
+            self._n_input = n
+            self._hydrogen_number_density = n
+        elif n is None:
             self._hydrogen_number_density = lambda: None
         else:
-            raise TypeError("Invalid n_H.")
+            raise TypeError("Invalid n.")
 
     def hydrogen_number_density(self, time):
         try:
@@ -527,14 +663,28 @@ class NEI:
 
         self._results = Simulation(
             initial=self.initial,
-            n_H_init=self.hydrogen_number_density(self.time_start),
+            n_init=self.hydrogen_number_density(self.time_start),
             T_e_init=self.electron_temperature(self.time_start),
             max_steps=self.max_steps,
             time_start=self.time_start,
         )
 
-    def get_timestep(self):
-        self._dt = 1 * u.s
+    def set_timestep(self, dt=None):
+        if dt is not None:
+            try:
+                dt = dt.to(u.s)
+            except Exception:
+                raise NEIError("Invalid timestep.")
+            finally:
+                self._dt = dt
+        elif self.adapt_dt:
+            raise NotImplementedError(
+                "Adaptive time step not yet implemented; set adapt_dt "
+                "to False.")
+        elif self.dt_input is not None:
+            self._dt = self.dt_input
+        else:
+            raise NEIError("Unable to get set timestep.")
 
     def simulate(self):
         """
@@ -545,8 +695,11 @@ class NEI:
 
         for step in range(self.max_steps):
 
-            self.get_timestep()
-            self.time_advance()
+            try:
+                self.set_timestep()
+                self.time_advance()
+            except Exception as exc:
+                raise NEIError(f"Unable to complete simulation.") from exc
 
         self._finalize_simulation()
 
@@ -561,6 +714,11 @@ class NEI:
         T_e = self.results.T_e[step - 1].value
         n_e = self.results.n_e[step - 1].value
         dt = self._dt.value
+
+        if self.verbose:
+            print(
+                f"step={step}  T_e={T_e}  n_e={n_e}  dt={dt}"
+            )
 
         new_ionic_fractions = {}
 
