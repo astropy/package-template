@@ -30,19 +30,26 @@ class Simulation:
         self._abundances = initial.abundances
         self._max_steps = max_steps
 
-        self._nstates = {elem: pl.atomic.atomic_number(elem) + 1 for elem in self.elements}
+        self._nstates = {elem: pl.atomic.atomic_number(elem) + 1
+                         for elem in self.elements}
 
         self._ionic_fractions = {
-            elem: np.full((self.nstates[elem], max_steps + 1), np.nan, dtype=np.float64)
+            elem: np.full((max_steps + 1, self.nstates[elem]), np.nan,
+                          dtype=np.float64)
             for elem in self.elements
         }
 
         self._number_densities = {
-            elem: np.full((self.nstates[elem], max_steps + 1), np.nan, dtype=np.float64) * u.cm ** -3
+            elem: np.full((max_steps + 1, self.nstates[elem]), np.nan,
+                          dtype=np.float64) * u.cm ** -3
             for elem in self.elements
         }
 
-        self._n_elem = {elem: np.full(max_steps + 1, np.nan) * u.cm ** -3 for elem in self.elements}
+        self._n_elem = {
+            elem: np.full(max_steps + 1, np.nan) * u.cm ** -3
+            for elem in self.elements
+        }
+
         self._n_e = np.full(max_steps + 1, np.nan) * u.cm ** -3
         self._T_e = np.full(max_steps + 1, np.nan) * u.K
         self._time = np.full(max_steps + 1, np.nan) * u.s
@@ -51,48 +58,72 @@ class Simulation:
 
         self._assign(
             new_time=time_start,
-            new_ionic_fractions=initial.ionic_fractions,
+            new_ionfracs=initial.ionic_fractions,
             new_n = n_init,
             new_T_e = T_e_init,
         )
 
-    def _assign(self, new_time, new_ionic_fractions, new_n, new_T_e):
+    def _assign(self, new_time, new_ionfracs, new_n, new_T_e):
 
         try:
-            self._time[self._index] = new_time
-            self._T_e[self._index] = new_T_e
+            index = self._index
+            elements = self.elements
+            self._time[index] = new_time
+            self._T_e[index] = new_T_e
 
-            for elem in self.elements:
-                self._ionic_fractions[elem][:, self._index] = new_ionic_fractions[elem][:]
+            for elem in elements:
+                self._ionic_fractions[elem][index, :] = new_ionfracs[elem][:]
 
             # Calculate elemental and ionic number densities
-            n_elem = {elem: new_n * self.abundances[elem] for elem in self.elements}
+            n_elem = {elem: new_n * self.abundances[elem] for elem in elements}
             number_densities = {
-                elem: n_elem[elem] * new_ionic_fractions[elem]
-                for elem in self.elements
+                elem: n_elem[elem] * new_ionfracs[elem]
+                for elem in elements
             }
 
             # Calculate the electron number density
             n_e = 0.0 * u.cm ** -3
-            for elem in self.elements:
-                integer_charges = np.linspace(0, self.nstates[elem]-1, self.nstates[elem])
+            for elem in elements:
+                integer_charges = np.linspace(
+                    0, self.nstates[elem]-1, self.nstates[elem])
                 n_e += np.sum(number_densities[elem] * integer_charges)
 
             # Assign densities
-            self._n_e[self._index] = n_e
-            for elem in self.elements:
-                self._n_elem[elem][self._index] = n_elem[elem]
-                self._number_densities[elem][:, self._index] = number_densities[elem]
+            self._n_e[index] = n_e
+            for elem in elements:
+                self._n_elem[elem][index] = n_elem[elem]
+                self._number_densities[elem][index, :] = number_densities[elem]
 
         except Exception as exc:
             raise NEIError(
                 f"Unable to assign parameters to Simulation instance "
-                f"for index {self._index} at time = {new_time}.  The "
+                f"for index {index} at time = {new_time}.  The "
                 f"parameters are new_n = {new_n}, new_T_e = {new_T_e}, "
-                f"and new_ionic_fractions = {new_ionic_fractions}."
+                f"and new_ionic_fractions = {new_ionfracs}."
             ) from exc
         finally:
             self._index += 1
+
+    def _cleanup(self):
+        # time
+        # temperature
+        # number density
+        # number densities
+        # n_e
+        nsteps = self._index
+
+        self._n_e = self._n_e[0:nsteps]
+        self._T_e = self._T_e[0:nsteps]
+        self._time = self._time[0:nsteps]
+
+        for element in self.elements:
+            self._ionic_fractions[element] = self._ionic_fractions[element][0:nsteps, :]
+            self._number_densities[element] = self._number_densities[element][0:nsteps, :]
+
+        self._index = None
+
+        # temporary check
+        assert not np.isnan(self._n_e[-1].value)
 
     @property
     def max_steps(self):
@@ -260,7 +291,9 @@ class NEI:
 
             self.abundances = self.initial.abundances
 
-            self._EigenDataDict = {element: EigenData2(element) for element in self.elements}
+            self._EigenDataDict = {
+                element: EigenData2(element) for element in self.elements
+            }
 
             if self.T_e_input is not None and not isinstance(inputs, dict):
                 for element in self.initial.elements:
@@ -310,7 +343,7 @@ class NEI:
         """
 
         if T_e is not None and time is not None:
-            raise NEIError("Only one of T_e and time may be used as an argument.")
+            raise NEIError("Only one of T_e and time may be an argument.")
 
         if T_e is None and time is None:
             if self.T_e_input.isscalar:
@@ -328,11 +361,12 @@ class NEI:
             T_e = self.electron_temperature(time)
 
         if not T_e.isscalar:
-            raise NEIError("Need scalar input for equilibrium_ionic_fractions.")
+            raise NEIError("Need scalar input for equil_ionic_fractions.")
 
         equil_ionfracs = {}
         for element in self.elements:
-            equil_ionfracs[element] = self.EigenDataDict[element].equilibrium_state(T_e.value)
+            equil_ionfracs[element] = \
+                self.EigenDataDict[element].equilibrium_state(T_e.value)
 
         return equil_ionfracs
 
@@ -375,7 +409,8 @@ class NEI:
             try:
                 times = times.to(u.s)
             except u.UnitConversionError:
-                raise u.UnitsError("time_input must have units of seconds.") from None
+                raise u.UnitsError(
+                    "time_input must have units of seconds.") from None
             if not np.all(times[1:] > times[:-1]):
                 raise ValueError("time_input must monotonically increase.")
             self._time_input = times
@@ -396,12 +431,16 @@ class NEI:
             try:
                 time = time.to(u.s)
             except u.UnitConversionError:
-                raise u.UnitsError("time_start must have units of seconds") from None
+                raise u.UnitsError(
+                    "time_start must have units of seconds") from None
             if hasattr(self, '_time_max') \
-                    and self._time_max is not None and self._time_max<=time:
-                raise ValueError("time_start must be less than time_max")
-            if self.time_input is not None and self.time_input.min() > time:
-                raise ValueError("time_start must be less than min(time_input)")
+                    and self._time_max is not None \
+                    and self._time_max<=time:
+                raise ValueError("Need time_start < time_max.")
+            if self.time_input is not None and \
+                    self.time_input.min() > time:
+                raise ValueError(
+                    "time_start must be less than min(time_input)")
             self._time_start = time
         else:
             raise TypeError("Invalid time_start.") from None
@@ -413,16 +452,18 @@ class NEI:
     @time_max.setter
     def time_max(self, time):
         if time is None:
-            self._time_max = self.time_input[-1] if self.time_input is not None else None
+            self._time_max = self.time_input[-1] \
+                if self.time_input is not None else np.inf * u.s
         elif isinstance(time, u.Quantity):
             if not time.isscalar:
                 raise ValueError("time_max must be a scalar")
             try:
                 time = time.to(u.s)
             except u.UnitConversionError:
-                raise u.UnitsError("time_max must have units of seconds") from None
-            if hasattr(self, '_time_start') and self._time_start is not None and \
-                    self._time_start >= time:
+                raise u.UnitsError(
+                    "time_max must have units of seconds") from None
+            if hasattr(self, '_time_start') and self._time_start is not None \
+                    and self._time_start >= time:
                 raise ValueError("time_max must be greater than time_start")
             self._time_max = time
         else:
@@ -464,7 +505,7 @@ class NEI:
 
     @safety_factor.setter
     def safety_factor(self, value):
-        if not isinstance(value, (float, np.float64, np.float32, np.integer, int)):
+        if not isinstance(value, (float, np.float64, np.integer, int)):
             raise TypeError
         if 1e-3 <= value <= 1e3:
             self._safety_factor = value
@@ -482,23 +523,17 @@ class NEI:
         else:
             raise TypeError("Invalid choice for verbose.")
 
-    def _check_time(self, time):
-        try:
-            time_s = time.to(u.s)
-        except Exception as exc:
-            raise NEIError(f"{time} is not a valid time.")
-        if np.isnan(time_s):
-            raise NEIError(f"time is not a number.")
-
-        if time_s < self.time_start:
-            raise NEIError(
-                f"time = {time} is less than time_start = "
-                f"{self.time_start}.")
-        elif self._time_max is not None and time_s > self.time_max:
-            raise NEIError(
-                f"time = {time} is greater than time_max = "
-                f"{self.time_max}"
-            )
+    def in_time_interval(self, time):
+        """
+        Return `True` if the time is between `time_start` and
+        `time_max`, and `False` otherwise.  If `time` is not a valid
+        time, then raise a `~astropy.units.UnitsError`.
+        """
+        if not isinstance(time, u.Quantity):
+            raise TypeError
+        if not time.unit.physical_type == 'time':
+            raise u.UnitsError(f"{time} is not a valid time.")
+        return self.time_start <= time <= self.time_max
 
     @property
     def max_steps(self):
@@ -506,10 +541,12 @@ class NEI:
 
     @max_steps.setter
     def max_steps(self, n):
-        if isinstance(n, (int, np.integer)) and n > 0:
+        if isinstance(n, (int, np.integer)) and 0 < n <= 1000000:
             self._max_steps = n
         else:
-            raise TypeError("max_steps must be an integer")
+            raise TypeError(
+                "max_steps must be an integer with 0 < max_steps <= "
+                "1000000")
 
     @property
     def T_e_input(self):
@@ -528,10 +565,11 @@ class NEI:
                 self._electron_temperature = lambda time: T_e
             else:
                 if self._time_input is None:
-                    raise TypeError("Must define time_input prior to T_e for an array.")
+                    raise TypeError(
+                        "Must define time_input prior to T_e for an array.")
                 time_input = self.time_input
                 if len(time_input) != len(T_e):
-                    raise ValueError("len(T_e) is not equal to len(time_input).")
+                    raise ValueError("len(T_e) not equal to len(time_input).")
                 f = interpolate.interp1d(time_input.value, T_e.value)
                 self._electron_temperature = lambda time: f(time.value) * u.K
                 self._T_e_input = T_e
@@ -551,22 +589,20 @@ class NEI:
 
     def electron_temperature(self, time):
         try:
-            self._check_time(time)
-            time = time.to(u.s)
-            T_e = self._electron_temperature(time).to(u.K)
-
-            if np.isnan(T_e):
-                raise NEIError(f"Finding T_e = {T_e} at time = {time}.")
-            elif T_e < 0 * u.K:
-                raise
-            else:
-                return T_e
+            if not self.in_time_interval(time):
+                raise NEIError("Not in simulation time interval.")
+            T_e = self._electron_temperature(time.to(u.s))
+            if np.isnan(T_e) or np.isinf(T_e) or T_e < 0 * u.K:
+                raise NEIError(f"T_e = {T_e} at time = {time}.")
+            return T_e
         except Exception as exc:
-            raise NEIError(f"Unable to calculate electron temperature for time {time}")
+            raise NEIError(
+                f"Unable to calculate a valid electron temperature "
+                f"for time {time}") from exc
 
     @property
     def n_input(self) -> u.Quantity:
-        """The hydrogen number density."""
+        """The number density factor input."""
         if 'H' in self.elements:
             return self._n_input
         else:
@@ -584,12 +620,14 @@ class NEI:
                 self.hydrogen_number_density = lambda time: n
             else:
                 if self._time_input is None:
-                    raise TypeError("Must define time_input prior to n for an array.")
+                    raise TypeError(
+                        "Must define time_input prior to n for an array.")
                 time_input = self.time_input
                 if len(time_input) != len(n):
                     raise ValueError("len(n) is not equal to len(time_input).")
                 f = interpolate.interp1d(time_input.value, n.value)
-                self._hydrogen_number_density = lambda time: f(time.value) * u.cm ** -3
+                self._hydrogen_number_density = \
+                    lambda time: f(time.value) * u.cm ** -3
                 self._n_input = n
         elif callable(n):
             if self.time_start is not None:
@@ -597,7 +635,7 @@ class NEI:
                     n(self.time_start).to(u.cm ** -3)
                     n(self.time_max).to(u.cm ** -3)
                 except Exception:
-                    raise ValueError("Invalid hydrogen number density function.")
+                    raise ValueError("Invalid number density function.")
             self._n_input = n
             self._hydrogen_number_density = n
         elif n is None:
@@ -615,10 +653,6 @@ class NEI:
     @property
     def EigenDataDict(self):
         return self._EigenDataDict
-
-    @EigenDataDict.setter
-    def EigenDataDict(self):
-        self._EigenDataDict = {element: EigenData2(element) for element in self.elements}
 
     @property
     def initial(self):
@@ -656,8 +690,8 @@ class NEI:
     def final(self):
         try:
             return self._final
-        except Exception:
-            raise AttributeError("The simulation has not yet been performed.")
+        except AttributeError:
+            raise NEIError("The simulation has not yet been performed.") from None
 
     def _initialize_simulation(self):
 
@@ -668,23 +702,8 @@ class NEI:
             max_steps=self.max_steps,
             time_start=self.time_start,
         )
-
-    def set_timestep(self, dt=None):
-        if dt is not None:
-            try:
-                dt = dt.to(u.s)
-            except Exception:
-                raise NEIError("Invalid timestep.")
-            finally:
-                self._dt = dt
-        elif self.adapt_dt:
-            raise NotImplementedError(
-                "Adaptive time step not yet implemented; set adapt_dt "
-                "to False.")
-        elif self.dt_input is not None:
-            self._dt = self.dt_input
-        else:
-            raise NEIError("Unable to get set timestep.")
+        self._old_time = self.time_start.to(u.s)
+        self._new_time = self.time_start.to(u.s)
 
     def simulate(self):
         """
@@ -698,13 +717,42 @@ class NEI:
             try:
                 self.set_timestep()
                 self.time_advance()
+            except StopIteration:
+                break
             except Exception as exc:
                 raise NEIError(f"Unable to complete simulation.") from exc
 
         self._finalize_simulation()
 
     def _finalize_simulation(self):
-        ...
+        self.results._cleanup()
+
+    def set_timestep(self, dt=None):
+        if dt is not None:
+            try:
+                dt = dt.to(u.s)
+            except Exception:
+                raise NEIError(f"{dt} is not a valid timestep.")
+            finally:
+                self._dt = dt
+        elif self.adapt_dt:
+            raise NotImplementedError(
+                "Adaptive time step not yet implemented; set adapt_dt "
+                "to False.")
+        elif self.dt_input is not None:
+            self._dt = self.dt_input
+        else:
+            raise NEIError("Unable to get set timestep.")
+
+        self._old_time = self._new_time
+        self._new_time = self._old_time + self._dt
+
+        if self._old_time >= self.time_max:
+            raise StopIteration
+
+        if self._new_time > self.time_max:
+            self._new_time = self.time_max
+            self._dt = self._new_time - self._old_time
 
     def time_advance(self):
 
@@ -725,7 +773,8 @@ class NEI:
         try:
             for elem in self.elements:
                 nstates = self.results.nstates[elem]
-                f0 = self.results._ionic_fractions[elem][:, self.results._index - 1]
+                f0 = self.results._ionic_fractions[elem][self.results._index - 1, :]
+
                 evals = self.EigenDataDict[elem].eigenvalues(T_e=T_e)
                 evect = self.EigenDataDict[elem].eigenvectors(T_e=T_e)
                 evect_inverse = self.EigenDataDict[elem].eigenvector_inverses(T_e=T_e)
@@ -747,52 +796,20 @@ class NEI:
 
                 new_ionic_fractions[elem] = ft
 
+            if self.verbose:
+                print(f'new_ionic_fractions = {new_ionic_fractions}')
+
         except Exception as exc:
             raise NEIError(f"Unable to do time advance for {elem}") from exc
         else:
 
-            new_time = self.results.time[0] + self._dt
+            new_time = self.results.time[self.results._index-1] + self._dt
             self.results._assign(
                 new_time=new_time,
-                new_ionic_fractions=new_ionic_fractions,
+                new_ionfracs=new_ionic_fractions,
                 new_T_e=self.electron_temperature(new_time),
                 new_n=self.hydrogen_number_density(new_time),
             )
-
-
-        # ------------------------------------------------------------------------------
-        # function: Time-Advance solover
-        # ------------------------------------------------------------------------------
-        # def func_solver_eigenval(natom, te, ne, dt, f0, table):
-        #    """
-        #        The testing function for performing time_advance calculations.
-        #    """
-
-        # !! Change the following to use table.eigen*(T_e=...)
-
-        #    table.temperature = te
-        #    evals = table.eigenvalues  # find eigenvalues on the chosen Te node
-        #    evect = table.eigenvectors
-        #    evect_invers = table.eigenvector_inverses
-
-        #    # define the temperary diagonal matrix
-        #    diagona_evals = np.zeros((natom + 1, natom + 1))
-        #    for ii in range(0, natom + 1):
-        #        diagona_evals[ii, ii] = np.exp(evals[ii] * dt * ne)
-
-        #    # matirx operation
-        #    matrix_1 = np.dot(diagona_evals, evect)
-        #    matrix_2 = np.dot(evect_invers, matrix_1)
-
-        #    # get ions fraction at (time+dt)
-        #    ft = np.dot(f0, matrix_2)
-
-        #    # re-check the smallest value
-        #    minconce = 1.0e-15
-        #    for ii in np.arange(0, natom + 1, dtype=np.int):
-        #        if (abs(ft[ii]) <= minconce):
-        #            ft[ii] = 0.0
-        #    return ft
 
     def save(self, filename="nei.h5"):
         ...
