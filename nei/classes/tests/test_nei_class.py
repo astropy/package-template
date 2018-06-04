@@ -8,7 +8,7 @@ import pytest
 inputs_dict = {'H': [0.9, 0.1], 'He': [0.5, 0.3, 0.2]}
 abundances = {'H': 1, 'He': 0.1}
 
-time_array = np.array([-3, 90]) * u.s
+time_array = np.array([0, 800]) * u.s
 T_e_array = np.array([4e4, 6e4]) * u.K
 n_array = np.array([1e9, 5e8]) * u.cm ** -3
 
@@ -23,9 +23,9 @@ tests = {
         'time_input': time_array,
         'time_start': 0 * u.s,
         'time_max': 800 * u.s,
-        'max_steps': 3,
+        'max_steps': 1,
         'adapt_dt': False,
-        'dt': 100 * u.s,
+        'dt': 800 * u.s,
         'verbose': True,
     },
 
@@ -79,6 +79,7 @@ tests = {
         'adapt_dt': False,
         'dt': 100 * u.s,
         'verbose': True,
+        'max_steps': 11
     },
 
     'equil test cool': {
@@ -89,7 +90,8 @@ tests = {
         'time_max': 1e6 * u.s,
         'tol': 1e-9,
         'adapt_dt': False,
-        'dt': 100 * u.s,
+        'dt': 1e5 * u.s,
+        'max_steps': 9,
         'verbose': True,
     },
 
@@ -99,7 +101,25 @@ tests = {
         'T_e': 7e6 * u.K,
         'n': 1e9 * u.cm ** -3,
         'time_max': 1e8 * u.s,
-        'dt': 100 * u.s,
+        'dt': 1e7 * u.s,
+        'adapt_dt': False,
+        'verbose': True,
+        'max_steps': 15,
+    },
+
+    'equil test start far out of equil': {
+        'inputs': {
+            'H': [0.99, 0.01],
+            'He': [0.5, 0.0, 0.5],
+            'O': [0.2, 0, 0.2, 0, 0.2, 0, 0.2, 0, 0.2],
+            'Fe': np.ones(27)/27,
+        },
+        'abundances': {'H': 1, 'He': 0.1, 'O': 1e-4, 'Fe': 1e-5},
+        'T_e': 3e6 * u.K,
+        'n': 1e9 * u.cm ** -3,
+        'dt': 1e6 * u.s,
+        'time_start': 0 * u.s,
+        'time_max': 1e6 * u.s,
         'adapt_dt': False,
         'verbose': True,
     }
@@ -161,18 +181,25 @@ class TestNEI:
         else:
             assert expected == actual
 
-#    @pytest.mark.parametrize(
-#        'test_name',
-#        [test_name for test_name in test_names
-#         if isinstance(tests[test_name]['T_e'], u.Quantity)
-#         and not tests[test_name]['T_e'].isscalar
-#         ],
-#    )
-#    def test_electron_temperature_array(self):
-#        ...
+    @pytest.mark.parametrize('test_name', test_names)
+    def test_electron_temperature(self, test_name):
+        instance = self.instances[test_name]
+        T_e_input = instance.T_e_input
+        if isinstance(T_e_input, u.Quantity):
+            if T_e_input.isscalar:
+                assert instance.electron_temperature(instance.time_start) == T_e_input
+                assert instance.electron_temperature(instance.time_max) == T_e_input
+            else:
+                for time, T_e in zip(instance.time_input, T_e_input):
+                    try:
+                        T_e_func = instance.electron_temperature(time)
+                    except Exception:
+                        raise ValueError("Unable to find T_e from electron_temperature")
 
-
-
+                    assert np.isclose(T_e.value, T_e_func.value)
+        if callable(T_e_input):
+            assert instance.T_e_input(instance.time_start) == \
+                instance.electron_temperature(instance.time_start)
 
     @pytest.mark.parametrize(
         'test_name',
@@ -189,20 +216,6 @@ class TestNEI:
             )
 
     @pytest.mark.parametrize('test_name', test_names)
-    def test_equilibration_one_very_long_step(self, test_name):
-        """
-        Test that
-        """
-        ...
-
-
-    @pytest.mark.parametrize('test_name', test_names)
-    def test_equilibration_ten_long_steps(self, test_name):
-        ...
-
-
-
-    @pytest.mark.parametrize('test_name', test_names)
     def test_simulate(self, test_name):
         try:
             self.instances[test_name].simulate()
@@ -210,16 +223,47 @@ class TestNEI:
             raise ValueError(f"Unable to simulate for test: {test_name}") from exc
 
     @pytest.mark.parametrize('test_name', test_names)
+    def test_simulation_end(self, test_name):
+        instance = self.instances[test_name]
+        time = instance.results.time
+        end_time = time[-1]
+        max_steps = instance.max_steps
+
+        if np.isnan(end_time.value):
+            raise Exception('End time is NaN.')
+
+        got_to_max_steps = len(time) == instance.max_steps + 1
+        got_to_time_max = np.isclose(time[-1].value, instance.time_max.value)
+
+        if not got_to_max_steps and not got_to_time_max:
+            print(f"time = {time}")
+            print(f"max_steps = {max_steps}")
+            print(f'time_max = {time_max}')
+            raise Exception("Problem with end time.")
+
+    @pytest.mark.parametrize(
+        'test_name',
+        [test_name for test_name in test_names if 'equil' in test_name]
+    )
+    def test_equilibration(self, test_name):
+        """
+        Test that equilibration works.
+        """
+        instance = self.instances[test_name]
+        T_e = instance.T_e_input
+        assert isinstance(T_e, u.Quantity) and T_e.isscalar, \
+            "This test can only be used for cases where T_e is constant."
+        equil_dict = instance.equil_ionic_fractions(T_e)
+        for element in instance.elements:
+            assert np.allclose(
+                equil_dict[element], instance.results.ionic_fractions[element][-1, :]
+            )
+
+    @pytest.mark.parametrize('test_name', test_names)
     def test_initial_results(self, test_name):
         initial = self.instances[test_name].initial
         results = self.instances[test_name].results
-
         assert initial.elements == results.elements
         assert initial.abundances == results.abundances
-
         for elem in initial.elements:
-            assert np.allclose(results.ionic_fractions[elem][:, 0], initial.ionic_fractions[elem])
-
-    # Test that ionization fractions that were calculated to be in
-    # equilibrium remain in equilibrium after (1) a single long time
-    # step, and (2) a bunch of smaller time steps.
+            assert np.allclose(results.ionic_fractions[elem][0, :], initial.ionic_fractions[elem])
