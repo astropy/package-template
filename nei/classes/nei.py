@@ -23,9 +23,37 @@ class NEIError(Exception):
 
 class Simulation:
     """
-    Store results from a non-equilibrium ionization simulation.
+    Results from a non-equilibrium ionization simulation.
+
+    Parameters
+    ----------
+    initial: ~IonizationStates
+        The `IonizationStates` instance representing the ionization
+        states of different elements and plasma properties as the
+        initial conditions.
+
+    n_init: ~astropy.units.quantity
+        The initial number density scaling factor.
+
+    T_e_init: ~astropy.units.quantity
+        The initial electron temperature.
+
+    max_steps: int
+        The maximum number of time steps that the simulation can take
+        before stopping.
+
+    time_start: ~astropy.units.Quantity
+        The time at the start of the simulation.
+
     """
-    def __init__(self, initial, n_init, T_e_init, max_steps, time_start):
+    def __init__(
+            self,
+            initial: IonizationStates,
+            n_init: u.Quantity,
+            T_e_init: u.Quantity,
+            max_steps: int,
+            time_start: u.Quantity,
+    ):
 
         self._elements = initial.elements
         self._abundances = initial.abundances
@@ -64,7 +92,41 @@ class Simulation:
             new_T_e = T_e_init,
         )
 
-    def _assign(self, new_time, new_ionfracs, new_n, new_T_e):
+    def _assign(
+            self,
+            new_time: u.Quantity,
+            new_ionfracs: Dict[str, np.ndarray],
+            new_n: u.Quantity,
+            new_T_e: u.Quantity,
+    ):
+        """
+        Store results from a time step of a non-equilibrium ionization
+        time advance in the `~nei.classes.NEI` class.
+
+        Parameters
+        ----------
+        new_time: ~astropy.units.Quantity
+            The time associated with this time step.
+
+        new_ionfracs: dict
+            The new ionization fractions for this time step.  The keys
+            of this `dict` are the atomic symbols of the elements being
+            tracked, and with the corresponding value being an
+            `~numpy.ndarray` representing the ionic fractions.  Each
+            element's array must have a length of the atomic number plus
+            one, and be normalized to one with all values between zero
+            and one.
+
+        new_n: ~astropy.units.Quantity
+            The new number density scaling factor for this time step.
+            The number densities of each ionic species will be the
+            product of this scaling factor, the element's abundance, and
+            the ionic fraction given in `new_ionfracs`.
+
+        new_T_e: ~astropy.units.Quantity
+            The new electron temperature.
+
+        """
 
         try:
             index = self._index
@@ -106,11 +168,13 @@ class Simulation:
             self._index += 1
 
     def _cleanup(self):
-        # time
-        # temperature
-        # number density
-        # number densities
-        # n_e
+        """
+        Clean up this class after the simulation is complete.
+
+        This method removes the excess elements from each array that
+        did not end up getting used for a time step in the simulation.
+
+        """
         nsteps = self._index
 
         self._n_e = self._n_e[0:nsteps]
@@ -123,47 +187,61 @@ class Simulation:
 
         self._index = None
 
-        # temporary check
-        assert not np.isnan(self._n_e[-1].value)
-
     @property
-    def max_steps(self):
+    def max_steps(self) -> int:
+        """
+        The maximum number of time steps allowed for this simulation.
+        """
         return self._max_steps
 
     @property
-    def nstates(self):
+    def nstates(self) -> Dict[str, int]:
+        """
+        Return the dictionary containing atomic symbols as keys and the
+        number of ionic species for the corresponding element as the
+        value.
+        """
         return self._nstates
 
     @property
-    def elements(self):
+    def elements(self) -> List[str]:
+        """The elements modeled by this simulation."""
         return self._elements
 
     @property
-    def abundances(self):
+    def abundances(self) -> Dict[str, float]:
+        """
+        The relative elemental abundances of the elements modeled in
+        this simulation.
+
+        The keys are the atomic symbols and the values are a `float`
+        representing that element's elemental abundance.
+
+        """
         return self._abundances
 
     @property
-    def ionic_fractions(self):
+    def ionic_fractions(self) -> Dict[str, np.ndarray]:
         return self._ionic_fractions
 
     @property
-    def number_densities(self):
+    def number_densities(self) -> Dict[str, u.Quantity]:
         return self._number_densities
 
     @property
-    def n_elem(self):
+    def n_elem(self) -> Dict[str: u.Quantity]:
         return self._n_elem
 
     @property
-    def n_e(self):
+    def n_e(self) -> u.Quantity:
         return self._n_e
 
     @property
-    def T_e(self):
+    def T_e(self) -> u.Quantity:
         return self._T_e
 
     @property
-    def time(self):
+    def time(self) -> u.Quantity:
         return self._time
 
 
