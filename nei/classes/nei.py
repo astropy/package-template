@@ -205,9 +205,26 @@ class NEI:
         temperature are given by arrays, then this argument must be less
         than `time_input[-1]`.
 
-    dt
+    max_steps: `int`
+        The maximum number of time steps to be taken during a
+        simulation.
 
-    adapt_dt
+    dt: `~astropy.units.Quantity`
+        The time step.  If `adapt_dt` is `False`, then `dt` is the time
+        step for the whole simulation.
+
+    adapt_dt: `bool`
+        If `True`, change the time step based on the characteristic
+        ionization and recombination time scales and change in
+        temperature.  Not yet implemented.
+
+    safety_factor: `float` or `int`
+        A multiplicative factor to multiply by the time step when
+        `adapt_dt` is `True`.  Lower values improve accuracy, whereas
+        higher values reduce computational time.  Not yet implemented.
+
+    tol: float
+        The absolute tolerance to be used in comparing ionic fractions.
 
     verbose: bool, optional
         A flag stating whether or not to print out information for every
@@ -223,26 +240,29 @@ class NEI:
     >>> import astropy.units as u
 
     >>> inputs = {'H': [0.9, 0.1], 'He': [0.9, 0.099, 0.001]}
-    >>> n = 1e9 * u.m ** -3
-    >>> abundances = {'H': 1, 'He': 0.085}
+    >>> abund = {'H': 1, 'He': 0.085}
+    >>> n = np.array([1e9, 1e8]) * u.cm ** -3
     >>> T_e = np.array([5000, 50000]) * u.K
     >>> time_input = np.array([0, 10]) * u.min
 
     The initial conditions can be accessed using the initial attribute.
 
-    #>>> nei.initial['H']
+    >>> sim = NEI(inputs=inputs, abundances=abund, n=n, T_e=T_e, time_input=time_input, adapt_dt=False, dt=1*u.min)
 
     After having inputted all of the necessary information, we can run
     the simulation.
 
-    #>>> nei.simulate()
+    >>> sim.simulate()
 
     The final results can be access with the `final` attribute.
 
-    #>>> nei.final['H']
-    #array([0.0, 1.0])
-    #>>> nei.final.T_e
-    #<Quantity 50000. K>
+    >>> sim.final.ionic_fractions['H']
+    array([0.87323978, 0.12676022])
+    >>> sim.final.ionic_fractions['He']
+    array([0.89964062, 0.09936038, 0.00099899])
+    >>> sim.final.T_e
+    <Quantity 50000. K>
+
 
     """
 
