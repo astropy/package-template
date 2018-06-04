@@ -7,6 +7,7 @@ import collections
 from scipy import interpolate
 from .eigenvaluetable import EigenData2
 from .ionization_states import IonizationStates
+import warnings
 
 # TODO: Allow this to keep track of velocity and position too, and
 # eventually to have density and temperature be able to be functions of
@@ -203,6 +204,10 @@ class NEI:
         The maximum time for the simulation.  If density and/or
         temperature are given by arrays, then this argument must be less
         than `time_input[-1]`.
+
+    dt
+
+    adapt_dt
 
     verbose: bool, optional
         A flag stating whether or not to print out information for every
@@ -725,7 +730,20 @@ class NEI:
         self._finalize_simulation()
 
     def _finalize_simulation(self):
-        self.results._cleanup()
+        self._results._cleanup()
+
+        final_ionfracs = {
+            element: self.results.ionic_fractions[element][-1, :]
+            for element in self.elements
+        }
+
+        self._final = IonizationStates(
+            inputs=final_ionfracs,
+            abundances=self.abundances,
+            n_H=np.sum(self.results.number_densities['H'][-1, :]),  # modify this later?,
+            T_e=self.results.T_e[-1],
+            tol=1e-6,
+        )
 
     def set_timestep(self, dt=None):
         if dt is not None:
@@ -788,16 +806,16 @@ class NEI:
 
                 ft = np.dot(f0, matrix_2)
 
-                # Can probably simplify this with np.where
-                minconce = 1.0e-15
-                for ii in np.arange(0, nstates, dtype=np.int):
-                    if (abs(ft[ii]) <= minconce):
-                        ft[ii] = 0.0
+                # Due to truncation errors in the solutions in the
+                # eigenvalues and eigenvectors, there is a chance that
+                # very slightly negative ionic fractions will arise.
+                # These are not natural and will make the code grumpy.
+                # For these reasons, the ionic fractions will be very
+                # slightly unnormalized.  We set negative ionic
+                # fractions to zero and renormalize.
 
-                new_ionic_fractions[elem] = ft
-
-            if self.verbose:
-                print(f'new_ionic_fractions = {new_ionic_fractions}')
+                ft[np.where(ft < 0.0)] = 0.0
+                new_ionic_fractions[elem] = ft / np.sum(ft)
 
         except Exception as exc:
             raise NEIError(f"Unable to do time advance for {elem}") from exc
