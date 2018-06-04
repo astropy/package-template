@@ -254,6 +254,10 @@ class NEI:
 
     >>> sim.simulate()
 
+    The initial results are stored in the `initial` attribute.
+
+    >>> sim.initial.ionic_fractions['H']
+
     The final results can be access with the `final` attribute.
 
     >>> sim.final.ionic_fractions['H']
@@ -263,6 +267,14 @@ class NEI:
     >>> sim.final.T_e
     <Quantity 50000. K>
 
+    Both `initial` and `final` are instances of the `IonizationStates`
+    class.
+
+    Notes
+    -----
+    The ionization and recombination rates are from Chianti version
+    8.x.  These rates include radiative and dielectronic recombination.
+    Photoionization is not included.
 
     """
 
