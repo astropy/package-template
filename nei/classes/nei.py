@@ -172,7 +172,8 @@ class Simulation:
         Clean up this class after the simulation is complete.
 
         This method removes the excess elements from each array that
-        did not end up getting used for a time step in the simulation.
+        did not end up getting used for a time step in the simulation
+        and sets the `last_step` attribute.
 
         """
         nsteps = self._index
@@ -242,7 +243,7 @@ class Simulation:
         return self._ionic_fractions
 
     @property
-    def number_densities(self) -> Dict[str, u.cm ** -3]:
+    def number_densities(self) -> Dict[str, u.Quantity]:
         """
         Return the number densities over the course of the simulation.
 
@@ -255,7 +256,7 @@ class Simulation:
         return self._number_densities
 
     @property
-    def n_elem(self) -> Dict[str: u.cm ** -3]:
+    def n_elem(self) -> Dict[str, u.Quantity]:
         """
         The number densities of each element over the course of the
         simulation.
@@ -268,7 +269,7 @@ class Simulation:
         return self._n_elem
 
     @property
-    def n_e(self) -> u.cm ** -3:
+    def n_e(self) -> u.Quantity:
         """
         The electron number density over the course of the simulation in
         units of number density.
@@ -278,7 +279,7 @@ class Simulation:
         return self._n_e
 
     @property
-    def T_e(self) -> u.K:
+    def T_e(self) -> u.Quantity:
         """
         The electron temperature over the course of the simulation in
         kelvin.
@@ -288,7 +289,7 @@ class Simulation:
         return self._T_e
 
     @property
-    def time(self) -> u.s:
+    def time(self) -> u.Quantity:
         """
         The time for each time step over the course of the simulation
         in units of seconds.
@@ -479,7 +480,11 @@ class NEI:
                 f"  max_steps = {max_steps}\n"
             )
 
-    def equil_ionic_fractions(self, T_e=None, time=None) -> dict:
+    def equil_ionic_fractions(
+            self,
+            T_e: u.Quantity = None,
+            time: u.Quantity = None,
+    ) -> Dict[str, np.ndarray]:
         """
         Return the equilibrium ionic fractions for a temperature or at
         a given time.
@@ -537,7 +542,7 @@ class NEI:
         return equil_ionfracs
 
     @property
-    def elements(self):
+    def elements(self) -> List[str]:
         return self._elements
 
     @elements.setter
@@ -564,10 +569,14 @@ class NEI:
 
     @property
     def tol(self) -> float:
+        """
+        The tolerance for comparisons between different ionization
+        states.
+        """
         return self._tol
 
     @tol.setter
-    def tol(self, value: float):
+    def tol(self, value: Union[float, int]):
         try:
             value = float(value)
         except Exception as exc:
@@ -600,12 +609,11 @@ class NEI:
 
     @property
     def time_start(self) -> u.Quantity:
-
-
+        """The start time of the simulation."""
         return self._time_start
 
     @time_start.setter
-    def time_start(self, time):
+    def time_start(self, time: u.Quantity):
         if time is None:
             self._time_start = 0.0 * u.s
         elif isinstance(time, u.Quantity):
@@ -629,11 +637,12 @@ class NEI:
             raise TypeError("Invalid time_start.") from None
 
     @property
-    def time_max(self):
+    def time_max(self) -> u.Quantity:
+        """The maximum time allowed for the simulation."""
         return self._time_max
 
     @time_max.setter
-    def time_max(self, time):
+    def time_max(self, time: u.Quantity):
         if time is None:
             self._time_max = self.time_input[-1] \
                 if self.time_input is not None else np.inf * u.s
@@ -653,7 +662,8 @@ class NEI:
             raise TypeError("Invalid time_max.") from None
 
     @property
-    def dt_input(self):
+    def dt_input(self) -> Optional[u.Quantity]:
+        """Return the inputted time step."""
         return self._dt
 
     @dt_input.setter
@@ -670,7 +680,12 @@ class NEI:
                 raise NEIError("Invalid dt.")
 
     @property
-    def adapt_dt(self):
+    def adapt_dt(self) -> Optional[bool]:
+        """
+        Return `True` if the time step is set to be adaptive, `False`
+        if the time step is set to not be adapted, and `None` if this
+        attribute was not set.
+        """
         return self._adapt_dt
 
     @adapt_dt.setter
@@ -684,6 +699,10 @@ class NEI:
 
     @property
     def safety_factor(self):
+        """
+        The multiplicative factor that the time step is to be multiplied
+        by when using an adaptive time step.
+        """
         return self._safety_factor
 
     @safety_factor.setter
@@ -696,17 +715,21 @@ class NEI:
             raise NEIError("Invalid safety factor.")
 
     @property
-    def verbose(self):
+    def verbose(self) -> bool:
+        """
+        Return `True` if verbose output during a simulation is
+        requested, and `False` otherwise.
+        """
         return self._verbose
 
     @verbose.setter
-    def verbose(self, choice):
+    def verbose(self, choice: bool):
         if choice is True or choice is False:
             self._verbose = choice
         else:
             raise TypeError("Invalid choice for verbose.")
 
-    def in_time_interval(self, time):
+    def in_time_interval(self, time: u.Quantity):
         """
         Return `True` if the time is between `time_start` and
         `time_max`, and `False` otherwise.  If `time` is not a valid
@@ -719,11 +742,15 @@ class NEI:
         return self.time_start <= time <= self.time_max
 
     @property
-    def max_steps(self):
+    def max_steps(self) -> int:
+        """
+        The maximum number of steps that a simulation will be allowed
+        to take.
+        """
         return self._max_steps
 
     @max_steps.setter
-    def max_steps(self, n):
+    def max_steps(self, n: int):
         if isinstance(n, (int, np.integer)) and 0 < n <= 1000000:
             self._max_steps = n
         else:
@@ -732,7 +759,10 @@ class NEI:
                 "1000000")
 
     @property
-    def T_e_input(self):
+    def T_e_input(self) -> Union[u.Quantity, Callable]:
+        """
+        The temperature input.
+        """
         return self._T_e_input
 
     @T_e_input.setter
@@ -770,7 +800,7 @@ class NEI:
         else:
             raise TypeError("Invalid T_e")
 
-    def electron_temperature(self, time):
+    def electron_temperature(self, time: u.Quantity) -> u.Quantity:
         try:
             if not self.in_time_interval(time):
                 raise NEIError("Not in simulation time interval.")
@@ -792,7 +822,7 @@ class NEI:
             raise ValueError
 
     @n_input.setter
-    def n_input(self, n):
+    def n_input(self, n: u.Quantity):
         if isinstance(n, u.Quantity):
             try:
                 n = n.to(u.cm ** -3)
@@ -826,7 +856,7 @@ class NEI:
         else:
             raise TypeError("Invalid n.")
 
-    def hydrogen_number_density(self, time):
+    def hydrogen_number_density(self, time: u.Quantity) -> u.Quantity:
         try:
             time = time.to(u.s)
         except (AttributeError, u.UnitsError):
@@ -834,14 +864,17 @@ class NEI:
         return self._hydrogen_number_density(time)
 
     @property
-    def EigenDataDict(self):
+    def EigenDataDict(self) -> Dict[str, EigenData2]:
+        """
+        Return a `dict` containing `~nei.class
+        """
         return self._EigenDataDict
 
     @property
-    def initial(self):
+    def initial(self) -> IonizationStates:
         """
-        The ~plasmapy.atomic.IonizationStates instance representing the
-        initial conditions of the simulation.
+        Return the ionization states of the plasma at the beginning of
+        the simulation.
         """
         return self._initial
 
@@ -856,21 +889,23 @@ class NEI:
             raise TypeError("Expecting an IonizationStates instance.")
 
     @property
-    def results(self):
+    def results(self) -> Simulation:
+        """
+        Return the `~nei.classes.Simulation` class instance that
+        corresponds to the simulation results.
+
+        """
         try:
             return self._results
         except Exception:
             raise AttributeError("The simulation has not yet been performed.")
 
-    @results.setter
-    def results(self, value):
-        if isinstance(value, Simulation):
-            self._results = value
-        else:
-            raise TypeError
-
     @property
-    def final(self):
+    def final(self) -> IonizationStates:
+        """
+        Return the ionization states of the plasma at the end of the
+        simulation.
+        """
         try:
             return self._final
         except AttributeError:
@@ -888,15 +923,16 @@ class NEI:
         self._old_time = self.time_start.to(u.s)
         self._new_time = self.time_start.to(u.s)
 
-    def simulate(self):
+    def simulate(self) -> Simulation:
         """
         Perform a non-equilibrium ionization simulation.
+
+        Returns the
         """
 
         self._initialize_simulation()
 
         for step in range(self.max_steps):
-
             try:
                 self.set_timestep()
                 self.time_advance()
@@ -906,6 +942,11 @@ class NEI:
                 raise NEIError(f"Unable to complete simulation.") from exc
 
         self._finalize_simulation()
+
+        # Is there a way to use the inspect package or something similar
+        # to only return self.results if it is in an expression where
+
+        return self.results
 
     def _finalize_simulation(self):
         self._results._cleanup()
@@ -923,7 +964,7 @@ class NEI:
             tol=1e-6,
         )
 
-    def set_timestep(self, dt=None):
+    def set_timestep(self, dt: u.Quantity = None):
         if dt is not None:
             try:
                 dt = dt.to(u.s)
@@ -951,6 +992,10 @@ class NEI:
             self._dt = self._new_time - self._old_time
 
     def time_advance(self):
+        """
+        Advance the simulation by one time step.
+        """
+        # TODO: Expand docstring and include equations!
 
         # TODO: Fully implement units into this.
 
@@ -1007,5 +1052,9 @@ class NEI:
                 new_n=self.hydrogen_number_density(new_time),
             )
 
-    def save(self, filename="nei.h5"):
-        ...
+    def save(self, filename: str = "nei.h5"):
+        """
+        Save the `~nei.classes.NEI` instance to an HDF5 file.  Not
+        implemented.
+        """
+        raise NotImplementedError
