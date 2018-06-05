@@ -185,6 +185,8 @@ class Simulation:
             self._ionic_fractions[element] = self._ionic_fractions[element][0:nsteps, :]
             self._number_densities[element] = self._number_densities[element][0:nsteps, :]
 
+        self._last_step = nsteps - 1
+
         self._index = None
 
     @property
@@ -193,6 +195,13 @@ class Simulation:
         The maximum number of time steps allowed for this simulation.
         """
         return self._max_steps
+
+    @property
+    def last_step(self) -> int:
+        """
+        The time index of the last step.
+        """
+        return self._last_step
 
     @property
     def nstates(self) -> Dict[str, int]:
@@ -222,26 +231,68 @@ class Simulation:
 
     @property
     def ionic_fractions(self) -> Dict[str, np.ndarray]:
+        """
+        Return the ionic fractions over the course of the simulation.
+
+        The keys of this dictionary are atomic symbols.  The values are
+        2D arrays where the first index refers to the time step and the
+        second index refers to the integer charge.
+
+        """
         return self._ionic_fractions
 
     @property
-    def number_densities(self) -> Dict[str, u.Quantity]:
+    def number_densities(self) -> Dict[str, u.cm ** -3]:
+        """
+        Return the number densities over the course of the simulation.
+
+        The keys of `number_densities` are atomic symbols.  The values
+        are 2D arrays with units of number density where the first index
+        refers to the time step and the second index is the integer
+        charge.
+
+        """
         return self._number_densities
 
     @property
-    def n_elem(self) -> Dict[str: u.Quantity]:
+    def n_elem(self) -> Dict[str: u.cm ** -3]:
+        """
+        The number densities of each element over the course of the
+        simulation.
+
+        The keys of `n_elem` are atomic symbols.  The values are 1D
+        arrays with units of number density where the index refers to
+        the time step.
+
+        """
         return self._n_elem
 
     @property
-    def n_e(self) -> u.Quantity:
+    def n_e(self) -> u.cm ** -3:
+        """
+        The electron number density over the course of the simulation in
+        units of number density.
+
+        The index of this array corresponds to the time step.
+        """
         return self._n_e
 
     @property
-    def T_e(self) -> u.Quantity:
+    def T_e(self) -> u.K:
+        """
+        The electron temperature over the course of the simulation in
+        kelvin.
+
+        The index of this array corresponds to the time step.
+        """
         return self._T_e
 
     @property
-    def time(self) -> u.Quantity:
+    def time(self) -> u.s:
+        """
+        The time for each time step over the course of the simulation
+        in units of seconds.
+        """
         return self._time
 
 
@@ -495,27 +546,42 @@ class NEI:
         self._elements = elements
 
     @property
-    def abundances(self):
+    def abundances(self) -> Dict[str, Union[float, int]]:
+        """Return the abundances."""
         return self._abundances
 
     @abundances.setter
-    def abundances(self, abund):
+    def abundances(self, abund: Dict[Union[str, int], Union[float, int]]):
+
+        # TODO: Update initial, etc. when abundances is updated. The
+        # checks within IonizationStates will also be checks for
+
+        # TODO: Update initial and other attributes when abundances is
+        # updated.
+        #
+
         self._abundances = abund
 
     @property
-    def tol(self):
+    def tol(self) -> float:
         return self._tol
 
     @tol.setter
-    def tol(self, value):
+    def tol(self, value: float):
+        try:
+            value = float(value)
+        except Exception as exc:
+            raise TypeError("Invalid tolerance.")
+        if 0 <= value < 1:
+            raise ValueError("Need 0 <= tol < 1.")
         self._tol = value
 
     @property
-    def time_input(self):
+    def time_input(self) -> Optional[u.Quantity]:
         return self._time_input
 
     @time_input.setter
-    def time_input(self, times):
+    def time_input(self, times: Optional[u.Quantity]):
         if times is None:
             self._time_input = None
         elif isinstance(times, u.Quantity):
@@ -533,7 +599,9 @@ class NEI:
             raise TypeError("Invalid time_input.")
 
     @property
-    def time_start(self):
+    def time_start(self) -> u.Quantity:
+
+
         return self._time_start
 
     @time_start.setter
