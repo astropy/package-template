@@ -4,6 +4,7 @@ cython
 astropy
 matplotlib
 plasmapy
+h5py
 flake8
 coveralls
 pytest
