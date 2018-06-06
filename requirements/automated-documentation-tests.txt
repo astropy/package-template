@@ -1,0 +1,15 @@
+numpy
+scipy
+cython
+astropy
+matplotlib
+plasmapy
+h5py
+flake8
+coveralls
+pytest
+numpydoc
+pillow
+sphinx
+sphinx-automodapi
+sphinx-gallery

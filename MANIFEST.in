@@ -4,9 +4,9 @@ include CHANGES.rst
 include ez_setup.py
 include ah_bootstrap.py
 include setup.cfg
-include packagename/tests/coveragerc
+include nei/tests/coveragerc
 
-recursive-include packagename *.pyx *.c *.pxd
+recursive-include nei *.pyx *.c *.pxd
 recursive-include docs *
 recursive-include licenses *
 recursive-include cextern *
