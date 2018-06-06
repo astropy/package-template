@@ -1,6 +1,6 @@
 language: python
 python:
-    - "3.6.4"
+    - "3.6.5"
 
 git:
     submodules: false
@@ -17,7 +17,7 @@ before_script:
     # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
     - time flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=astropy_helpers
 
-script: coverage run -m pytest nei
+script: travis_wait coverage run -m pytest nei
 
 after_success:
     - coveralls
