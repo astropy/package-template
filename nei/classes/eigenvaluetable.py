@@ -34,7 +34,7 @@ class EigenData2:
     To get the table for element 'Helium' at Te=5.0e5K:
 
     >>> table = EigenData2(element=2)
-    >>> table.temperature=5.0e5k
+    >>> table.temperature=5.0e5
 
     Output eigenvals:
     >>> table.eigenvalues()
