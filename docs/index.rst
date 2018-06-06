@@ -3,7 +3,6 @@ Documentation
 
 This is the documentation for `nei`.
 
-
 .. toctree::
   :maxdepth: 2
 
