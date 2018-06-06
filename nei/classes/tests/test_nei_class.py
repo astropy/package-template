@@ -238,7 +238,7 @@ class TestNEI:
         if not got_to_max_steps and not got_to_time_max:
             print(f"time = {time}")
             print(f"max_steps = {max_steps}")
-            print(f'time_max = {time_max}')
+            print(f'time_max = {instance.time_max}')
             raise Exception("Problem with end time.")
 
     @pytest.mark.parametrize(
