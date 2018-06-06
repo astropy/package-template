@@ -1,6 +1,6 @@
 language: python
 python:
-    - "3.6.4"
+    - "3.6.5"
 
 git:
     submodules: false
@@ -116,7 +116,6 @@ after_success:
         # time.
 #        - os: linux
 #          env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.14
-
 
         # Try numpy pre-release
 #        - os: linux
