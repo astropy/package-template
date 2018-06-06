@@ -895,7 +895,7 @@ class NEI:
         Returns
         ------
         get_time: astropy.units.Quantity
-                  The time value
+                  The time value associated with index input(s)
         """
 
         index_arr = []
@@ -908,6 +908,33 @@ class NEI:
         get_time = interpolate.interp1d(index_arr, time_arr)
 
         return get_time(index)*u.s
+
+    def time_to_index(self, time):
+        """
+        Returns the closest index value or array for the given time(s)
+
+        Parameters
+        ------
+        time: array-like
+               A value or array of values representing the values of
+               the time array created by the simulation
+        
+        Returns
+        ------
+        get_index: array-like,
+                  The index value associated with the time input(s)
+        """
+
+        index_arr = []
+        time_arr = []
+
+        for idx, val in enumerate(self.results.time.value):
+            index_arr.append(idx)
+            time_arr.append(val)
+
+        get_time = interpolate.interp1d(time_arr, index_arr)
+
+        return np.array(get_time(time), dtype=int)
 
     def dens_ratio(self, gamma, mach):
         """
