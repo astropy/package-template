@@ -447,7 +447,7 @@ class NEI:
                 abundances=abundances,
                 T_e=T_e_init,
                 n_H=n_init,  # TODO: Update n_H in IonizationState(s)
-                tol = tol
+                tol = tol,
             )
 
             self.tol = tol
@@ -581,7 +581,7 @@ class NEI:
             value = float(value)
         except Exception as exc:
             raise TypeError("Invalid tolerance.")
-        if 0 <= value < 1:
+        if not 0 <= value < 1:
             raise ValueError("Need 0 <= tol < 1.")
         self._tol = value
 
