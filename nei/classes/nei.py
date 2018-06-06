@@ -1051,8 +1051,7 @@ class NEI:
                 new_T_e=self.electron_temperature(new_time),
                 new_n=self.hydrogen_number_density(new_time),
             )
-
-            =======
+            
     def save(self, filename: str = "nei.h5"):
         """
         Save the `~nei.classes.NEI` instance to an HDF5 file.  Not
