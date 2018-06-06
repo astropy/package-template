@@ -863,3 +863,211 @@ class NEI:
 
     def save(self, filename="nei.h5"):
         ...
+    
+    def visual(self, element):
+        """
+        Returns an atomic object used for plotting protocols
+
+        Parameter
+        ------
+        element: str,
+                 The elemental symbol of the particle in question (i.e. 'H')
+
+        Returns
+        ------
+        Class object
+        """
+        
+        plot_obj = Visualize(element, self.results)
+
+        return plot_obj
+
+    def index_to_time(self, index):
+        """
+        Returns the time value or array given the index/indices
+
+        Parameters
+        ------
+        index: array-like
+               A value or array of values representing the index of
+               the time array created by the simulation
+        
+        Returns
+        ------
+        get_time: astropy.units.Quantity
+                  The time value
+        """
+
+        index_arr = []
+        time_arr = []
+
+        for idx, val in enumerate(self.results.time.value):
+            index_arr.append(idx)
+            time_arr.append(val)
+
+        get_time = interpolate.interp1d(index_arr, time_arr)
+
+        return get_time(index)*u.s
+
+    def dens_ratio(self, gamma, mach):
+        """
+        Returns the density ratio according to the Rankine-Hugonoit 
+        jump conditions
+
+        Parameters
+        ------
+        gamma: float,
+               The specific heats ratios of the system
+        mach: int,
+              The mach number of the system
+
+        Returns
+        ------
+        den_ratio: array-like
+                   The density solution to the mass conservation equation as 
+                   defined by the Rankine-Hugoniot relations.
+        """
+
+        den_ratio = ((gamma+1)*mach**2)/(2+(gamma-1)*mach**2)
+
+        return dens_ratio
+
+    def temp_ratio(self, gamma, mach):
+        """
+        Returns the temperature ratio according to the Rankine-Hugonoit 
+        jump conditions
+
+        Parameters
+        ------
+        gamma: float,
+               The specific heats ratios of the system
+        mach: int,
+              The mach number of the system
+
+        Returns
+        ------
+        temp_ratio: array-like
+                   The temperature solutions to the energy conservation equation as 
+                   defined by the Rankine-Hugoniot relations.
+        """
+
+        temp_ratio = ((gamma+1)+2 * gamma * (mach**2-1))*\
+        ((gamma + 1) + (gamma-1)*(mach**2 - 1)) / \
+        (gamma + 1)**2*mach**2
+
+        return temp_ratio
+
+class Visualize:
+    """
+    Store plotting results from the simulation
+    """
+    def __init__(self, element, results):
+        self.element = element
+        self.results = results
+
+    def ionfrac_evol_plot(self, ion, time_sequence):
+        """
+        Creates a plot of the ionix fraction time evolution of element inputs
+
+        Paramaters
+        ------
+        element: string,
+                 The elemental symbal of the atom (i.e. 'H'),
+        ion: array-like, dtype=int
+             The repective integer charge of the atomic particle (i.e. 0 or [0,1])
+        
+        time_sequence: ~astropy.units.Quantity ,
+                       The time array at which we will be plotting over
+
+        """
+        #Check if element input is a string
+        if not isinstance(self.element, str):
+            raise TypeError('The element input must be a string')
+
+        #Check if time input is in units of time
+        try:
+            time = time_sequence.to(u.s)
+        except TypeError:
+            print("Invalid time units")
+
+        
+        #Ensure ion input is array of integers
+        ion = np.array(ion, dtype=np.int16)
+
+        
+
+        if ion.size > 1:
+            for nstate in ion:
+                ionic_frac = self.results.ionic_fractions[self.element][:,nstate]
+                plt.plot(time.value,ionic_frac, label='%s+%i'%(self.element, nstate))
+                plt.xlabel('Time (s)')
+                plt.ylabel('Ionic Fraction')
+                plt.title('Ionic Fraction Evolution of {}'.format(self.element))
+            plt.legend()
+            plt.show()
+        else:
+            ionic_frac = self.results.ionic_fractions[self.element][:,ion]
+            plt.plot(time.value,ionic_frac)
+            plt.xlabel('Time (s)')
+            plt.ylabel('Ionic Fraction')
+            plt.title('Ionic Fraction Evolution of $%s^{%i+}$'%(self.element,ion))
+            plt.show()
+
+    def ionfrac_bar_plot(self, time_index):
+        """
+        Creates a bar plot of the ion fraction change at a particular time index
+
+        Parameters
+        ------
+        element: str,
+                 The elemental symbol of the atom (i.e. 'H')
+        time_index: int,
+                    The particular time index at which to collect the various ion fractiom
+                    change
+        """
+
+        if not isinstance(self.element, str):
+            raise TypeError('The element input must be a string')
+
+        ion = pl.atomic.atomic_number(self.element)
+
+        x = np.linspace(0, ion, ion+1, dtype=np.int16)
+
+        width=1.0
+
+        fig, ax = plt.subplots()
+        if isinstance(time_index, (list, np.ndarray)):
+
+            
+            alpha = 1.0
+            colors = ['blue', 'red']
+            for idx in time_index:
+                ax.bar(x, self.results.ionic_fractions[self.element][idx,:], alpha=alpha, \
+                        width=width, color=colors[idx], label=f'Time:{idx} s')
+                alpha -= 0.4
+            ax.set_xticks(x-width/2.0)
+            ax.set_xticklabels(x)
+            ax.set_title(f'{self.element}')
+            ax.set_ylabel('Ionic Fraction') 
+            ax.legend(loc='best')
+            plt.show()
+
+        else:
+            ax.bar(x, self.results.ionic_fractions[self.element][time_index,:], alpha=1.0, width=width)
+            ax.set_xticks(x-width/2.0)
+            ax.set_xticklabels(x)
+            ax.set_title(f'{self.element}')
+            ax.set_ylabel('Ionic Fraction') 
+            plt.show()
+    
+
+
+
+
+
+        
+
+
+
+
+
