@@ -1,10 +1,7 @@
 numpy (>= 1.14)
 scipy (>= 1.0)
 cython (>= 0.28)
-astropy (>= 2.1)
-matplotlib (>= 2.0)
+astropy (>= 3.0)
+matplotlib (>= 2.2)
 plasmapy (>= 0.1.1)
-h5py
-flake8
-coveralls
-pytest
+h5py (>= 0.28.0)
