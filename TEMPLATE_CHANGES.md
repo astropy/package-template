@@ -22,6 +22,9 @@ be copied over manually if desired.
 - Adding ``support_python2`` option to distinguish with version of
   astropy_helpers to be used. [#306]
 
+- Removing the `ez_setup.py` file to reflect the changes in the latest
+  astropy-helpers. [#339]
+
 
 1.1.2 (2016-07-02)
 ------------------

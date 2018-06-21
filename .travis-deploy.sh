@@ -28,9 +28,8 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     helpers_version=$(jq -r ".cookiecutter.astropy_helpers_version" $HOME/.cookiecutter_replay/package-template.json)
     git checkout $helpers_version
     cp ah_bootstrap.py ../
-    cp ez_setup.py ../
     cd ..
-    git add astropy_helpers ah_bootstrap.py ez_setup.py
+    git add astropy_helpers ah_bootstrap.py
 
     git commit -m "Update rendered version to ""$TRAVIS_COMMIT"
     git push origin master
