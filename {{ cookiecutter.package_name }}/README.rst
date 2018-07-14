@@ -34,7 +34,7 @@ We assure you - the little voice in your head is wrong. If you can write code at
 all, you can contribute code to open source. Contributing to open source
 projects is a fantastic way to advance one's coding skills. Writing perfect code
 isn't the measure of a good developer (that would disqualify all of us!); it's
-trying to create something, making mistakes, and learning from thoseF
+trying to create something, making mistakes, and learning from those
 mistakes. That's how we all improve, and we are happy to help others learn.
 
 Being an open source contributor doesn't just mean writing code, either. You can
@@ -48,4 +48,4 @@ the errors and assumptions that seasoned contributors have glossed over.
 `Adrienne Lowe <https://github.com/adriennefriend>`_ for a
 `PyCon talk <https://www.youtube.com/watch?v=6Uj746j9Heo>`_, and was adapted by
 {{ cookiecutter.package_name }} based on its use in the README file for the
-`MetPy project <https://github.com/Unidata/MetPy>`_)
+`MetPy project <https://github.com/Unidata/MetPy>`_.)
