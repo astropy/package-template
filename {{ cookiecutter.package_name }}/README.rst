@@ -21,8 +21,8 @@ more information.
 Contributing
 ------------
 
-We love contributions! {{ cookiecutter.package_name }} is open source, built on open source, and we'd love
-to have you hang out in our community.
+We love contributions! {{ cookiecutter.package_name }} is open source,
+built on open source, and we'd love to have you hang out in our community.
 
 **Imposter syndrome disclaimer**: We want your help. No, really.
 
@@ -45,7 +45,7 @@ a whole, because you're coming to the project with fresh eyes, so you can see
 the errors and assumptions that seasoned contributors have glossed over.
 
 (This disclaimer was originally written by
-[Adrienne Lowe](https://github.com/adriennefriend) for a
-[PyCon talk](https://www.youtube.com/watch?v=6Uj746j9Heo), and was adapted by
+`Adrienne Lowe <https://github.com/adriennefriend>`_ for a
+`PyCon talk <https://www.youtube.com/watch?v=6Uj746j9Heo>`_, and was adapted by
 {{ cookiecutter.package_name }} based on its use in the README file for the
-[MetPy project](https://github.com/Unidata/MetPy))
+`MetPy project <https://github.com/Unidata/MetPy>`_)
