@@ -31,6 +31,6 @@ if [[ "${TRAVIS_PULL_REQUEST}" = "false" && "$TRAVIS_OS_NAME" = "linux" && $TASK
     cd ..
     git add astropy_helpers ah_bootstrap.py
 
-    git commit -m "Update rendered version to ""$TRAVIS_COMMIT"
+    git commit --allow-empty -m "Update rendered version to ""$TRAVIS_COMMIT"
     git push origin master
 fi
