@@ -1,7 +1,7 @@
 Astropy package template
 ========================
 
-|powered| | **cookiecutter branch:** |travis cookiecutter| | **master branch:** |travis master| |appveyor master|
+|powered|   -   **cookiecutter branch:** |travis cookiecutter|   -   **master branch:** |travis master| |appveyor master|
 
 This is a package template provided by the Astropy project.
 
