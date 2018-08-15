@@ -11,4 +11,4 @@ python setup.py test
 python setup.py check --restructuredtext
 
 # Make sure the Travis file is valid
-travis lint
+travis lint --skip-completion-check
