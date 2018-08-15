@@ -38,8 +38,8 @@ environment:
         NUMPY_VERSION: "stable"
       {%- endif %}
 
-      # We test Python 3.6 for Python 3 support.
-      - PYTHON_VERSION: "3.6"
+      # We test Python 3.7 for Python 3 support.
+      - PYTHON_VERSION: "3.7"
         ASTROPY_VERSION: "stable"
         NUMPY_VERSION: "stable"
 
