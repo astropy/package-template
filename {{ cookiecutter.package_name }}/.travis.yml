@@ -66,11 +66,14 @@ env:
         - PYTHON_VERSION=2.7 SETUP_CMD='egg_info'
         - PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
         - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+        - PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
         {%- elif  cookiecutter.minimum_python_version == "3.5" %}
         - PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
         - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+        - PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
         {%- elif  cookiecutter.minimum_python_version == "3.6" %}
         - PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+        - PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
         {%- endif %}
 
 
@@ -95,7 +98,7 @@ matrix:
 
         # Now try Astropy dev with the latest Python and LTS with Python 2.7 and 3.x.
         - os: linux
-          env: ASTROPY_VERSION=development
+          env: PYTHON_VERSION=3.7 ASTROPY_VERSION=development
                EVENT_TYPE='pull_request push cron'
         {%- if cookiecutter.minimum_python_version == "2.7" %}
         - os: linux
