@@ -1,9 +1,7 @@
 Astropy package template
 ========================
 
-.. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
-    :target: http://www.astropy.org
-    :alt: Powered by Astropy Badge
+|powered| | **cookiecutter branch:** |travis cookiecutter| | **master branch:** |travis master| |appveyor master|
 
 This is a package template provided by the Astropy project.
 
@@ -63,3 +61,20 @@ repository. Everything in the repository that is not in this folder is not part
 of the template that the user will have rendered.
 
 For further information on writing templates for cookiecutter see `the cookiecutter docs <https://cookiecutter.readthedocs.io/en/latest/first_steps.html>`__.
+
+
+.. |powered| image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
+    :target: http://www.astropy.org
+    :alt: Powered by Astropy Badge
+
+.. |travis cookiecutter| image:: https://travis-ci.org/astropy/package-template.svg?branch=cookiecutter
+    :target: https://travis-ci.org/astropy/package-template
+    :alt: Travis cookiecutter badge
+
+.. |travis master| image:: https://travis-ci.org/astropy/package-template.svg?branch=master
+    :target: https://travis-ci.org/astropy/package-template
+    :alt: Travis master badge
+
+.. |appveyor master| image:: https://ci.appveyor.com/api/projects/status/6p3senmnkk0m43yg/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/Astropy/package-template-615
+    :alt: Appveyor master badge
