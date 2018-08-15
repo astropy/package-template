@@ -17,10 +17,13 @@ environment:
       # Cython code, you can set CONDA_DEPENDENCIES: ""
       CONDA_DEPENDENCIES: "Cython"
       {% else %}
-      # List other runtime dependencies for the package that are available as
-      # conda packages here.
+      # List runtime dependencies for the package that are available as conda
+      # packages here.
       CONDA_DEPENDENCIES: ""
       {% endif %}
+      # List other runtime dependencies for the package that are available as
+      # pip packages here.
+      PIP_DEPENDENCIES: ""
 
       # Conda packages for affiliated packages are hosted in channel
       # "astropy" while builds for astropy LTS with recent numpy versions
