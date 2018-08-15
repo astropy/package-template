@@ -40,10 +40,12 @@ env:
         # so Cython is required for testing. If your package does not include
         # Cython code, you can set CONDA_DEPENDENCIES=''
         - CONDA_DEPENDENCIES='Cython'
+        - CONDA_DEPENDENCIES_DOC='Cython sphinx-astropy'
         {% else %}
         # List other runtime dependencies for the package that are available as
         # conda packages here.
         - CONDA_DEPENDENCIES=''
+        - CONDA_DEPENDENCIES_DOC='sphinx-astropy'
         {% endif %}
         # List other runtime dependencies for the package that are available as
         # pip packages here.
@@ -92,6 +94,7 @@ matrix:
         # may run for a long time
         - os: linux
           env: SETUP_CMD='build_docs -w'
+               CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES_DOC
 
         # Now try Astropy dev with the latest Python and LTS with Python 2.7 and 3.x.
         - os: linux
