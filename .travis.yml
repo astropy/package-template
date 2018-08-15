@@ -36,18 +36,14 @@ env:
       - EXTRA_CONTEXT='minimum_python_version=3.5'
       - TASK='render' FLAGS='--config-file rendered.yml --no-input' EXTRA_CONTEXT='include_example_cython_code=y initialize_git_repo=n license=Other'
 install:
-
     - git clone --depth 1 git://github.com/astropy/ci-helpers.git
     - source ci-helpers/travis/setup_conda.sh
+    - gem install travis
 
 script:
    - cd docs ; make html ; cd ..
    - cookiecutter --no-input ./ -o ../test $EXTRA_CONTEXT $FLAGS
-   - cd ../test/$FOLDERNAME
-   - if [[ $TASK == 'test' ]]; then python setup.py egg_info; fi
-   - if [[ $TASK == 'test' ]]; then python setup.py build; fi
-   - if [[ $TASK == 'test' ]]; then python setup.py build_docs; fi
-   - if [[ $TASK == 'test' ]]; then python setup.py test; fi
+   - if [[ $TASK == 'test' ]]; then ./run_tests.sh ../test/$FOLDERNAME; fi
 
 
 after_success:
