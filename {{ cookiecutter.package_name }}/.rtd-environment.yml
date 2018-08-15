@@ -4,6 +4,7 @@ channels:
     - astropy
 
 dependencies:
+    - python>={{ cookiecutter.minimum_python_version }}
     - astropy
     - Cython
     - matplotlib
