@@ -124,13 +124,13 @@ matrix:
 
         # Do a PEP8 test with flake8
         - os: linux
-          env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count $FLAKE8_OPT' SETUP_CMD=''
+          env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count --show-source --statistics $FLAKE8_OPT' SETUP_CMD=''
 
     allow_failures:
         # Do a PEP8 test with flake8
         # (allow to fail unless your code completely compliant)
         - os: linux
-          env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count $FLAKE8_OPT' SETUP_CMD=''
+          env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count --show-source --statistics $FLAKE8_OPT' SETUP_CMD=''
 
 install:
 
