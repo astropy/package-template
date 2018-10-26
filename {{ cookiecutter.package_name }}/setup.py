@@ -4,14 +4,10 @@
 import glob
 import os
 import sys
-{% if cookiecutter.minimum_python_version.startswith("2") %}
 try:
     from configparser import ConfigParser
 except ImportError:
     from ConfigParser import ConfigParser
-{%- else %}
-from configparser import ConfigParser
-{%- endif %}
 
 # Get some values from the setup.cfg
 conf = ConfigParser()
