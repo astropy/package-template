@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
+# Note: This file needs to be Python 2 / <3.6 compatible, so that the nice
+# "This package only supports Python 3.x+" error prints without syntax errors etc.
 
 import glob
 import os
 import sys
-{% if cookiecutter.minimum_python_version.startswith("2") %}
 try:
     from configparser import ConfigParser
 except ImportError:
     from ConfigParser import ConfigParser
-{%- else %}
-from configparser import ConfigParser
-{%- endif %}
 
 # Get some values from the setup.cfg
 conf = ConfigParser()
