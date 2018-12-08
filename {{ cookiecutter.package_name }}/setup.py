@@ -47,11 +47,11 @@ from astropy_helpers.setup_helpers import (register_commands, get_debug_option,
 from astropy_helpers.git_helpers import get_git_devstr
 from astropy_helpers.version_helpers import generate_version_py
 
+PACKAGENAME = metadata['name']
+
 # Store the package name in a built-in variable so it's easy
 # to get from other parts of the setup infrastructure
 builtins._ASTROPY_PACKAGE_NAME_ = PACKAGENAME
-
-PACKAGENAME = metadata['name']
 
 # VERSION should be PEP440 compatible (http://www.python.org/dev/peps/pep-0440)
 VERSION = metadata['version']
