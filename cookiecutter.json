@@ -23,6 +23,6 @@
     "_copy_without_render": [
         "docs/_templates"
     ],
-    "minimum_python_version": ["3.6", "3.5", "2.7"],
+    "minimum_python_version": ["3.7", "3.6", "3.5", "2.7"],
     "astropy_helpers_version": "{% if cookiecutter.minimum_python_version == '2.7' %}v2.0.8{% else %}v3.1{% endif %}"
 }
