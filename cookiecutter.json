@@ -6,7 +6,7 @@
     "author_name": "Astropy Developers",
     "author_email": "",
     "license": ["BSD 3-Clause", "GNU GPL v3+", "Apache Software Licence 2.0", "BSD 2-Clause", "Other"],
-    "project_url": "http://astropy.org",
+    "project_url": "http://docs.astropy.org/projects/package-template/",
     "project_version": "0.0.dev",
     "include_example_code": "y",
     "include_example_cython_code": "n",
