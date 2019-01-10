@@ -5,12 +5,13 @@ be removed in affiliated packages.
 The changes below indicate what file the change was made in so that these can
 be copied over manually if desired.
 
-2.0 (unreleased)
+2.0 (2019-01-10)
 ----------------
 
 - Updated the setup.cfg to include the version number. [#129]
 
-- Removed Python 2.6 tests from travis.yml file as astropy 1.2 no longer supports Python 2.6 [#183]
+- Removed Python 2.6 tests from travis.yml file as astropy 1.2 no longer
+  supports Python 2.6 [#183]
 
 - Updated ``setup.cfg`` and ``setup.py`` so that the install requirements
   are defined in ``setup.cfg``. [#208]
@@ -22,8 +23,12 @@ be copied over manually if desired.
 - Adding ``support_python2`` option to distinguish with version of
   astropy_helpers to be used. [#306]
 
-- Removing the `ez_setup.py` file to reflect the changes in the latest
+- Removing the ``ez_setup.py`` file to reflect the changes in the latest
   astropy-helpers. [#339]
+
+- Change the default url to the ``package-template`` documentation. [#381]
+
+- Prevent newer pytests to pick up the test function as a test. [#373]
 
 
 1.1.2 (2016-07-02)
