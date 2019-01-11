@@ -24,14 +24,6 @@ LICENSE = metadata.get('license', 'unknown')
 URL = metadata.get('url', '{{ cookiecutter.project_url }}')
 __minimum_python_version__ = metadata.get("minimum_python_version", "{{ cookiecutter.minimum_python_version }}")
 
-# Enforce Python version check - this is the same check as in __init__.py but
-# this one has to happen before importing ah_bootstrap.
-if sys.version_info < tuple((int(val) for val in __minimum_python_version__.split('.'))):
-    sys.stderr.write("ERROR: {{ cookiecutter.module_name }} requires Python {} or later\n".format(__minimum_python_version__))
-    sys.exit(1)
-
-# Import ah_bootstrap after the python version validation
-
 import ah_bootstrap
 from setuptools import setup
 {% if cookiecutter.minimum_python_version.startswith("2") %}
