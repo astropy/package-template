@@ -5,6 +5,11 @@ be removed in affiliated packages.
 The changes below indicate what file the change was made in so that these can
 be copied over manually if desired.
 
+2.1 (unreleased)
+----------------
+
+- Fix make.bat file so that the clean command removes generated API files. [#389]
+
 2.0 (2019-01-10)
 ----------------
 
