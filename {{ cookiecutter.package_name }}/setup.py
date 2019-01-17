@@ -15,7 +15,7 @@ from astropy_helpers.version_helpers import generate_version_py
 
 # Store the package name in a built-in variable so it's easy
 # to get from other parts of the setup infrastructure
-builtins._ASTROPY_PACKAGE_NAME_ = read_configuration()['metadata']['name']
+builtins._ASTROPY_PACKAGE_NAME_ = read_configuration('setup.cfg')['metadata']['name']
 
 # Create a dictionary with setup command overrides. Note that this gets
 # information about the package (name and version) from the setup.cfg file.
