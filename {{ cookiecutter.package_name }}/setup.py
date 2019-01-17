@@ -27,10 +27,6 @@ cmdclassd = register_commands()
 # about the package (name and version) from the setup.cfg file.
 version = generate_version_py()
 
-# Treat everything in scripts except README* as a script to be installed
-scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))
-           if not os.path.basename(fname).startswith('README')]
-
 # Get configuration information from all of the various subpackages.
 # See the docstring for setup_helpers.update_package_files for more
 # details.
