@@ -2,8 +2,6 @@
 
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-import os
-import glob
 import builtins
 
 # Ensure that astropy-helpers is available
