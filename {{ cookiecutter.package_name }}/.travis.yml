@@ -66,22 +66,22 @@ env:
         # - FLAKE8_OPT='--ignore=E501'
         - FLAKE8_OPT=''
 
-    matrix:
-        # Make sure that egg_info works without dependencies
-        {%- if cookiecutter.minimum_python_version == "2.7" %}
-        - PYTHON_VERSION=2.7 SETUP_CMD='egg_info'
-        - PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
-        {%- else %}
-        - PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
-        {%- endif %}
-
-
 matrix:
 
     # Don't wait for allowed failures
     fast_finish: true
 
     include:
+        {%- if cookiecutter.minimum_python_version == "2.7" %}
+        # Make sure that egg_info works without dependencies
+        - os: linux
+          env: PYTHON_VERSION=2.7 SETUP_CMD='egg_info'
+        {%- endif %}
+
+        # Make sure that egg_info works without dependencies
+        - os: linux
+          env: PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
+
         # Try MacOS X
         - os: osx
           env: SETUP_CMD='test'
