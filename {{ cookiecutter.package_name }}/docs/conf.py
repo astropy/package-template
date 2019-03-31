@@ -36,10 +36,14 @@ except ImportError:
     sys.exit(1)
 
 # Get configuration information from setup.cfg
+{% if cookiecutter.minimum_python_version.startswith("2") %}
 try:
     from ConfigParser import ConfigParser
 except ImportError:
     from configparser import ConfigParser
+{%- else %}
+from configparser import ConfigParser
+{%- endif %}    
 conf = ConfigParser()
 
 conf.read([os.path.join(os.path.dirname(__file__), '..', 'setup.cfg')])
