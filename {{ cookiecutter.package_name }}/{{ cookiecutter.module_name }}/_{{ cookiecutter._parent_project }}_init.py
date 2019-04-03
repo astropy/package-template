@@ -6,11 +6,15 @@ __all__ = ['__version__', '__githash__']
 try:
     _ASTROPY_SETUP_
 except NameError:
+{% if cookiecutter.minimum_python_version.startswith("2") %}
     from sys import version_info
     if version_info[0] >= 3:
         import builtins
     else:
         import __builtin__ as builtins
+{%- else %}
+    import builtins
+{%- endif %}
     builtins._ASTROPY_SETUP_ = False
 
 try:
