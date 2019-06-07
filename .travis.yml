@@ -34,7 +34,6 @@ env:
       - EXTRA_CONTEXT="package_name=AstropyProject" FOLDERNAME='AstropyProject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
       - EXTRA_CONTEXT='minimum_python_version=3.5'
-      - PYTHON_VERSION=2.7 TASK='error_check' EXTRA_CONTEXT='minimum_python_version=3.5'
       - TASK='render' FLAGS='--config-file rendered.yml --no-input' EXTRA_CONTEXT='include_example_cython_code=y initialize_git_repo=n license=Other'
 
 install:

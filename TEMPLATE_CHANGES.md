@@ -5,10 +5,19 @@ be removed in affiliated packages.
 The changes below indicate what file the change was made in so that these can
 be copied over manually if desired.
 
+
+3.0 (unreleased)
+----------------
+
+- Removing Python 2 support from the template. [#385]
+
+
 2.1 (unreleased)
 ----------------
 
-- Fix make.bat file so that the clean command removes generated API files. [#389]
+- Fix make.bat file so that the clean command removes generated API files.
+  [#389]
+
 
 - Updating ``astropy_helpers`` version to v2.0.10 and v3.2. [#405]
 
