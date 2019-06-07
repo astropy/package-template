@@ -16,9 +16,21 @@ addons:
         packages:
             - graphviz
 
+
+stage: Comprehensive tests
+
+stages:
+   # Do the style check and a single test job, don't proceed if it fails
+   - name: Initial tests
+   # Test docs, astropy dev, and without optional dependencies
+   - name: Comprehensive tests
+   # These will only run when cron is opted in
+   - name: Cron tests
+     if: type = cron
+
+
 env:
     global:
-
         # The following versions are the 'default' for tests, unless
         # overridden underneath. They are defined here in order to save having
         # to repeat them for all configurations.
@@ -68,14 +80,18 @@ matrix:
 
     include:
         # Make sure that egg_info works without dependencies
-        - env: PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
+        - stage: Initial tests
+          env: PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
 
-        # Try MacOS X
+        # Try MacOS X, usually enough only to run from cron as hardly there are
+        # issues that are not picked up by a linux worker
         - os: osx
+          stage: Cron
           env: SETUP_CMD='test'
 
         # Do a coverage test.
         - os: linux
+          stage: Initial tests
           env: SETUP_CMD='test --coverage'
 
         # Check for sphinx doc build warnings - we do this first because it
@@ -103,13 +119,15 @@ matrix:
 
         # Do a PEP8 test with flake8
         - os: linux
+          stage: Initial tests
           env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count --show-source --statistics $FLAKE8_OPT' SETUP_CMD=''
 
     allow_failures:
         # Do a PEP8 test with flake8
         # (do allow to fail unless your code completely compliant)
         # - os: linux
-        #  env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count --show-source --statistics $FLAKE8_OPT' SETUP_CMD=''
+        #   stage: Initial tests
+        #   env: MAIN_CMD='flake8 {{ cookiecutter.module_name }} --count --show-source --statistics $FLAKE8_OPT' SETUP_CMD=''
 
 install:
 
