@@ -10,6 +10,9 @@ be copied over manually if desired.
 
 - Fix make.bat file so that the clean command removes generated API files. [#389]
 
+- Updating ``astropy_helpers`` version to v2.0.10 and v3.2. [#405]
+
+
 2.0 (2019-01-10)
 ----------------
 
