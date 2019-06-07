@@ -25,9 +25,10 @@
 # Thus, any C-extensions that are needed to build the documentation will *not*
 # be accessible, and the documentation will not build correctly.
 
-import datetime
 import os
 import sys
+import datetime
+from importlib import import_module
 
 try:
     from sphinx_astropy.conf.v1 import *  # noqa
@@ -36,14 +37,7 @@ except ImportError:
     sys.exit(1)
 
 # Get configuration information from setup.cfg
-{% if cookiecutter.minimum_python_version.startswith("2") %}
-try:
-    from ConfigParser import ConfigParser
-except ImportError:
-    from configparser import ConfigParser
-{%- else %}
 from configparser import ConfigParser
-{%- endif %}    
 conf = ConfigParser()
 
 conf.read([os.path.join(os.path.dirname(__file__), '..', 'setup.cfg')])
@@ -82,7 +76,7 @@ copyright = '{0}, {1}'.format(
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 
-__import__(setup_cfg['name'])
+import_module(setup_cfg['name'])
 package = sys.modules[setup_cfg['name']]
 
 # The short X.Y version.
