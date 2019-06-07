@@ -81,6 +81,13 @@ Once you have run cookiecutter you can edit the files in the folder to further
 customize your package. This section of the documentation lists some ways you
 might want to do this.
 
+Customizing the package metadata
+################################
+
+All of the metadata about the package (name, version, keywords, etc.) are
+defined in the ``setup.cfg`` file. This is described in detail in the
+`setuptools documentation <https://setuptools.readthedocs.io/en/latest/setuptools.html#configuring-setup-using-setup-cfg-files>`_.
+
 Customizing the documentation CSS
 #################################
 

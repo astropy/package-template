@@ -5,12 +5,13 @@ be removed in affiliated packages.
 The changes below indicate what file the change was made in so that these can
 be copied over manually if desired.
 
-
 3.0 (unreleased)
 ----------------
 
 - Removing Python 2 support from the template. [#385]
 
+- Moved as much as possible of the setup.py configuration to setup.cfg, and now require
+  setuptools>=30.3. [#375]
 
 2.1 (unreleased)
 ----------------
