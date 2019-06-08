@@ -27,5 +27,5 @@ if not _ASTROPY_SETUP_:   # noqa
 {%- if cookiecutter.include_example_code != 'y' %}
     pass
 {%- else %}
-    from .example_mod import *   #noqa
+    from .example_mod import *   # noqa
 {%- endif %}
