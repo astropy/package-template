@@ -89,8 +89,8 @@ if __name__ == '__main__':
                 "and astropy_helpers not downloaded.")
 
     else:
-        with urllib.request.urlopen(
-                'https://raw.githubusercontent.com/astropy/astropy-helpers/'
-                '{{ cookiecutter.astropy_helpers_version }}/ah_bootstrap.py') as ah:
-            with open('ah_bootstrap.py', mode='wb') as ah_file:
-                shutil.copyfileobj(ah, ah_file)
+        urllib.request.urlretrieve(
+            url=('https://raw.githubusercontent.com/astropy/astropy-helpers/'
+                 '{{ cookiecutter.astropy_helpers_version }}/ah_bootstrap.py'),
+            filename='ah_bootstrap.py')
+        urllib.request.urlcleanup()
