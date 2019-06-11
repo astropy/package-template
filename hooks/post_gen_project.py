@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import urllib.request
 
 
 def remove_file(filepath):
@@ -86,3 +87,10 @@ if __name__ == '__main__':
             print(
                 "gitpython is not installed so the repository will not be initialised "
                 "and astropy_helpers not downloaded.")
+
+    else:
+        urllib.request.urlretrieve(
+            url=('https://raw.githubusercontent.com/astropy/astropy-helpers/'
+                 '{{ cookiecutter.astropy_helpers_version }}/ah_bootstrap.py'),
+            filename='ah_bootstrap.py')
+        urllib.request.urlcleanup()
