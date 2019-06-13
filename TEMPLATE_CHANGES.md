@@ -20,7 +20,7 @@ be copied over manually if desired.
   [#389]
 
 
-- Updating ``astropy_helpers`` version to v2.0.10 and v3.2. [#405]
+- Updating ``astropy_helpers`` version to v2.0.10 and v3.2.1. [#405, #413]
 
 
 2.0 (2019-01-10)

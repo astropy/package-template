@@ -24,5 +24,5 @@
         "docs/_templates"
     ],
     "minimum_python_version": ["3.7", "3.6", "3.5"],
-    "astropy_helpers_version": "v3.2"
+    "astropy_helpers_version": "v3.2.1"
 }
