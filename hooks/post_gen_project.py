@@ -2,7 +2,7 @@
 
 import os
 import shutil
-import urllib.request
+from six.moves import urllib
 
 
 def remove_file(filepath):
