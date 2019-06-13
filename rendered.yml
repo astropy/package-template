@@ -18,4 +18,4 @@ default_context:
   use_read_the_docs: "y"
   sphinx_theme: "astropy-bootstrap"
   initialize_git_repo: "n"
-  minimum_python_version: "3.6"
+  minimum_python_version: "2.7"
