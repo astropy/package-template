@@ -29,5 +29,5 @@ if not _ASTROPY_SETUP_:   # noqa
     pass
 {%- else %}
     from .example_mod import *   # noqa
-    __all__ += .example_mod.__all__
+    __all__ += example_mod.__all__
 {%- endif %}
