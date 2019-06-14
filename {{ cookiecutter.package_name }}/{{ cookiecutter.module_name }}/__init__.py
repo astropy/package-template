@@ -13,6 +13,7 @@ from distutils.version import LooseVersion
 
 __minimum_python_version__ = "{{ cookiecutter.minimum_python_version }}"
 
+__all__ = []
 
 class UnsupportedPythonError(Exception):
     pass
@@ -28,4 +29,8 @@ if not _ASTROPY_SETUP_:   # noqa
     pass
 {%- else %}
     from .example_mod import *   # noqa
+    # Then you can be explicit to control what ends up in the namespace,
+    __all__ += ['do_primes']
+    # or you can keep everything from the subpackage with the following instead
+    # __all__ += example_mod.__all__
 {%- endif %}
