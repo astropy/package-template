@@ -5,7 +5,7 @@ Next Steps
 
 Once you have rendered your package and set it up on `GitHub
 <https://github.com>`__ you may wish to enable `Travis CI
-<https://travis-ci.org>`_ , `Appveyor <https://www.appveyor.com/>`_ and
+<https://travis-ci.org>`_ and
 `Read the Docs <https://readthedocs.org/>`_.  Configuration for these services
 is included in the template, and while their use is optional, it is
 recommended.
@@ -36,14 +36,6 @@ work with the latest stable and latest development version of astropy (i.e. the
 astropy git master branch) and the same versions of python and numpy supported
 by astropy.  The template ``.travis.yml`` covers those versions; in some
 circumstances you may need to limit the versions your package covers.
-
-Appveyor
-########
-
-Appveyor is similar to Travis, but provides testing on the Windows platform. If
-you want to enable this, you should register and enable your project at
-https://www.appveyor.com/. The appveyor build is controlled by the
-``appveyor.yml`` file included in the template (by default).
 
 Coveralls
 #########
