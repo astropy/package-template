@@ -24,6 +24,8 @@ stages:
    - name: Initial tests
    # Test docs, astropy dev, and without optional dependencies
    - name: Comprehensive tests
+   # Slow tests that should only run if comprehensive ones passed
+   - name: Slow tests
    # These will only run when cron is opted in
    - name: Cron tests
      if: type = cron
@@ -117,6 +119,7 @@ matrix:
 
         # Try on Windows.
         - os: windows
+          stage: Slow tests
           env: SETUP_CMD='test'
 
         # Try all python versions and Numpy versions. Since we can assume that
