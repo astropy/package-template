@@ -8,10 +8,12 @@ be copied over manually if desired.
 3.0 (unreleased)
 ----------------
 
-- Removing Python 2 support from the template. [#385]
+- Removed Python 2 support from the template. [#385]
 
 - Moved as much as possible of the setup.py configuration to setup.cfg, and now require
   setuptools>=30.3. [#375]
+
+- Removed Appveyor CI option. Use ``os: windows`` in Travis CI. [#420]
 
 2.1 (unreleased)
 ----------------

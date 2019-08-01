@@ -22,7 +22,6 @@ a description of each of the prompts:
 #. ``edit_on_github_extension``: Set to ``True`` to enable the edit on GitHub sphinx extension.
 #. ``github_project``: This is the GitHub identifier for the edit on GitHub extension and the changelog link extension.
 #. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
-#. ``use_appveyor_ci``: If ``'y'`` the template will include an example ``appveyor.yml`` file for the Appveyor CI service.
 #. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
 #. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
 #. ``initialize_git_repo``: If `gitpython <https://gitpython.readthedocs.io/en/stable/>`_ is installed this option will turn the rendered package into a git repository and add and initilize the ``astropy_helpers`` submodule.

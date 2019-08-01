@@ -43,9 +43,6 @@ if __name__ == '__main__':
     if '{{ cookiecutter.use_travis_ci }}' != 'y':
         remove_file('.travis.yml')
 
-    if '{{ cookiecutter.use_appveyor_ci }}' != 'y':
-        remove_file('appveyor.yml')
-
     if '{{ cookiecutter.use_read_the_docs }}' != 'y':
         remove_file('.rtd-environment.yml')
         remove_file('readthedocs.yml')
