@@ -3,6 +3,8 @@
 # install Python ourselves using conda.
 language: c
 
+dist: xenial
+
 os:
     - linux
 
