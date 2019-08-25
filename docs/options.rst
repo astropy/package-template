@@ -29,4 +29,4 @@ a description of each of the prompts:
 
 Once the project has been set up, any of the values can still be `manually
 updated <http://docs.astropy.org/en/latest/development/astropy-package-template.html>`_.
-In addition, further customization can also be carreid out in the :ref:`next-steps`.
+In addition, further customization can also be carried out in the :ref:`next-steps`.
