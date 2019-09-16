@@ -19,6 +19,6 @@ a description of each of the prompts.
 12. ``github_project``: This is the GitHub identifier for the edit on GitHub extension and the changelog link extension.
 13. ``project_version``: The current version number of your project.
 14. ``use_travis_ci``: If 'y' the template will include an example ``.travis.yml`` file for the Travis CI service.
-15. ``use_read_the_docs``: If 'y' the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
+15. ``use_read_the_docs``: If 'y' the ``.readthedocs.yml`` and ``docs/requirements.txt`` files will be included for using pip on Read the Docs.
 16. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
 17. ``minimum_python_version``: Version string of minimum supported Python version

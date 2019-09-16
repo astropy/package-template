@@ -44,8 +44,8 @@ if __name__ == '__main__':
         remove_file('.travis.yml')
 
     if '{{ cookiecutter.use_read_the_docs }}' != 'y':
-        remove_file('.rtd-environment.yml')
-        remove_file('readthedocs.yml')
+        remove_file('docs/requirements.txt')
+        remove_file('.readthedocs.yml')
 
     if '{{ cookiecutter.include_cextern_folder }}' != 'y':
         remove_dir("cextern")

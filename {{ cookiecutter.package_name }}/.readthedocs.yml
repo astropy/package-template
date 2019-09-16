@@ -1,5 +1,25 @@
-conda:
-  file: .rtd-environment.yml
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+version: 2
 
+# Set "fail_on_warning: true" for RTD to fail on warnings.
+sphinx:
+  builder: html
+  configuration: docs/conf.py
+  fail_on_warning: false
+
+# Set the version of Python and requirements required to build your docs
+# NOTE: This does not follow {{ cookiecutter.minimum_python_version }}
 python:
-   setup_py_install: true
+  version: 3.7
+  system_packages: true
+  install:
+    - requirements: docs/requirements.txt
+    - method: setuptools
+      path: .
+
+submodules:
+  include: all
+
+# Don't build any extra formats
+formats: []
