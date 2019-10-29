@@ -15,7 +15,7 @@ env:
         - FOLDERNAME='packagename'
         - PYTHON_VERSION=3.7
         - CONDA_DEPENDENCIES='cython astropy sphinx'
-        - PIP_DEPENDENCIES='cookiecutter gitpython pytest-astropy sphinx-astropy'
+        - PIP_DEPENDENCIES='cookiecutter gitpython pytest-astropy pytest-astropy-header sphinx-astropy'
         - EVENT_TYPE='pull_request push'
         - TASK='test'
         - EXTRA_CONTEXT=''

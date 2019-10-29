@@ -15,6 +15,8 @@ be copied over manually if desired.
 
 - Removed Appveyor CI option. Use ``os: windows`` in Travis CI. [#420]
 
+- Use pytest-astropy-header for test header. [#???]
+
 2.1 (unreleased)
 ----------------
 
