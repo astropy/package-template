@@ -98,9 +98,9 @@ matrix:
         # for both developer teams.
         - os: linux
           python: 3.8
-          name: Python 3.6 latest developer version of key dependencies
+          name: Python 3.8 latest developer version of key dependencies
           stage: Cron tests
-          env: TOXENV=py36-test-devdeps
+          env: TOXENV=py38-test-devdeps
 
         # Try on Windows.
         - os: windows
