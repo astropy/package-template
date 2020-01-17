@@ -68,26 +68,5 @@ if __name__ == '__main__':
                 "Creation of {{ cookiecutter.package_name }} from astropy package template"
             )
 
-            if '{{ cookiecutter.astropy_helpers_version }}':
-                Repo.create_submodule(
-                    new_repo, "astropy_helpers", "astropy_helpers",
-                    "https://github.com/astropy/astropy-helpers.git",
-                    "{{ cookiecutter.astropy_helpers_version }}")
-                new_repo.submodules[0].update()
-                copy_file('astropy_helpers/ah_bootstrap.py', 'ah_bootstrap.py')
-                new_repo.git.add('ah_bootstrap.py')
-                new_repo.index.commit(
-                    "Initialize astropy_helpers at version {{ cookiecutter.astropy_helpers_version }}"
-                )
-
         except ImportError:
-            print(
-                "gitpython is not installed so the repository will not be initialised "
-                "and astropy_helpers not downloaded.")
-
-    else:
-        urllib.request.urlretrieve(
-            url=('https://raw.githubusercontent.com/astropy/astropy-helpers/'
-                 '{{ cookiecutter.astropy_helpers_version }}/ah_bootstrap.py'),
-            filename='ah_bootstrap.py')
-        urllib.request.urlcleanup()
+            print("gitpython is not installed so the repository will not be initialised.")
