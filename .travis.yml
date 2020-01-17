@@ -29,7 +29,7 @@ env:
       - TASK='render' FLAGS='--config-file rendered.yml --no-input' EXTRA_CONTEXT='include_example_cython_code=y initialize_git_repo=n license=Other'
 
 install:
-    - pip install sphinx cookiecutter gitpython tox
+    - pip install sphinx-astropy cookiecutter gitpython tox
 
 script:
    - cd docs ; make html ; cd ..
