@@ -7,7 +7,7 @@
 import os
 import sys
 
-from setuptools import setup,
+from setuptools import setup
 from setuptools.config import read_configuration
 {% if cookiecutter.include_example_code == 'y' %}
 from extension_helpers import get_extensions
@@ -81,7 +81,7 @@ except Exception:
 setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
                        'write_to_template': VERSION_TEMPLATE},
       ext_modules=get_extensions())
-{% elif %}
+{% else %}
 setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
                        'write_to_template': VERSION_TEMPLATE})
 {% endif %}
