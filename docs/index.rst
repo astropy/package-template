@@ -63,6 +63,7 @@ documentation, read the :ref:`next-steps` for further information.
    options
    nextsteps
    updating
+   ape17
 
 
 Removal of Python 2 support
