@@ -1,23 +1,25 @@
 APE 17 Migration Guide
 ======================
 
+.. warning:: This guide is not yet ready for widespread use and may
+             still change significantly.
+
 The Astropy project is now transitioning from using astropy-helpers for
 infrastructure to more standard Python packaging tools. The motivation
 and implications of this are discussed in an Astropy Proposal for
 Enhancements: `APE 17: A roadmap for package infrastructure without
 astropy-helpers <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst>`__
 
-This document is a **work in progress** and aims to provide a guide to
-migrating to using the new infrastructure described in APE 17. We assume
-that your package is currently using astropy-helpers and that you have
-used a version of the Astropy package-template in the past to set up
-your package (though this guide might still be useful if the latter is
-not the case).
+This page aims to provide a guide to migrating to using the new infrastructure
+described in APE 17. We assume that your package is currently using
+astropy-helpers and that you have used a version of the Astropy package-template
+in the past to set up your package (though this guide might still be useful if
+the latter is not the case).
 
-Throughout this guide, we will assume that your package is called
-``my-package`` and that the module is called ``my_package``. We
-deliberately choose a name where the package name is different from the
-module name, but for many cases, these will be the same.
+Throughout this guide, we will assume that your package is called ``my-package``
+and that the module is called ``my_package``. We deliberately choose a name
+where the package name is different from the module name, but for many cases,
+these will be the same.
 
 Step 1: Remove astropy-helpers
 ------------------------------
@@ -81,7 +83,7 @@ If you already had a file, make sure you remove the following entries
 -  ``tests_require``
 -  ``[ah_bootstrap]`` and all entries in it
 
-Step 3 - Define Optional, test, and docs dependencies
+Step 3 - Define optional, test, and docs dependencies
 -----------------------------------------------------
 
 Next up, add a new section to the ``setup.cfg`` file (or modify, if it
@@ -129,57 +131,85 @@ following:
 
 .. code:: python
 
-   #!/usr/bin/env python
+    #!/usr/bin/env python
+    # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-   import os
-   import sys
-   from setuptools import setup
+    # NOTE: The configuration for the package, including the name, version, and
+    # other information are set in the setup.cfg file.
 
-   TEST_HELP = """
-   Note: running tests is no longer done using 'python setup.py test'. Instead
-   you will need to run:
+    import os
+    import sys
 
-       tox -e test
+    from setuptools import setup
+    from extension_helpers import get_extensions
 
-   If you don't already have tox installed, you can install it with:
+    # First provide helpful messages if contributors try and run legacy commands
+    # for tests or docs.
 
-       pip install tox
+    TEST_HELP = """
+    Note: running tests is no longer done using 'python setup.py test'. Instead
+    you will need to run:
 
-   If you only want to run part of the test suite, you can also use pytest
-   directly with::
+        tox -e test
 
-       pip install -e .
-       pytest
+    If you don't already have tox installed, you can install it with:
 
-   For more information, see:
+        pip install tox
 
-     http://docs.astropy.org/en/latest/development/testguide.html#running-tests
-   """
+    If you only want to run part of the test suite, you can also use pytest
+    directly with::
 
-   if 'test' in sys.argv:
-       print(TEST_HELP)
-       sys.exit(1)
+        pip install -e .[test]
+        pytest
 
-   DOCS_HELP = """
-   Note: building the documentation is no longer done using
-   'python setup.py build_docs'. Instead you will need to run:
+    For more information, see:
 
-       tox -e build_docs
+    http://docs.astropy.org/en/latest/development/testguide.html#running-tests
+    """
 
-   If you don't already have tox installed, you can install it with:
+    if 'test' in sys.argv:
+        print(TEST_HELP)
+        sys.exit(1)
 
-       pip install tox
+    DOCS_HELP = """
+    Note: building the documentation is no longer done using
+    'python setup.py build_docs'. Instead you will need to run:
 
-   For more information, see:
+        tox -e build_docs
 
-     http://docs.astropy.org/en/latest/install.html#builddocs
-   """
+    If you don't already have tox installed, you can install it with:
 
-   if 'build_docs' in sys.argv or 'build_sphinx' in sys.argv:
-       print(DOCS_HELP)
-       sys.exit(1)
+        pip install tox
 
-   setup(use_scm_version={'write_to': os.path.join('my_package', 'version.py')})
+    You can also build the documentation with Sphinx directly using::
+
+        pip install -e .[docs]
+        cd docs
+        make html
+
+    For more information, see:
+
+    http://docs.astropy.org/en/latest/install.html#builddocs
+    """
+
+    if 'build_docs' in sys.argv or 'build_sphinx' in sys.argv:
+        print(DOCS_HELP)
+        sys.exit(1)
+
+    VERSION_TEMPLATE = """
+    # Note that we need to fall back to the hard-coded version if either
+    # setuptools_scm can't be imported or setuptools_scm can't determine the
+    # version, so we catch the generic 'Exception'.
+    try:
+        from setuptools_scm import get_version
+        version = get_version(root='..', relative_to=__file__)
+    except Exception:
+        version = '{version}'
+    """.lstrip()
+
+    setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
+                        'write_to_template': VERSION_TEMPLATE},
+        ext_modules=get_extensions())
 
 Step 6: add a ``pyproject.toml`` file
 -------------------------------------
@@ -365,7 +395,8 @@ Step 10 - Update ``MANIFEST.in``
 --------------------------------
 
 Edit your ``MANIFEST.in`` file to remove the following lines, if present
-(and any other line related to ``astropy_helpers``)::
+(and any other line related to ``astropy_helpers``) - those lines might
+include any of the following::
 
    include ez_setup.py
    include ah_bootstrap.py
@@ -437,9 +468,6 @@ you should change it to:
 Find and replace any instances of ``package_name`` in the file with
 ``name``.
 
-TODO: there are probably some more changes here for older packages,
-might need to really just make a new template ``conf.py`` to use.
-
 Step 12 - Setting up tox
 ------------------------
 
@@ -453,13 +481,7 @@ declared the package data correctly.
 
 Given the set-up described in the previous steps, you should be able to
 create a ``tox.ini`` file at the root of your package with the following
-content:
-
-*Suggestion: add ``package_name = my_package`` and then replace
-``my_package`` throughout with ``[tox]package_name`` to avoid needing to
-change package name in multiple places.*
-
-::
+content::
 
    [tox]
    envlist =
@@ -470,6 +492,7 @@ change package name in multiple places.*
        setuptools >= 30.3.0
        pip >= 19.3.1
    isolated_build = true
+   module_name = my_package
 
    [testenv]
    passenv =
@@ -499,17 +522,17 @@ change package name in multiple places.*
        build_docs: docs
        alldeps: all
    commands =
-       test: pytest --pyargs my_package {toxinidir}/docs {posargs}
+       test: pytest --pyargs {[tox]module_name} {toxinidir}/docs --cov {[tox]module_name} --cov-config {toxinidir}/setup.cfg {posargs}
        build_docs: sphinx-build -W -b html . _build/html {posargs}
 
    [testenv:codestyle]
    skip_install = true
    description = check package code style
    deps = pycodestyle
-   commands = pycodestyle my_package
+   commands = pycodestyle {[tox]module_name}
 
-Replace instances of ``my_package`` with your module name. To try this
-out, you should be able to do the following:
+Edit the ``module_name`` line in the ``[tox]`` section to specify your module
+name. Once you have done this you should be able to do the following:
 
 Run tests with minimal dependencies::
 
@@ -521,12 +544,12 @@ Run tests with astropy LTS and Numpy 1.16::
 
 Run tests with all optional dependencies::
 
-   tox -e test-all
+   tox -e test-alldeps
 
 Run tests with minimal dependencies and the latest developer version of
 numpy and astropy::
 
-   tox -e test-dev
+   tox -e test-devdeps
 
 Build the documentation::
 
@@ -665,7 +688,61 @@ you can also add the following line at the end of your
 
    formats: []
 
-Step 15 - Final cleanup
+Step 15 - Coverage configuration
+--------------------------------
+
+Preivously, astropy-helpers expected the coverage configuration to
+be located in ``my_package/tests/coveragerc``. This is now no longer
+necessary, so you can now define the coverage configuration inside
+the ``setup.cfg`` file, which should help reduce the number of files
+to keep track of. Add the following to the bottom of your ``setup.cfg``::
+
+    [coverage:run]
+    omit =
+        my_package/_{{ cookiecutter._parent_project }}_init*
+        my_package/conftest.py
+        my_package/*setup_package*
+        my_package/tests/*
+        my_package/*/tests/*
+        my_package/extern/*
+        my_package/version*
+        */my_package/_{{ cookiecutter._parent_project }}_init*
+        */my_package/conftest.py
+        */my_package/*setup_package*
+        */my_package/tests/*
+        */my_package/*/tests/*
+        */my_package/extern/*
+        */my_package/version*
+
+    [coverage:report]
+    exclude_lines =
+        # Have to re-enable the standard pragma
+        pragma: no cover
+        # Don't complain about packages we have installed
+        except ImportError
+        # Don't complain if tests don't hit assertions
+        raise AssertionError
+        raise NotImplementedError
+        # Don't complain about script hooks
+        def main\(.*\):
+        # Ignore branches that don't pertain to this version of Python
+        pragma: py{ignore_python_version}
+        # Don't complain about IPython completion helper
+        def _ipython_key_completions_
+
+Make sure to replace ``my_package`` by your module name. If you had any
+customizations in ``coveragerc`` you can include them here, but otherwise the
+above should be sufficient.
+
+Step 16 - conftest.py file updates
+----------------------------------
+
+For the header in your test runs to be correct with the latest versions of
+astropy, you will need to make sure that you update your ``conftest.py``
+file as described in the `pytest-astropy-header instructions
+<https://github.com/astropy/pytest-astropy-header#migrating-from-the-astropy-header-plugin-to-pytest-astropy>`_.
+
+Step 17 - Final cleanup
 -----------------------
 
 Once you’ve made the above changes, you should be able to remove the
@@ -677,6 +754,6 @@ following sections from your ``setup.cfg`` file:
 
 You should also add ``pip-wheel-metadata`` to your ``.gitignore`` file.
 
-TODO: there will likely be more things that can be removed
-
-Things to add: version.py file in .gitignore, coveragerc, conftest.py
+**Once you are done, if you would like us to help by reviewing your changes,
+you can open a pull request to your package and mention @astrofrog or
+@Cadair to ask for a review**

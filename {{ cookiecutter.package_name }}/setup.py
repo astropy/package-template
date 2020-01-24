@@ -77,7 +77,7 @@ except Exception:
     version = '{version}'
 """.lstrip()
 
-{% if cookiecutter.include_example_code == 'y' %}
+{% if cookiecutter.use_compiled_extensions == 'y' %}
 setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
                        'write_to_template': VERSION_TEMPLATE},
       ext_modules=get_extensions())
