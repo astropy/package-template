@@ -41,7 +41,7 @@ def primes(imax):
 
 def do_primes(n, usecython=False):
     if usecython:
-{% if cookiecutter.include_example_cython_code != 'y' %}
+{% if cookiecutter.use_compiled_extensions != 'y' %}
         raise Exception("This template does not have the example C code included.")
 {% else %}
         from .example_c import primes as cprimes
