@@ -57,7 +57,7 @@ For further customization of your package including setting up testing and
 documentation, read the :ref:`next-steps` for further information.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    options

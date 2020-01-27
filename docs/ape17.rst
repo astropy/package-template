@@ -21,6 +21,20 @@ and that the module is called ``my_package``. We deliberately choose a name
 where the package name is different from the module name, but for many cases,
 these will be the same.
 
+Step 0: Re-rendering the template (optional)
+--------------------------------------------
+
+In this guide, we will descibe the changes to make to the files in your package.
+However, you may not currently have the latest version of all files from the
+template, so this is also a good chance to make sure you are completely up to
+date by re-rendering the cookiecutter template to a new folder::
+
+    cookiecutter gh:astropy/package-template -o my_package_tmp
+
+As you progress through this guide, you can then - if you wish - copy over the
+newest version of the file, taking care to edit it if needed to match any
+desired customizations you had previously.
+
 Step 1: Remove astropy-helpers
 ------------------------------
 
@@ -687,6 +701,10 @@ you can also add the following line at the end of your
 .. code:: yaml
 
    formats: []
+
+With this updated file, you should now be able to remove any pip
+requirements file or conda yml file that were previously used by
+``readthedocs.yml``.
 
 Step 15 - Coverage configuration
 --------------------------------
