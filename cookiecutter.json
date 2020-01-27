@@ -10,7 +10,7 @@
     "project_version": "0.0.dev",
     "include_cextern_folder": "n",
     "use_compiled_extensions": "y",
-    "include_example_code": "n",
+    "include_example_code": "y",
     "edit_on_github_extension": "False",
     "github_project": "astropy/astropy",
     "use_travis_ci": "y",
@@ -19,5 +19,5 @@
     "initialize_git_repo": "y",
     "_parent_project": "astropy",
     "_install_requires": "astropy",
-    "minimum_python_version": ["3.7", "3.6", "3.5"],
+    "minimum_python_version": ["3.7", "3.6", "3.5"]
 }
