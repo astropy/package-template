@@ -1,4 +1,11 @@
-requirements_file: requirements.txt
+version: 2
+
+build:
+  image: latest
 
 python:
-   version: 3.5
+  version: 3.7
+  install:
+    - requirements: requirements.txt
+
+formats: []
