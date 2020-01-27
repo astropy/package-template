@@ -15,6 +15,9 @@ be copied over manually if desired.
 
 - Removed Appveyor CI option. Use ``os: windows`` in Travis CI. [#420]
 
+- Refactored the template to follow the recommendations in APE 17:
+  https://github.com/astropy/astropy-APEs/blob/master/APE17.rst [#438]
+
 2.1 (unreleased)
 ----------------
 
