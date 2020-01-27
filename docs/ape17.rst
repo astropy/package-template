@@ -21,8 +21,8 @@ and that the module is called ``my_package``. We deliberately choose a name
 where the package name is different from the module name, but for many cases,
 these will be the same.
 
-Step 0: Re-rendering the template (optional)
---------------------------------------------
+Step 0: Re-rendering the template
+---------------------------------
 
 In this guide, we will descibe the changes to make to the files in your package.
 However, you may not currently have the latest version of all files from the
@@ -33,7 +33,8 @@ date by re-rendering the cookiecutter template to a new folder::
 
 As you progress through this guide, you can then - if you wish - copy over the
 newest version of the file, taking care to edit it if needed to match any
-desired customizations you had previously.
+desired customizations you had previously. This will also be useful for any new
+files which you can then just copy from the rendered template.
 
 Step 1: Remove astropy-helpers
 ------------------------------
@@ -139,103 +140,23 @@ included as well as all files inside ``my_package/tests/data``.
 Step 5 - Update your ``setup.py`` file
 --------------------------------------
 
-If you don’t have any compiled (e.g. C or Cython) extensions in your
-package, you can replace your existing ``setup.py`` file with the
-following:
-
-.. code:: python
-
-    #!/usr/bin/env python
-    # Licensed under a 3-clause BSD style license - see LICENSE.rst
-
-    # NOTE: The configuration for the package, including the name, version, and
-    # other information are set in the setup.cfg file.
-
-    import os
-    import sys
-
-    from setuptools import setup
-    from extension_helpers import get_extensions
-
-    # First provide helpful messages if contributors try and run legacy commands
-    # for tests or docs.
-
-    TEST_HELP = """
-    Note: running tests is no longer done using 'python setup.py test'. Instead
-    you will need to run:
-
-        tox -e test
-
-    If you don't already have tox installed, you can install it with:
-
-        pip install tox
-
-    If you only want to run part of the test suite, you can also use pytest
-    directly with::
-
-        pip install -e .[test]
-        pytest
-
-    For more information, see:
-
-    http://docs.astropy.org/en/latest/development/testguide.html#running-tests
-    """
-
-    if 'test' in sys.argv:
-        print(TEST_HELP)
-        sys.exit(1)
-
-    DOCS_HELP = """
-    Note: building the documentation is no longer done using
-    'python setup.py build_docs'. Instead you will need to run:
-
-        tox -e build_docs
-
-    If you don't already have tox installed, you can install it with:
-
-        pip install tox
-
-    You can also build the documentation with Sphinx directly using::
-
-        pip install -e .[docs]
-        cd docs
-        make html
-
-    For more information, see:
-
-    http://docs.astropy.org/en/latest/install.html#builddocs
-    """
-
-    if 'build_docs' in sys.argv or 'build_sphinx' in sys.argv:
-        print(DOCS_HELP)
-        sys.exit(1)
-
-    VERSION_TEMPLATE = """
-    # Note that we need to fall back to the hard-coded version if either
-    # setuptools_scm can't be imported or setuptools_scm can't determine the
-    # version, so we catch the generic 'Exception'.
-    try:
-        from setuptools_scm import get_version
-        version = get_version(root='..', relative_to=__file__)
-    except Exception:
-        version = '{version}'
-    """.lstrip()
-
-    setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
-                        'write_to_template': VERSION_TEMPLATE},
-        ext_modules=get_extensions())
+Copy the ``setup.py`` file you generated in Step 0 and replace your existing one
+- it should be good to go as-is without any further customizations.
 
 Step 6: add a ``pyproject.toml`` file
 -------------------------------------
 
-The ``pyproject.toml`` file is used to declare dependencies needed to
-run ``setup.py`` and build the package. If your package doesn’t have any
-compiled extensions, the file should contain:
+The ``pyproject.toml`` file is used to declare dependencies needed to run
+``setup.py`` and build the package. Copy the ``pyproject.toml`` file you
+generated in Step 0 and replace your existing one.
+
+If your package doesn’t have any compiled extensions, the file should contain:
 
 .. code:: toml
 
    [build-system]
    requires = ["setuptools",
+               "setuptools_scm",
                "wheel"]
    build-backend = 'setuptools.build_meta'
 
@@ -254,7 +175,8 @@ Step 7a - Defining extensions manually
 You can define extensions manually as described
 `here <https://oa-packaging-guide-preview.readthedocs.io/en/latest/extensions.html#defining-extensions-in-setup-py>`__.
 If you do this, you can remove all ``setup_package.py`` files in your
-package.
+package, and you don't need to include extension-helpers in the
+``pyproject.toml`` file.
 
 If you have Cython extensions or your extensions use the NumPy C API,
 proceed to Step 7c, otherwise you can proceed to Step 8.
@@ -275,7 +197,9 @@ each should return a list of extensions. Check through your existing
 ``setup_package.py`` files (if any), and make sure that any
 ``astropy_helpers`` imports are changed to ``extension_helpers``.
 
-Next, add:
+Provided you indicated when you generated the template that you wanted to
+use compiled extensions, you should be good to go. If not, make sure
+you add:
 
 .. code:: python
 
@@ -288,18 +212,8 @@ just under the following lines at the top of the ``setup.py`` file:
    import sys
    from setuptools import setup
 
-In addition, in the same file, change:
-
-.. code:: python
-
-   setup(use_scm_version={'write_to': os.path.join('my_package', 'version.py')})
-
-to
-
-.. code:: python
-
-   setup(use_scm_version={'write_to': os.path.join('my_package', 'version.py')},
-         ext_modules=get_extensions())
+In addition, in the same file, add ``ext_modules=get_extensions()`` to the
+call to ``setup.py``.
 
 If you have Cython extensions or your extensions use the NumPy C API,
 proceed to Step 7c, otherwise you can proceed to Step 8.
@@ -312,31 +226,28 @@ declare Numpy as a build-time dependency in ``pyproject.toml``. Note
 that as described in `APE
 17 <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst#build-time-dependencies>`__,
 you need to pin the build-time Numpy dependency to the **oldest**
-supported Numpy version for each Python version. However, rather than
-doing this manually, you can add the ``oldest-supported-numpy`` package
-to your ``pyproject.toml`` file:
+supported Numpy version for each Python version. However, rather than doing this
+manually, you can add the ``oldest-supported-numpy`` package to the build
+dependencies in your ``pyproject.toml`` file. In addition if you have Cython
+extensions, you will need to also add an entry for Cython, pinning it to a
+recent version. Provided you indicated when you generated the template in Step 0
+that you wanted to use compiled extensions, you should be good to go as both
+``oldest-supported-numpy`` and ``cython`` should be in the ``pyproject.toml``
+file. In this case your ``pyproject.toml`` file will look like:
 
 .. code:: toml
 
    [build-system]
    requires = ["setuptools",
+               "setuptools_scm",
                "wheel",
-               "oldest-supported-numpy"]
-   build-backend = 'setuptools.build_meta'
-
-If you have Cython extensions, you will need to also add an entry for
-Cython, pinning it to a recent version:
-
-.. code:: toml
-
-   [build-system]
-   requires = ["setuptools",
-               "wheel",
+               "extension-helpers",
+               "oldest-supported-numpy",
                "cython==0.29.14"]
    build-backend = 'setuptools.build_meta'
 
 Whenever a new major Python version is released, you will likely need to
-update this pinning to use the most recent Cython version available.
+update the Cython pinning to use the most recent Cython version available.
 
 Step 8 - Using setuptools_scm
 -----------------------------
@@ -344,32 +255,29 @@ Step 8 - Using setuptools_scm
 The `setuptools_scm <https://pypi.org/project/setuptools-scm/>`__
 package is now recommended to manage the version numbers for your
 package. The way this works is that instead of setting the version
-number manually in e.g. \ ``setup.cfg`` or elsewhere in your package,
+number manually in e.g. ``setup.cfg`` or elsewhere in your package,
 the version number is based on git tags.
 
-First, define ``setup_requires`` inside the ``[options]`` section of
-your ``setup.cfg`` file::
+In Steps 5 and 6, we already added the required entry for
+setuptools_scm to ``setup.py`` and ``pyproject.toml``.
+
+In addition to these, we recommend that you define ``setup_requires`` inside the
+``[options]`` section of your ``setup.cfg`` file::
 
    [options]
    ...
    setup_requires = setuptools_scm
    ...
 
-Next, add ``setuptools_scm`` as a build-time dependency in the
-``requires`` list of your ``pyproject.toml`` file:
+This is not strictly necessary but will make it possible for ``python setup.py --version``
+to work without having to install ``setuptools_scm`` manually.
 
-.. code:: toml
-
-   [build-system]
-   requires = ["setuptools",
-               "setuptools_scm",
-               ...
-
-Check your ``.gitignore`` and make sure that you have a line containing::
+Next, check your ``.gitignore`` and make sure that you have a line containing::
 
    my_package/version.py
 
-Finally, edit your ``my_package/_astropy_init.py`` file and remove the
+Finally, copy over the ``_astropy_init.py`` file generated in Step 0, or
+alternatively edit your ``my_package/_astropy_init.py`` file and remove the
 following lines:
 
 .. code:: python
@@ -380,9 +288,7 @@ following lines:
        __githash__ = ''
 
 and remove ``'__githash__'`` from the ``__all__`` list at the top of the
-file.
-
-The git hash is now contained in the version number, so this is no
+file. The git hash is now contained in the version number, so this is no
 longer needed.
 
 Step 9 - Configuring pytest
@@ -493,60 +399,11 @@ install it into a virtual environment before running tests or building
 docs, which means that it will be a good test of whether e.g. you have
 declared the package data correctly.
 
-Given the set-up described in the previous steps, you should be able to
-create a ``tox.ini`` file at the root of your package with the following
-content::
+As a starting point, copy over the ``tox.ini`` file generated in Step 0.
+You can always then customize it if needed (although it should work out
+of the box).
 
-   [tox]
-   envlist =
-       py{36,37,38}-test{,-alldeps,-devdeps}
-       build_docs
-       codestyle
-   requires =
-       setuptools >= 30.3.0
-       pip >= 19.3.1
-   isolated_build = true
-   module_name = my_package
-
-   [testenv]
-   passenv =
-       HOME
-       WINDIR
-       LC_ALL
-       LC_CTYPE
-       CC
-       CFLAGS
-   changedir =
-       test: .tmp/{envname}
-       build_docs: docs
-   description =
-       test: run tests with pytest
-       build_docs: invoke sphinx-build to build the HTML docs
-       alldeps: run tests with all optional dependencies
-       devdeps: run tests with numpy and astropy dev versions
-   deps =
-       astropylts: astropy==4.0rc2
-       numpy116: numpy==1.16.*
-       numpy117: numpy==1.17.*
-       numpy118: numpy==1.18.*
-       devdeps: git+https://github.com/numpy/numpy.git#egg=numpy
-       devdeps: git+https://github.com/astropy/astropy.git#egg=astropy
-   extras =
-       test: test
-       build_docs: docs
-       alldeps: all
-   commands =
-       test: pytest --pyargs {[tox]module_name} {toxinidir}/docs --cov {[tox]module_name} --cov-config {toxinidir}/setup.cfg {posargs}
-       build_docs: sphinx-build -W -b html . _build/html {posargs}
-
-   [testenv:codestyle]
-   skip_install = true
-   description = check package code style
-   deps = pycodestyle
-   commands = pycodestyle {[tox]module_name}
-
-Edit the ``module_name`` line in the ``[tox]`` section to specify your module
-name. Once you have done this you should be able to do the following:
+Once you have done this you should be able to do the following:
 
 Run tests with minimal dependencies::
 
@@ -582,129 +439,28 @@ environment, you can do::
 Step 13 - Updating your Continuous Integration
 ----------------------------------------------
 
-This step will depend on what continuous integration services you use.
-Broadly speaking, unless there are dependencies you need that can only
-be installed with conda, you should no longer need to use ci-helpers.
+This step will depend on what continuous integration services you use. Broadly
+speaking, unless there are dependencies you need that can only be installed with
+conda, you should no longer need to use ci-helpers to install these. The
+recommended approach is to use the tox file to set up the different
+configurations you want to use, and to then keep the CI configuration as simple
+as possible.
 
-The recommended approach is to use the tox file to set up the different
-configurations you want to use, and to then keep the CI configuration as
-simple as possible. For example, if you wanted to set up a Travis CI
-file to run the tox environments defined in Step 10, you could use a
-configuration such as:
-
-.. code:: yaml
-
-   language: c
-
-   sudo: false
-
-   env:
-       global:
-           - TOXENV=''
-           - TOXARGS=''
-           - TOXPOSARGS=''
-
-   matrix:
-
-       include:
-
-           # Run the default test environment on
-           # all major platforms
-
-           - os: linux
-             python: 3.8
-             env: TOXENV='test'
-
-           - os: osx
-             env: PYTHON_VERSION=3.7 TOXENV='test'
-
-           - os: windows
-             env: PYTHON_VERSION=3.7 TOXENV='test'
-
-           # Run the test-dev-all environment and pass the
-           # --remote-data to demonstrate passing positional
-           # arguments for pytest
-           - os: linux
-             python: 3.7
-             env: TOXENV="test-all-dev"
-                  TOXPOSARGS="--remote-data=astropy"
-
-           # Build the docs
-           - os: linux
-             python: 3.7
-             env: TOXENV="build_docs"
-
-           # Run pycodestyle checks
-           - os: linux
-             python: 3.7
-             env: TOXENV="pycodestyle"
-
-   before_install:
-
-       # We need a full clone to make sure setuptools_scm
-       # works properly
-       - git fetch --unshallow .
-       - git fetch --depth=1000000
-
-   install:
-
-       - if [[ $TRAVIS_OS_NAME == osx || $TRAVIS_OS_NAME == windows ]]; then
-           git clone git://github.com/astropy/ci-helpers.git;
-           source ci-helpers/travis/setup_conda.sh;
-         fi
-
-       - pip install tox --upgrade
-
-   script:
-       - tox -e $TOXENV $TOXARGS -- $TOXPOSARGS
-
-   after_success:
-       - pip install codecov
-       - codecov
-
-Note that the above shouldn’t be used as-is - it just shows how one can
-configure Travis to use tox, optionally using conda via ci-helpers to
-set up Python on MacOS X and Windows, but you should adapt your existing
-CI configuration rather than using the above.
+If you use Travis CI, a good place to start is the ``.travis.yml`` file
+generated in Step 0, and you can then see if any previous customizations you had
+made need to be copied over. This file shows how one can configure Travis to use
+tox, optionally using conda via ci-helpers to set up Python on MacOS X and
+Windows.
 
 Step 14 - Update ReadTheDocs configuration
 ------------------------------------------
 
 With the set-up described in this migration guide, you should be able to
 simplify the configuration for ReadTheDocs. This can be done via a
-``readthedocs.yml`` or ``.readthedocs.yml`` file (the latter is
-recommended). This file just needs to contain:
-
-.. code:: yaml
-
-   version: 2
-
-   build:
-     image: latest
-
-   python:
-     version: 3.7
-     install:
-       - method: pip
-         path: .
-         extra_requirements:
-           - docs
-           - all
-
-If you don’t have the ``all`` extras_require defined, you can remove
-that line.
-
-If you don’t need to build non-HTML formats for the docs (e.g. epub),
-you can also add the following line at the end of your
-``.readthedocs.yml`` file:
-
-.. code:: yaml
-
-   formats: []
-
-With this updated file, you should now be able to remove any pip
-requirements file or conda yml file that were previously used by
-``readthedocs.yml``.
+``readthedocs.yml`` or ``.readthedocs.yml`` file (the latter is recommended).
+You should be able to copy over the ``.readthedocs.yml`` file created in Step 0.
+With this updated file, you should now be able to remove any pip requirements
+file or conda yml file that were previously used by ``readthedocs.yml``.
 
 Step 15 - Coverage configuration
 --------------------------------
@@ -756,9 +512,11 @@ Step 16 - conftest.py file updates
 ----------------------------------
 
 For the header in your test runs to be correct with the latest versions of
-astropy, you will need to make sure that you update your ``conftest.py``
-file as described in the `pytest-astropy-header instructions
+astropy, you will need to make sure that you update your ``conftest.py`` file as
+described in the `pytest-astropy-header instructions
 <https://github.com/astropy/pytest-astropy-header#migrating-from-the-astropy-header-plugin-to-pytest-astropy>`_.
+You can also just copy over the file created in Step 0 and add back any
+customizations you had.
 
 Step 17 - Final cleanup
 -----------------------
