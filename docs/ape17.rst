@@ -21,6 +21,8 @@ and that the module is called ``my_package``. We deliberately choose a name
 where the package name is different from the module name, but for many cases,
 these will be the same.
 
+.. _step0:
+
 Step 0: Re-rendering the template
 ---------------------------------
 
@@ -140,7 +142,7 @@ included as well as all files inside ``my_package/tests/data``.
 Step 5 - Update your ``setup.py`` file
 --------------------------------------
 
-Copy the ``setup.py`` file you generated in Step 0 and replace your existing one
+Copy the ``setup.py`` file you generated in :ref:`Step 0 <step0>` and replace your existing one
 - it should be good to go as-is without any further customizations.
 
 Step 6: add a ``pyproject.toml`` file
@@ -148,7 +150,7 @@ Step 6: add a ``pyproject.toml`` file
 
 The ``pyproject.toml`` file is used to declare dependencies needed to run
 ``setup.py`` and build the package. Copy the ``pyproject.toml`` file you
-generated in Step 0 and replace your existing one.
+generated in :ref:`Step 0 <step0>` and replace your existing one.
 
 If your package doesn’t have any compiled extensions, the file should contain:
 
@@ -197,9 +199,9 @@ each should return a list of extensions. Check through your existing
 ``setup_package.py`` files (if any), and make sure that any
 ``astropy_helpers`` imports are changed to ``extension_helpers``.
 
-Provided you indicated when you generated the template that you wanted to
-use compiled extensions, you should be good to go. If not, make sure
-you add:
+Provided you indicated when you generated the template in :ref:`Step 0 <step0>`
+that you wanted to use compiled extensions, you should be good to go. If not,
+make sure you add:
 
 .. code:: python
 
@@ -230,7 +232,7 @@ supported Numpy version for each Python version. However, rather than doing this
 manually, you can add the ``oldest-supported-numpy`` package to the build
 dependencies in your ``pyproject.toml`` file. In addition if you have Cython
 extensions, you will need to also add an entry for Cython, pinning it to a
-recent version. Provided you indicated when you generated the template in Step 0
+recent version. Provided you indicated when you generated the template in :ref:`Step 0 <step0>`
 that you wanted to use compiled extensions, you should be good to go as both
 ``oldest-supported-numpy`` and ``cython`` should be in the ``pyproject.toml``
 file. In this case your ``pyproject.toml`` file will look like:
@@ -276,7 +278,7 @@ Next, check your ``.gitignore`` and make sure that you have a line containing::
 
    my_package/version.py
 
-Finally, copy over the ``_astropy_init.py`` file generated in Step 0, or
+Finally, copy over the ``_astropy_init.py`` file generated in :ref:`Step 0 <step0>`, or
 alternatively edit your ``my_package/_astropy_init.py`` file and remove the
 following lines:
 
@@ -399,7 +401,7 @@ install it into a virtual environment before running tests or building
 docs, which means that it will be a good test of whether e.g. you have
 declared the package data correctly.
 
-As a starting point, copy over the ``tox.ini`` file generated in Step 0.
+As a starting point, copy over the ``tox.ini`` file generated in :ref:`Step 0 <step0>`.
 You can always then customize it if needed (although it should work out
 of the box).
 
@@ -447,7 +449,7 @@ configurations you want to use, and to then keep the CI configuration as simple
 as possible.
 
 If you use Travis CI, a good place to start is the ``.travis.yml`` file
-generated in Step 0, and you can then see if any previous customizations you had
+generated in :ref:`Step 0 <step0>`, and you can then see if any previous customizations you had
 made need to be copied over. This file shows how one can configure Travis to use
 tox, optionally using conda via ci-helpers to set up Python on MacOS X and
 Windows.
@@ -458,7 +460,7 @@ Step 14 - Update ReadTheDocs configuration
 With the set-up described in this migration guide, you should be able to
 simplify the configuration for ReadTheDocs. This can be done via a
 ``readthedocs.yml`` or ``.readthedocs.yml`` file (the latter is recommended).
-You should be able to copy over the ``.readthedocs.yml`` file created in Step 0.
+You should be able to copy over the ``.readthedocs.yml`` file created in :ref:`Step 0 <step0>`.
 With this updated file, you should now be able to remove any pip requirements
 file or conda yml file that were previously used by ``readthedocs.yml``.
 
@@ -515,7 +517,7 @@ For the header in your test runs to be correct with the latest versions of
 astropy, you will need to make sure that you update your ``conftest.py`` file as
 described in the `pytest-astropy-header instructions
 <https://github.com/astropy/pytest-astropy-header#migrating-from-the-astropy-header-plugin-to-pytest-astropy>`_.
-You can also just copy over the file created in Step 0 and add back any
+You can also just copy over the file created in :ref:`Step 0 <step0>` and add back any
 customizations you had.
 
 Step 17 - Final cleanup
