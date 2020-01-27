@@ -25,7 +25,7 @@ stages:
    - name: Comprehensive tests
    # These will only run when cron is opted in
    - name: Cron tests
-    #  if: type = cron
+     if: type = cron
 
 
 env:
