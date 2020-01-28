@@ -471,14 +471,14 @@ to keep track of. Add the following to the bottom of your ``setup.cfg``::
 
     [coverage:run]
     omit =
-        my_package/_{{ cookiecutter._parent_project }}_init*
+        my_package/_astropy_init*
         my_package/conftest.py
         my_package/*setup_package*
         my_package/tests/*
         my_package/*/tests/*
         my_package/extern/*
         my_package/version*
-        */my_package/_{{ cookiecutter._parent_project }}_init*
+        */my_package/_astropy_init*
         */my_package/conftest.py
         */my_package/*setup_package*
         */my_package/tests/*
