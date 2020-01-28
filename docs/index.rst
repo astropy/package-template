@@ -20,9 +20,7 @@ Getting Started
 The Astropy Package template uses the `Cookiecutter
 <http://cookiecutter.readthedocs.io/>`_ project to make it easier to customise
 the template for your package. To use the package template you need cookiecutter
-installed. The package template also optionally makes use of `gitpython
-<https://gitpython.readthedocs.io/en/stable/>`_ to setup the
-``astropy_helpers`` submodule. Depending on how you have Python
+installed. Depending on how you have Python
 installed these packages can be obtained through either pip or conda::
 
   conda install -c conda-forge cookiecutter gitpython

@@ -54,16 +54,3 @@ if __name__ == '__main__':
 
     if '{{ cookiecutter.use_compiled_extensions }}' != 'y' or '{{ cookiecutter.include_example_code }}' != 'y':
         remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
-
-    if '{{ cookiecutter.initialize_git_repo }}' == 'y':
-        try:
-            from git import Repo
-
-            new_repo = Repo.init(PROJECT_DIRECTORY)
-            new_repo.git.add('.')
-            new_repo.index.commit(
-                "Creation of {{ cookiecutter.package_name }} from astropy package template"
-            )
-
-        except ImportError:
-            print("gitpython is not installed so the repository will not be initialised.")

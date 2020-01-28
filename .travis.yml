@@ -22,11 +22,11 @@ env:
       # being overridden here must exist in the cookiecutter.json
       # See https://cookiecutter.readthedocs.io/en/0.9.1/advanced_usage.html#injecting-extra-context
       - EXTRA_CONTEXT=''
-      - EXTRA_CONTEXT='include_example_cython_code=y'
+      - EXTRA_CONTEXT='use_compiled_extensions=y include_example_code=y'
       - EXTRA_CONTEXT="package_name=AstropyProject" FOLDERNAME='AstropyProject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
       - EXTRA_CONTEXT='minimum_python_version=3.5'
-      - TASK='render' FLAGS='--config-file rendered.yml --no-input' EXTRA_CONTEXT='include_example_cython_code=y initialize_git_repo=n license=Other'
+      - TASK='render' FLAGS='--config-file rendered.yml --no-input' EXTRA_CONTEXT='use_compiled_extensions=y include_example_code=y license=Other'
 
 install:
     - pip install sphinx-astropy cookiecutter gitpython tox

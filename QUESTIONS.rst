@@ -20,4 +20,3 @@ a description of each of the prompts.
 13. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
 14. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
 15. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
-16. ``initialize_git_repo``: If `gitpython <https://gitpython.readthedocs.io/en/stable/>`_ is installed this option will turn the rendered package into a git repository and add and initilize the ``astropy_helpers`` submodule.
