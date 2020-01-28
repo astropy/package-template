@@ -9,6 +9,8 @@ infrastructure to more standard Python packaging tools. The motivation
 and implications of this are discussed in an Astropy Proposal for
 Enhancements: `APE 17: A roadmap for package infrastructure without
 astropy-helpers <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst>`__.
+The core astropy package has already migrated and these changes will be included
+in astropy v4.1.
 
 This page aims to provide a guide to migrating to using the new infrastructure
 described in APE 17. We assume that your package is currently using
