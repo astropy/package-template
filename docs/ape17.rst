@@ -8,7 +8,7 @@ The Astropy project is now transitioning from using astropy-helpers for
 infrastructure to more standard Python packaging tools. The motivation
 and implications of this are discussed in an Astropy Proposal for
 Enhancements: `APE 17: A roadmap for package infrastructure without
-astropy-helpers <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst>`__
+astropy-helpers <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst>`__.
 
 This page aims to provide a guide to migrating to using the new infrastructure
 described in APE 17. We assume that your package is currently using
@@ -26,7 +26,7 @@ these will be the same.
 Step 0: Re-rendering the template
 ---------------------------------
 
-In this guide, we will descibe the changes to make to the files in your package.
+In this guide, we will describe the changes to make to the files in your package.
 To make some of the steps easier below, you should first re-run cookiecutter to
 re-render the template to a temporary folder::
 
@@ -42,7 +42,9 @@ To remove the astropy-helpers submodule, first, run::
    git rm -r astropy_helpers
 
 if ``astropy_helpers`` was the only submodule in your repository, the
-``.gitmodules`` file will be empty, you can remove this if you wish.
+``.gitmodules`` file will be empty, you can remove this if you wish::
+
+    git rm .gitmodules
 
 Next you should remove the ``ah_bootstrap.py`` file::
 
@@ -184,7 +186,7 @@ Step 7b - Using extension-helpers
 
 You can use the extension-helpers package to:
 
--  Automatically define extensions for Cython files
+-  Automatically define extensions for Cython files.
 -  Pick up extensions declared in ``setup_package.py`` files, as
    described in the `extension-helpers
    documentation <https://extension-helpers.readthedocs.io/en/latest/>`__.
@@ -253,7 +255,7 @@ Step 8 - Using setuptools_scm
 The `setuptools_scm <https://pypi.org/project/setuptools-scm/>`__
 package is now recommended to manage the version numbers for your
 package. The way this works is that instead of setting the version
-number manually in e.g. ``setup.cfg`` or elsewhere in your package,
+number manually in, e.g., ``setup.cfg`` or elsewhere in your package,
 the version number is based on git tags.
 
 In Steps 5 and 6, we already added the required entry for
@@ -390,11 +392,11 @@ Step 12 - Setting up tox
 ------------------------
 
 `tox <https://tox.readthedocs.io/en/latest/>`__ is a tool for automating
-commands, which is well suited to e.g. running tests for your package or
+commands, which is well suited to, e.g., running tests for your package or
 building the documentation. One of the benefits of using tox is that it
 will (by default) create a source distribution for your package and
 install it into a virtual environment before running tests or building
-docs, which means that it will be a good test of whether e.g. you have
+docs, which means that it will be a good test of whether, e.g., you have
 declared the package data correctly.
 
 As a starting point, copy over the ``tox.ini`` file generated in :ref:`Step 0 <step0>`.
@@ -458,7 +460,7 @@ simplify the configuration for ReadTheDocs. This can be done via a
 ``readthedocs.yml`` or ``.readthedocs.yml`` file (the latter is recommended).
 You should be able to copy over the ``.readthedocs.yml`` file created in :ref:`Step 0 <step0>`.
 With this updated file, you should now be able to remove any pip requirements
-file or conda yml file that were previously used by ``readthedocs.yml``.
+file or conda YAML file that were previously used by ``readthedocs.yml``.
 
 Step 15 - Coverage configuration
 --------------------------------
@@ -513,7 +515,7 @@ For the header in your test runs to be correct with the latest versions of
 astropy, you will need to make sure that you update your ``conftest.py`` file as
 described in the `pytest-astropy-header instructions
 <https://github.com/astropy/pytest-astropy-header#migrating-from-the-astropy-header-plugin-to-pytest-astropy>`_.
-You can also just copy over the file created in :ref:`Step 0 <step0>` and add back any
+You can also copy over the file created in :ref:`Step 0 <step0>` and add back any
 customizations you had.
 
 Step 17 - Final cleanup
@@ -530,4 +532,4 @@ You should also add ``pip-wheel-metadata`` to your ``.gitignore`` file.
 
 **Once you are done, if you would like us to help by reviewing your changes,
 you can open a pull request to your package and mention @astrofrog or
-@Cadair to ask for a review**
+@Cadair to ask for a review.**
