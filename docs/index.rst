@@ -67,7 +67,7 @@ documentation, read the :ref:`next-steps` for further information.
 Removal of Python 2 support
 ===========================
 
-This package template now supports Python 3.5+ versions only. However we
+This package template now supports Python 3.6+ versions only. However we
 will provide critical bug fixes to the ``cookiecutter-2.x`` branch until
 the end of 2019.
 We also provide a Python 2 compatible rendered versions of the template in

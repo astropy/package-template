@@ -25,7 +25,7 @@ env:
       - EXTRA_CONTEXT='use_compiled_extensions=y include_example_code=y'
       - EXTRA_CONTEXT="package_name=AstropyProject" FOLDERNAME='AstropyProject'
       - EXTRA_CONTEXT='_parent_project=sunpy'
-      - EXTRA_CONTEXT='minimum_python_version=3.5'
+      - EXTRA_CONTEXT='minimum_python_version=3.6'
       - TASK='render' FLAGS='--config-file rendered.yml --no-input' EXTRA_CONTEXT='use_compiled_extensions=y include_example_code=y license=Other'
 
 install:
