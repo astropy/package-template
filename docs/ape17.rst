@@ -23,7 +23,7 @@ and that the module is called ``my_package``. We deliberately choose a name
 where the package name is different from the module name, but for many cases,
 these will be the same.
 
-.. _step0:
+.. _step-rerender:
 
 Step 0: Re-rendering the template
 ---------------------------------
@@ -59,10 +59,11 @@ You can now commit your changes with::
 Step 2: Update/create ``setup.cfg``
 -----------------------------------
 
-The next step is to update make sure that you have a ``setup.cfg`` file
-that contains meta-data about the package. If you already have this
-file, you will likely need to update it, and if you don’t already have
-this file, you will need to create it.
+The next step is to update make sure that you have a `setup.cfg
+<https://setuptools.readthedocs.io/en/latest/setuptools.html#configuring-setup-using-setup-cfg-files>`_
+file that contains meta-data about the package. If you already have this file,
+you will likely need to update it, and if you don’t already have this file, you
+will need to create it.
 
 This file should contain at least the following entries::
 
@@ -96,9 +97,12 @@ If you already had a file, make sure you remove the following entries
 
 -  ``package_name``
 -  ``version``
--  ``setup_requires``
 -  ``tests_require``
 -  ``[ah_bootstrap]`` and all entries in it
+
+Also remove any existing ``setup_requires`` entry, though we'll add
+back this key for the setuptools-scm package in
+:ref:`Step 8 <step-setuptools-scm>`.
 
 Step 3 - Define optional, test, and docs dependencies
 -----------------------------------------------------
@@ -139,18 +143,22 @@ e.g.::
 In the above example, all ``.fits`` and ``.csv`` in the package will be
 included as well as all files inside ``my_package/tests/data``.
 
+.. _step-setup-py:
+
 Step 5 - Update your ``setup.py`` file
 --------------------------------------
 
-Copy the ``setup.py`` file you generated in :ref:`Step 0 <step0>` and replace your existing one
+Copy the ``setup.py`` file you generated in :ref:`Step 0 <step-rerender>` and replace your existing one
 - it should be good to go as-is without any further customizations.
+
+.. _step-pyproject-toml:
 
 Step 6: add a ``pyproject.toml`` file
 -------------------------------------
 
 The ``pyproject.toml`` file is used to declare dependencies needed to run
 ``setup.py`` and build the package. Copy the ``pyproject.toml`` file you
-generated in :ref:`Step 0 <step0>` and replace your existing one.
+generated in :ref:`Step 0 <step-rerender>` and replace your existing one.
 
 If your package doesn’t have any compiled extensions, the file should contain:
 
@@ -181,7 +189,8 @@ package, and you don't need to include extension-helpers in the
 ``pyproject.toml`` file.
 
 If you have Cython extensions or your extensions use the NumPy C API,
-proceed to Step 7c, otherwise you can proceed to Step 8.
+proceed to :ref:`Step 7c <step-cython-numpy>`, otherwise you can proceed to
+:ref:`Step 8 <step-setuptools-scm>`.
 
 Step 7b - Using extension-helpers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,9 +206,16 @@ The latter works by looking through all the ``setup_package.py`` files
 in your package and executing the ``get_extensions()`` functions, which
 each should return a list of extensions. Check through your existing
 ``setup_package.py`` files (if any), and make sure that any
-``astropy_helpers`` imports are changed to ``extension_helpers``.
+``astropy_helpers`` imports are changed to ``extension_helpers``. Also
+note that all functions in extension-helpers should now be imported from
+the top level. See the `extension-helpers API documentation
+<https://extension-helpers.readthedocs.io/en/latest/api.html>`_ for a complete
+list of functions still provided by extension-helpers. Finally, make
+sure that any instance of ``include_dirs='numpy'`` is changed to
+``include_dirs=np.get_include()`` and add the ``import numpy as np``
+import if not already present.
 
-Provided you indicated when you generated the template in :ref:`Step 0 <step0>`
+Provided you indicated when you generated the template in :ref:`Step 0 <step-rerender>`
 that you wanted to use compiled extensions, you should be good to go. If not,
 make sure you add:
 
@@ -218,7 +234,10 @@ In addition, in the same file, add ``ext_modules=get_extensions()`` to the
 call to ``setup.py``.
 
 If you have Cython extensions or your extensions use the NumPy C API,
-proceed to Step 7c, otherwise you can proceed to Step 8.
+proceed to :ref:`Step 7c <step-cython-numpy>`, otherwise you can proceed to
+:ref:`Step 8 <step-setuptools-scm>`.
+
+.. _step-cython-numpy:
 
 Step 7c - Cython and Numpy build-time dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -232,7 +251,7 @@ supported Numpy version for each Python version. However, rather than doing this
 manually, you can add the ``oldest-supported-numpy`` package to the build
 dependencies in your ``pyproject.toml`` file. In addition if you have Cython
 extensions, you will need to also add an entry for Cython, pinning it to a
-recent version. Provided you indicated when you generated the template in :ref:`Step 0 <step0>`
+recent version. Provided you indicated when you generated the template in :ref:`Step 0 <step-rerender>`
 that you wanted to use compiled extensions, you should be good to go as both
 ``oldest-supported-numpy`` and ``cython`` should be in the ``pyproject.toml``
 file. In this case your ``pyproject.toml`` file will look like:
@@ -251,6 +270,8 @@ file. In this case your ``pyproject.toml`` file will look like:
 Whenever a new major Python version is released, you will likely need to
 update the Cython pinning to use the most recent Cython version available.
 
+.. _step-setuptools-scm:
+
 Step 8 - Using setuptools_scm
 -----------------------------
 
@@ -260,8 +281,9 @@ package. The way this works is that instead of setting the version
 number manually in, e.g., ``setup.cfg`` or elsewhere in your package,
 the version number is based on git tags.
 
-In Steps 5 and 6, we already added the required entry for
-setuptools_scm to ``setup.py`` and ``pyproject.toml``.
+In :ref:`Steps 5 <step-setup-py>` and :ref:`6 <step-pyproject-toml>`, we already
+added the required entry for setuptools_scm to ``setup.py`` and
+``pyproject.toml``.
 
 In addition to these, we recommend that you define ``setup_requires`` inside the
 ``[options]`` section of your ``setup.cfg`` file::
@@ -278,7 +300,7 @@ Next, check your ``.gitignore`` and make sure that you have a line containing::
 
    my_package/version.py
 
-Finally, copy over the ``_astropy_init.py`` file generated in :ref:`Step 0 <step0>`, or
+Finally, copy over the ``_astropy_init.py`` file generated in :ref:`Step 0 <step-rerender>`, or
 alternatively edit your ``my_package/_astropy_init.py`` file and remove the
 following lines:
 
@@ -401,7 +423,7 @@ install it into a virtual environment before running tests or building
 docs, which means that it will be a good test of whether, e.g., you have
 declared the package data correctly.
 
-As a starting point, copy over the ``tox.ini`` file generated in :ref:`Step 0 <step0>`.
+As a starting point, copy over the ``tox.ini`` file generated in :ref:`Step 0 <step-rerender>`.
 You can always then customize it if needed (although it should work out
 of the box).
 
@@ -449,7 +471,7 @@ configurations you want to use, and to then keep the CI configuration as simple
 as possible.
 
 If you use Travis CI, a good place to start is the ``.travis.yml`` file
-generated in :ref:`Step 0 <step0>`, and you can then see if any previous customizations you had
+generated in :ref:`Step 0 <step-rerender>`, and you can then see if any previous customizations you had
 made need to be copied over. This file shows how one can configure Travis to use
 tox, optionally using conda via ci-helpers to set up Python on MacOS X and
 Windows.
@@ -460,7 +482,10 @@ Step 14 - Update ReadTheDocs configuration
 With the set-up described in this migration guide, you should be able to
 simplify the configuration for ReadTheDocs. This can be done via a
 ``readthedocs.yml`` or ``.readthedocs.yml`` file (the latter is recommended).
-You should be able to copy over the ``.readthedocs.yml`` file created in :ref:`Step 0 <step0>`.
+See the `ReadTheDocs <https://docs.readthedocs.io/en/stable/config-file/v2.html>`_
+documentation for more information about this file.
+
+You should be able to copy over the ``.readthedocs.yml`` file created in :ref:`Step 0 <step-rerender>`.
 With this updated file, you should now be able to remove any pip requirements
 file or conda YAML file that were previously used by ``readthedocs.yml``.
 
@@ -517,7 +542,7 @@ For the header in your test runs to be correct with the latest versions of
 astropy, you will need to make sure that you update your ``conftest.py`` file as
 described in the `pytest-astropy-header instructions
 <https://github.com/astropy/pytest-astropy-header#migrating-from-the-astropy-header-plugin-to-pytest-astropy>`_.
-You can also copy over the file created in :ref:`Step 0 <step0>` and add back any
+You can also copy over the file created in :ref:`Step 0 <step-rerender>` and add back any
 customizations you had.
 
 Step 17 - Final cleanup
