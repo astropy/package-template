@@ -9,7 +9,7 @@ import sys
 
 from setuptools import setup
 from setuptools.config import read_configuration
-{% if cookiecutter.include_example_code == 'y' %}
+{% if cookiecutter.use_compiled_extensions == 'y' %}
 from extension_helpers import get_extensions
 {% endif %}
 
