@@ -27,16 +27,12 @@ Step 0: Re-rendering the template
 ---------------------------------
 
 In this guide, we will descibe the changes to make to the files in your package.
-However, you may not currently have the latest version of all files from the
-template, so this is also a good chance to make sure you are completely up to
-date by re-rendering the cookiecutter template to a new folder::
+To make some of the steps easier below, you should first re-run cookiecutter to
+re-render the template to a temporary folder::
 
     cookiecutter gh:astropy/package-template -o my_package_tmp
 
-As you progress through this guide, you can then - if you wish - copy over the
-newest version of the file, taking care to edit it if needed to match any
-desired customizations you had previously. This will also be useful for any new
-files which you can then just copy from the rendered template.
+We will refer to some of the rendered files in several of the steps below.
 
 Step 1: Remove astropy-helpers
 ------------------------------
