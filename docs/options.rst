@@ -22,6 +22,7 @@ a description of each of the prompts:
 #. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
 #. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
 #. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
+#. ``minimum_python_version``: Version string of minimum supported Python version
 
 Once the project has been set up, any of the values can still be `manually
 updated <http://docs.astropy.org/en/latest/development/astropy-package-template.html>`_.
