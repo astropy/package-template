@@ -77,11 +77,9 @@ except Exception:
     version = '{version}'
 """.lstrip()
 
-{% if cookiecutter.use_compiled_extensions == 'y' %}
 setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
-                       'write_to_template': VERSION_TEMPLATE},
+                       'write_to_template': VERSION_TEMPLATE}
+{%- if cookiecutter.use_compiled_extensions == 'y' %},
       ext_modules=get_extensions())
-{% else %}
-setup(use_scm_version={'write_to': os.path.join('{{ cookiecutter.module_name }}', 'version.py'),
-                       'write_to_template': VERSION_TEMPLATE})
-{% endif %}
+{%- else %})
+{%- endif %}
