@@ -15,6 +15,7 @@
     "use_read_the_docs": "y",
     "sphinx_theme": "astropy-bootstrap",
     "_parent_project": "astropy",
-    "_install_requires": "astropy",
+    "required_dependencies": "astropy",
+    "optional_dependencies": "",
     "minimum_python_version": ["3.6", "3.7", "3.8"]
 }

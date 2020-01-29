@@ -25,9 +25,7 @@ def pytest_configure(config):
     packagename = os.path.basename(os.path.dirname(__file__))
     TESTED_VERSIONS[packagename] = version
 
-from astropy.tests.helper import enable_deprecations_as_exceptions  # noqa
-
-# Uncomment the last line in this block to treat all DeprecationWarnings as
+# Uncomment the last two lines in this block to treat all DeprecationWarnings as
 # exceptions. For Astropy v2.0 or later, there are 2 additional keywords,
 # as follow (although default should work for most cases).
 # To ignore some packages that produce deprecation warnings on import
@@ -37,4 +35,5 @@ from astropy.tests.helper import enable_deprecations_as_exceptions  # noqa
 # To ignore some specific deprecation warning messages for Python version
 # MAJOR.MINOR or later, add:
 #     warnings_to_ignore_by_pyver={(MAJOR, MINOR): ['Message to ignore']}
+# from astropy.tests.helper import enable_deprecations_as_exceptions  # noqa
 # enable_deprecations_as_exceptions()

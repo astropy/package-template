@@ -16,3 +16,5 @@ default_context:
   use_read_the_docs: "y"
   sphinx_theme: "astropy-bootstrap"
   minimum_python_version: "3.6"
+  required_dependencies: "astropy"
+  optional_dependencies: ""
