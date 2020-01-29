@@ -20,4 +20,6 @@ a description of each of the prompts.
 13. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
 14. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
 15. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
-16. ``minimum_python_version``: Version string of minimum supported Python version
+16. ``required_dependencies``: Comma-separated list of required dependencies
+17. ``optional_dependencies``: Comma-separated list of optional dependencies
+18. ``minimum_python_version``: Version string of minimum supported Python version
