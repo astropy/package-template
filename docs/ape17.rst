@@ -46,7 +46,7 @@ To remove the astropy-helpers submodule, first, run::
 if ``astropy_helpers`` was the only submodule in your repository, the
 ``.gitmodules`` file will be empty, you can remove this if you wish::
 
-    git rm .gitmodules
+    git rm -f .gitmodules
 
 Next you should remove the ``ah_bootstrap.py`` file::
 
@@ -63,9 +63,12 @@ The next step is to update make sure that you have a `setup.cfg
 <https://setuptools.readthedocs.io/en/latest/setuptools.html#configuring-setup-using-setup-cfg-files>`_
 file that contains meta-data about the package. If you already have this file,
 you will likely need to update it, and if you don’t already have this file, you
-will need to create it.
+will need to create it by copying over the ``setup.cfg`` file generated in
+:ref:`Step 0 <step-rerender>`. If you are updating an existing file, you may
+also find it easier to start from the file generated in :ref:`Step 0 <step-rerender>`
+and add back any customizations.
 
-This file should contain at least the following entries::
+In any case this file should contain at least the following entries::
 
    [metadata]
    name = my-package
@@ -160,15 +163,13 @@ The ``pyproject.toml`` file is used to declare dependencies needed to run
 ``setup.py`` and build the package. Copy the ``pyproject.toml`` file you
 generated in :ref:`Step 0 <step-rerender>` and replace your existing one.
 
-If your package doesn’t have any compiled extensions, the file should contain:
+If your package doesn’t have any compiled extensions, the file should contain::
 
-.. code:: toml
-
-   [build-system]
-   requires = ["setuptools",
-               "setuptools_scm",
-               "wheel"]
-   build-backend = 'setuptools.build_meta'
+    [build-system]
+    requires = ["setuptools",
+                "setuptools_scm",
+                "wheel"]
+    build-backend = 'setuptools.build_meta'
 
 Step 7 - Handling C/Cython extensions
 -------------------------------------
@@ -254,18 +255,16 @@ extensions, you will need to also add an entry for Cython, pinning it to a
 recent version. Provided you indicated when you generated the template in :ref:`Step 0 <step-rerender>`
 that you wanted to use compiled extensions, you should be good to go as both
 ``oldest-supported-numpy`` and ``cython`` should be in the ``pyproject.toml``
-file. In this case your ``pyproject.toml`` file will look like:
+file. In this case your ``pyproject.toml`` file will look like::
 
-.. code:: toml
-
-   [build-system]
-   requires = ["setuptools",
-               "setuptools_scm",
-               "wheel",
-               "extension-helpers",
-               "oldest-supported-numpy",
-               "cython==0.29.14"]
-   build-backend = 'setuptools.build_meta'
+    [build-system]
+    requires = ["setuptools",
+                "setuptools_scm",
+                "wheel",
+                "extension-helpers",
+                "oldest-supported-numpy",
+                "cython==0.29.14"]
+    build-backend = 'setuptools.build_meta'
 
 Whenever a new major Python version is released, you will likely need to
 update the Cython pinning to use the most recent Cython version available.
@@ -293,8 +292,10 @@ In addition to these, we recommend that you define ``setup_requires`` inside the
    setup_requires = setuptools_scm
    ...
 
-This is not strictly necessary but will make it possible for ``python setup.py --version``
-to work without having to install ``setuptools_scm`` manually.
+This will already be the case if you copied the ``setup.cfg`` generated in
+:ref:`Step 0 <step-rerender>`. Having ``setup_requires`` is not strictly
+necessary but will make it possible for ``python setup.py --version`` to work
+without having to install ``setuptools_scm`` manually.
 
 Next, check your ``.gitignore`` and make sure that you have a line containing::
 
@@ -328,8 +329,9 @@ To make sure that pytest works properly, you can set a few options in a
    text_file_format = rst
    addopts = --doctest-rst
 
-For the ``testpaths`` line, make sure you replace ``my_package`` with
-the name of your package.
+For the ``testpaths`` line, make sure you replace ``my_package`` with the name
+of your package. This section will already exist if you copied the ``setup.cfg``
+generated in :ref:`Step 0 <step-rerender>`.
 
 The remaining options ensure that the output from pytest includes a
 header that lists dependencies and system information, and also ensure
@@ -533,7 +535,9 @@ to keep track of. Add the following to the bottom of your ``setup.cfg``::
 
 Make sure to replace ``my_package`` by your module name. If you had any
 customizations in ``coveragerc`` you can include them here, but otherwise the
-above should be sufficient.
+above should be sufficient and you should now be able to remove the old file::
+
+    git rm my_package/tests/coveragerc
 
 Step 16 - conftest.py file updates
 ----------------------------------
