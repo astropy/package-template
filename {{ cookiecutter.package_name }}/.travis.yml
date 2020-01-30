@@ -64,13 +64,13 @@ matrix:
           stage: Cron tests
           env: PYTHON_VERSION=3.7 TOXENV=py37-test
 
-        # Do a regular build on Linux with Python 3.8.
+        # Do a regular build on Linux with Python 3.8, with cov
         # For Linux we use language: python to avoid using conda.
         - os: linux
           python: 3.8
-          name: Python 3.8 with required dependencies
+          name: Python 3.8 with required dependencies and measure coverage
           stage: Initial tests
-          env: TOXENV=py38-test
+          env: TOXENV=py38-test-cov
 
         # Check for sphinx doc build warnings
         - os: linux
