@@ -57,12 +57,12 @@ this branch.
 
 1. Add the Astropy package template repo as a git remote (if it is not already)::
 
-   $ git remote add package-template
+   $ git remote add package-template https://github.com/astropy/package-template
 
 2. Pull from the remote::
 
-   $ git remote update
+   $ git fetch package-template
 
 3. Merge the branch::
 
-   $ git merge package-template/rendered
+   $ git merge package-template/master
