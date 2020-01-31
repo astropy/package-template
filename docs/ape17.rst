@@ -564,3 +564,48 @@ You should also add ``pip-wheel-metadata`` to your ``.gitignore`` file.
 **Once you are done, if you would like us to help by reviewing your changes,
 you can open a pull request to your package and mention @astrofrog or
 @Cadair to ask for a review.**
+
+Note on releasing your package
+------------------------------
+
+As a result of the changes above, there are some tweaks to the procedure to
+follow for releasing your package - see the `latest instructions
+<https://docs.astropy.org/en/latest/development/astropy-package-template.html>`_
+in the astropy documentation. The two main changes are that you no longer need
+to manually update the version number in files, instead the version number
+is based on the latest git tag, and in addition the source file should be
+built using the `pep517 <https://pypi.org/project/pep517/>`_ package.
+
+Note on conda recipes and pyproject.toml
+----------------------------------------
+
+While not something you can do until you release your updated package, you will
+need to take care to update conda recipes (e.g. in conda-forge) for your
+package. In particular, since conda ignores ``pyproject.toml`` files,
+you will need to make sure that the build dependencies present in ``pyproject.toml``
+are explicitly listed as build dependencies in the conda recipe. For
+packages with compiled extensions and Cython, this would look like::
+
+    build:
+        - {{ compiler('c') }}
+    host:
+        - pip
+        - python
+        - setuptools
+        - setuptools_scm
+        - numpy
+        - cython
+        - extension-helpers
+    run:
+        ...
+
+while for pure-Python packages you will still need to make sure
+``setuptools_scm`` is included in the build dependencies::
+
+    host:
+        - pip
+        - python
+        - setuptools
+        - setuptools_scm
+    run:
+        ...
