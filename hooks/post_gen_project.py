@@ -47,47 +47,10 @@ if __name__ == '__main__':
         remove_file('.rtd-environment.yml')
         remove_file('readthedocs.yml')
 
-    if '{{ cookiecutter.include_cextern_folder }}' != 'y':
-        remove_dir("cextern")
-
     if '{{ cookiecutter.include_example_code }}' != 'y':
         remove_dir('{{ cookiecutter.module_name }}/example_subpkg/')
         remove_file('{{ cookiecutter.module_name }}/example_mod.py')
         remove_file('{{ cookiecutter.module_name }}/tests/test_example.py')
 
-    if '{{ cookiecutter.include_example_cython_code }}' != 'y':
+    if '{{ cookiecutter.use_compiled_extensions }}' != 'y' or '{{ cookiecutter.include_example_code }}' != 'y':
         remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
-
-    if '{{ cookiecutter.initialize_git_repo }}' == 'y':
-        try:
-            from git import Repo
-
-            new_repo = Repo.init(PROJECT_DIRECTORY)
-            new_repo.git.add('.')
-            new_repo.index.commit(
-                "Creation of {{ cookiecutter.package_name }} from astropy package template"
-            )
-
-            if '{{ cookiecutter.astropy_helpers_version }}':
-                Repo.create_submodule(
-                    new_repo, "astropy_helpers", "astropy_helpers",
-                    "https://github.com/astropy/astropy-helpers.git",
-                    "{{ cookiecutter.astropy_helpers_version }}")
-                new_repo.submodules[0].update()
-                copy_file('astropy_helpers/ah_bootstrap.py', 'ah_bootstrap.py')
-                new_repo.git.add('ah_bootstrap.py')
-                new_repo.index.commit(
-                    "Initialize astropy_helpers at version {{ cookiecutter.astropy_helpers_version }}"
-                )
-
-        except ImportError:
-            print(
-                "gitpython is not installed so the repository will not be initialised "
-                "and astropy_helpers not downloaded.")
-
-    else:
-        urllib.request.urlretrieve(
-            url=('https://raw.githubusercontent.com/astropy/astropy-helpers/'
-                 '{{ cookiecutter.astropy_helpers_version }}/ah_bootstrap.py'),
-            filename='ah_bootstrap.py')
-        urllib.request.urlcleanup()

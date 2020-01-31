@@ -2,7 +2,6 @@ Documentation
 =============
 
 This is the documentation for {{ cookiecutter.package_name }}.
-{{ cookiecutter.long_description|wordwrap(break_long_words=False) }}
 
 .. toctree::
   :maxdepth: 2

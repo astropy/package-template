@@ -2,10 +2,9 @@ Updating Your Package
 =====================
 
 Once you have setup your project there will come a time when some things in the
-package template change, new versions of ``astropy_helpers`` or updates to the
-infrastructure you want to utilise. Updating your package with these changes is
-a balance between maintaining parity with the original template and customising
-your project to your needs.
+package template change. Updating your package with these changes is a balance
+between maintaining parity with the original template and customising your
+project to your needs.
 
 
 Using Cookiecutter to Update
@@ -27,10 +26,6 @@ settings configured to your package and then pull the changes into your package.
    temporary folder::
 
    $ cookiecutter [--replay] gh:astropy/package-template -o /tmp
-
-   .. note::
-
-      You should choose 'n' for the "initialize_git_repo" question.
 
 #. **Make a new branch**::
 
