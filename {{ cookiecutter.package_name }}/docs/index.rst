@@ -1,14 +1,16 @@
-Documentation
-=============
+{{ '*' * "%s Documentation"|format(cookiecutter.package_name)|length() }}
+{{ cookiecutter.package_name }} Documentation
+{{ '*' * "%s Documentation"|format(cookiecutter.package_name)|length() }}
 
 This is the documentation for {{ cookiecutter.package_name }}.
-
+{% if cookiecutter.include_example_code == 'y' %}
 .. toctree::
   :maxdepth: 2
 
-  {{ cookiecutter.module_name }}/index.rst
+  example_subpkg.rst
+{% endif %}
 
-.. note:: The layout of this directory is simply a suggestion.  To follow
-          traditional practice, do *not* edit this page, but instead place
-          all documentation for the package inside ``{{ cookiecutter.module_name }}/``.
-          You can follow this practice or choose your own layout.
+Reference/API
+=============
+
+.. automodapi:: {{ cookiecutter.module_name }}
