@@ -580,7 +580,7 @@ Note on conda recipes and pyproject.toml
 ----------------------------------------
 
 While not something you can do until you release your updated package, you will
-need to take care to update conda recipes (e.g. in conda-forge) for your
+need to take care to update conda recipes (e.g., in conda-forge) for your
 package. In particular, since conda ignores ``pyproject.toml`` files,
 you will need to make sure that the build dependencies present in ``pyproject.toml``
 are explicitly listed as build dependencies in the conda recipe. For
