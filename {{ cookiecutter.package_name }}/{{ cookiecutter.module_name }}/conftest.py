@@ -1,5 +1,8 @@
 # This file is used to configure the behavior of pytest when using the Astropy
-# test infrastructure.
+# test infrastructure. It needs to live inside the package in order for it to
+# get picked up when running the tests inside an interpreter using
+# packagename.test
+
 import os
 
 from astropy.version import version as astropy_version
