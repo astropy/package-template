@@ -6,23 +6,7 @@
 from ._astropy_init import *   # noqa
 # ----------------------------------------------------------------------------
 
-# Enforce Python version check during package import.
-# This is the same check as the one at the top of setup.py
-import sys
-from distutils.version import LooseVersion
-
-__minimum_python_version__ = "3.6"
-
 __all__ = []
-
-
-class UnsupportedPythonError(Exception):
-    pass
-
-
-if LooseVersion(sys.version) < LooseVersion(__minimum_python_version__):
-    raise UnsupportedPythonError("packagename does not support Python < {}"
-                                 .format(__minimum_python_version__))
 from .example_mod import *   # noqa
 # Then you can be explicit to control what ends up in the namespace,
 __all__ += ['do_primes']   # noqa
