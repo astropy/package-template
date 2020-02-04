@@ -483,7 +483,7 @@ Step 14 - Update ReadTheDocs configuration
 
 With the set-up described in this migration guide, you should be able to
 simplify the configuration for ReadTheDocs. This can be done via a
-``readthedocs.yml`` or ``.readthedocs.yml`` file (the latter is recommended).
+``.readthedocs.yml`` or ``readthedocs.yml`` file (the former is recommended).
 See the `ReadTheDocs <https://docs.readthedocs.io/en/stable/config-file/v2.html>`_
 documentation for more information about this file.
 
@@ -559,7 +559,7 @@ following sections from your ``setup.cfg`` file:
 -  ``[build_sphinx]``
 -  ``[upload_docs]``
 
-You should also add ``pip-wheel-metadata`` to your ``.gitignore`` file.
+You should also add ``pip-wheel-metadata/`` to your ``.gitignore`` file.
 
 **Once you are done, if you would like us to help by reviewing your changes,
 you can open a pull request to your package and mention @astrofrog or
