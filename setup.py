@@ -8,7 +8,6 @@ import os
 import sys
 
 from setuptools import setup
-from setuptools.config import read_configuration
 
 from extension_helpers import get_extensions
 
