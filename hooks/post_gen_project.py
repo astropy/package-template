@@ -54,3 +54,6 @@ if __name__ == '__main__':
 
     if '{{ cookiecutter.use_compiled_extensions }}' != 'y' or '{{ cookiecutter.include_example_code }}' != 'y':
         remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
+
+    if '{{ cookiecutter.include_cextern_folder }}' != 'y':
+        remove_dir('cextern')
