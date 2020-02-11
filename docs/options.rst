@@ -16,7 +16,6 @@ a description of each of the prompts:
 #. ``project_url``: Project website.
 #. ``include_example_code``: This includes a set of example python files showing you how to use the package template. If you choose ``n`` then none of this will be included and you will have to populate the directory structure before you can import the package.
 #. ``use_compiled_extensions``: Whether you plan to use compiled extensions in your package
-#. ``include_cextern_folder``: The cextern folder should be used if you are including non-python C code.
 #. ``edit_on_github_extension``: Set to ``True`` to enable the edit on GitHub sphinx extension.
 #. ``github_project``: This is the GitHub identifier for the edit on GitHub extension and the changelog link extension.
 #. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.

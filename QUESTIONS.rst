@@ -14,12 +14,11 @@ a description of each of the prompts.
 7. ``project_url``: Project website.
 8. ``include_example_code``: This includes a set of example python files showing you how to use the package template. If you choose ``n`` then none of this will be included and you will have to populate the directory structure before you can import the package.
 9. ``use_compiled_extensions``: Whether you plan to use compiled extensions in your package
-10. ``include_cextern_folder``: The cextern folder should be used if you are including non-python C code.
-11. ``edit_on_github_extension``: Set to ``True`` to enable the edit on GitHub sphinx extension.
-12. ``github_project``: This is the GitHub identifier for the edit on GitHub extension and the changelog link extension.
-13. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
-14. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
-15. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
-16. ``required_dependencies``: Comma-separated list of required dependencies
-17. ``optional_dependencies``: Comma-separated list of optional dependencies
-18. ``minimum_python_version``: Version string of minimum supported Python version
+10. ``edit_on_github_extension``: Set to ``True`` to enable the edit on GitHub sphinx extension.
+11. ``github_project``: This is the GitHub identifier for the edit on GitHub extension and the changelog link extension.
+12. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
+13. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
+14. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
+15. ``required_dependencies``: Comma-separated list of required dependencies
+16. ``optional_dependencies``: Comma-separated list of optional dependencies
+17. ``minimum_python_version``: Version string of minimum supported Python version
