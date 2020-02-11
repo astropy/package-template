@@ -6,7 +6,6 @@
     "author_email": "",
     "license": ["BSD 3-Clause", "GNU GPL v3+", "Apache Software Licence 2.0", "BSD 2-Clause", "Other"],
     "project_url": "http://docs.astropy.org/projects/package-template/",
-    "include_cextern_folder": "n",
     "use_compiled_extensions": "y",
     "include_example_code": "y",
     "edit_on_github_extension": "False",

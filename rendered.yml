@@ -9,7 +9,6 @@ default_context:
   project_version: "0.0.dev"
   include_example_code: "y"
   use_compiled_extensions: "y"
-  include_cextern_folder: "y"
   edit_on_github_extension: "False"
   github_project: "astropy/astropy"
   use_travis_ci: "y"
