@@ -7,7 +7,6 @@ include pyproject.toml
 recursive-include packagename *.pyx *.c *.pxd
 recursive-include docs *
 recursive-include licenses *
-recursive-include cextern *
 recursive-include scripts *
 
 prune build
