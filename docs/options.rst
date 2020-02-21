@@ -19,6 +19,7 @@ a description of each of the prompts:
 #. ``edit_on_github_extension``: Set to ``True`` to enable the edit on GitHub sphinx extension.
 #. ``github_project``: This is the GitHub identifier for the edit on GitHub extension and the changelog link extension.
 #. ``use_travis_ci``: If ``'y'`` the template will include an example ``.travis.yml`` file for the Travis CI service.
+#. ``use_gh_actions``: If ``'y'`` the template will include an example ``.github/workflows/tox-tests.yml`` file for the Github Actions CI service.
 #. ``use_read_the_docs``: If ``'y'`` the ``read_the_docs.yml`` and ``.rtd-environment.yml`` files will be included for using conda on Read the Docs.
 #. ``sphinx_theme``: The value of the ``html_theme`` variable in the sphinx configuration file.
 #. ``required_dependencies``: Comma-separated list of required dependencies
