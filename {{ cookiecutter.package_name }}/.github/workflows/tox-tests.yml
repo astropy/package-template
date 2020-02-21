@@ -21,10 +21,11 @@ jobs:
         # E. g.: os: [ubuntu-latest, macos-latest, windows-latest]
         os: [ubuntu-latest]
 
-        # Test python 3.6, 3.7, and 3.8 by default
+        # Test python 3.6, 3.7, and 3.8 by default.
         python-ver: [6, 7, 8]
 
-        # Specify which tox environments to test in this list
+        # Specify which tox environments to test in this list. They will get built into a form of, e.g., py38-test-astropylts for
+        # python-ver of '8' and tox-env of 'astropylts'.
         tox-env: [cov, alldeps, devdeps, oldestdeps, astropylts]
     steps:
     - uses: actions/checkout@v1
