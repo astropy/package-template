@@ -35,10 +35,10 @@ jobs:
     - name: Install base dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install numpy tox
+        python -m pip install tox
     - name: Test with tox
       run: |
-        tox -e ${{ matrix.tox-env }}
+        tox -e py3${{ matrix.python-ver }}-${{ matrix.tox-env }}
     #
     # # This is an example of how to upload coverage to codecov
     # - name: Upload coverage to codecov
