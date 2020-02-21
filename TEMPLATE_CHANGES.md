@@ -18,6 +18,9 @@ be copied over manually if desired.
 - Refactored the template to follow the recommendations in APE 17:
   https://github.com/astropy/astropy-APEs/blob/master/APE17.rst [#438]
 
+- Add option to use Github Actions for CI.
+
+
 2.1 (unreleased)
 ----------------
 
