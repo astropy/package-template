@@ -216,6 +216,33 @@ sure that any instance of ``include_dirs='numpy'`` is changed to
 ``include_dirs=np.get_include()`` and add the ``import numpy as np``
 import if not already present.
 
+Note that if you have existing ``setup_package.py`` files from an older version
+of the package template, you may have imports that look like:
+
+.. code:: python
+
+    from astropy_helpers import setup_helpers
+
+and extensions that make use of:
+
+.. code:: python
+
+    cfg = setup_helpers.DistutilsExtensionArgs()
+
+You should replace the import, ``from astropy_helpers import setup_helpers``,
+with:
+
+.. code:: python
+
+    from collections import defaultdict
+
+and change any lines that use ``setup_helpers.DistutilsExtensionArgs()`` to
+instead use:
+
+.. code:: python
+
+    cfg = defaultdict(list)
+
 Provided you indicated when you generated the template in :ref:`Step 0 <step-rerender>`
 that you wanted to use compiled extensions, you should be good to go. If not,
 make sure you add:
