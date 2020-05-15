@@ -1,5 +1,5 @@
 [build-system]
-{% if cookiecutter.include_example_code == 'y' %}
+{% if cookiecutter.used_compiled_extensions == 'y' %}
 requires = ["setuptools",
             "setuptools_scm",
             "wheel",
