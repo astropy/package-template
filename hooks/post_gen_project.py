@@ -25,19 +25,19 @@ license_files = {"BSD 3-Clause": 'BSD3.rst',
                  "BSD 2-Clause": 'BSD2.rst'}
 
 
-def process_licence(licence_name):
-    if licence_name in license_files:
-        shutil.copyfile(os.path.join(PROJECT_DIRECTORY, 'licenses', license_files[licence_name]),
+def process_license(license_name):
+    if license_name in license_files:
+        shutil.copyfile(os.path.join(PROJECT_DIRECTORY, 'licenses', license_files[license_name]),
                         os.path.join(PROJECT_DIRECTORY, 'licenses', 'LICENSE.rst'))
 
-    if licence_name != "Other":
-        for licence_file in license_files.values():
-            os.remove(os.path.join(PROJECT_DIRECTORY, 'licenses', licence_file))
+    if license_name != "Other":
+        for license_file in license_files.values():
+            os.remove(os.path.join(PROJECT_DIRECTORY, 'licenses', license_file))
 
 
 if __name__ == '__main__':
 
-    process_licence('{{ cookiecutter.license }}')
+    process_license('{{ cookiecutter.license }}')
 
     if '{{ cookiecutter.use_travis_ci }}' != 'y':
         remove_file('.travis.yml')
