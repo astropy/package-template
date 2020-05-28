@@ -1,9 +1,6 @@
 APE 17 Migration Guide
 ======================
 
-.. warning:: This guide is not yet ready for widespread use and may
-             still change significantly.
-
 The Astropy project is now transitioning from using astropy-helpers for
 infrastructure to more standard Python packaging tools. The motivation
 and implications of this are discussed in an Astropy Proposal for
