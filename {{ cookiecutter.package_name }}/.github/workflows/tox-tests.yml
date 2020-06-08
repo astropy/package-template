@@ -21,15 +21,15 @@ jobs:
         # For example -- os: [ubuntu-latest, macos-latest, windows-latest]
         os: [ubuntu-latest]
 
-        # Test python 3.6, 3.7, and 3.8 by default.
-        python-ver: [6, 7, 8]
+        # Test python 3.7 and 3.8 by default.
+        python-ver: [7, 8]
 
         # Specify which tox environments to test in this list.
         tox-env: [cov, alldeps, devdeps, astropylts]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Set up python 3.${{ matrix.python-ver }} with tox environment py3${{ matrix.python-ver }}-${{ matrix.tox-env }} on ${{ matrix.os }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: 3.${{ matrix.python-ver }}
     - name: Install base dependencies
@@ -54,11 +54,11 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Set up Python to build docs with sphinx
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: '3.x'
     - name: Install base dependencies
       run: |
         python -m pip install --upgrade pip
@@ -73,11 +73,11 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Python codestyle check
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: '3.x'
     - name: Install base dependencies
       run: |
         python -m pip install --upgrade pip
