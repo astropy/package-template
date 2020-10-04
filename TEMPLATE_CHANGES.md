@@ -22,6 +22,8 @@ be copied over manually if desired.
 
 - Added cron job for RST link checking [#482]
 
+- Added changelog on render [#484]
+
 2.1 (unreleased)
 ----------------
 
