@@ -127,6 +127,17 @@ matrix:
           stage: Initial tests
           env: TOXENV=codestyle
 
+        # Run documentation link check in a cron job.
+        - language: python
+          python: 3.8
+          name: Documentation link check
+          stage: Cron tests
+          env: TOXENV=linkcheck
+          addons:
+              apt:
+                  packages:
+                      - graphviz
+
     allow_failures:
         # Do a PEP8 test with flake8
         # (do allow to fail unless your code completely compliant)
@@ -135,6 +146,7 @@ matrix:
         #   name: Code style checks
         #   stage: Initial tests
         #   env: TOXENV=codestyle
+
 
 before_install:
     # Create a coverage.xml for use by coveralls or codecov

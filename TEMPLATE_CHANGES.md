@@ -18,6 +18,8 @@ be copied over manually if desired.
 - Refactored the template to follow the recommendations in APE 17:
   https://github.com/astropy/astropy-APEs/blob/master/APE17.rst [#438]
 
+- Added cron job for RST link checking [#482]
+
 2.1 (unreleased)
 ----------------
 

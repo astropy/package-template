@@ -169,6 +169,15 @@ if setup_cfg.get('edit_on_github').lower() == 'true':
 # -- Resolving issue number to links in changelog -----------------------------
 github_issues_url = 'https://github.com/{0}/issues/'.format(setup_cfg['github_project'])
 
+
+# -- Options for linkcheck output -------------------------------------------
+linkcheck_retry = 5
+linkcheck_ignore = [
+    r'https://github\.com/{{ cookiecutter.github_project }}/(?:issues|pull)/\d+',
+]
+linkcheck_timeout = 180
+linkcheck_anchors = False
+
 # -- Turn on nitpicky mode for sphinx (to warn about references not found) ----
 #
 # nitpicky = True
