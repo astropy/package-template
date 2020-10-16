@@ -17,7 +17,7 @@ Core Package Contributors
 All contributors (alphabetical last name):
 
 {% for req in cookiecutter.author_name.split(',') %}
-    * {{ req.strip() }}
+* {{ req.strip() }}
 {% endfor %}
 
 
