@@ -135,6 +135,9 @@ html_title = '{0} v{1}'.format(project, release)
 # Output file base name for HTML help builder.
 htmlhelp_basename = project + 'doc'
 
+# Prefixes that are ignored for sorting the Python module index
+modindex_common_prefix = ["packagename."]
+
 
 # -- Options for LaTeX output -------------------------------------------------
 
