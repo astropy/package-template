@@ -1,6 +1,6 @@
-The contents of this template are licenced under the terms of the following
-licence, this does not mean that your project has to be licenced under this
-licence.
+The contents of this template are licensed under the terms of the following
+license, this does not mean that your project has to be licensed under this
+license.
 
 
 Copyright (c) 2018, Astropy Developers
