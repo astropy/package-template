@@ -39,9 +39,6 @@ if __name__ == '__main__':
 
     process_license('{{ cookiecutter.license }}')
 
-    if '{{ cookiecutter.use_travis_ci }}' != 'y':
-        remove_file('.travis.yml')
-
     if '{{ cookiecutter.use_gh_actions }}' != 'y':
         remove_dir('.github')
 
