@@ -15,37 +15,32 @@ Setting Up Continuous Integration
 
 `Continuous Integration
 <https://github.com/astropy/astropy/wiki/Continuous-Integration>`__ (CI)
-services, like Travis CI, continuously test your package
-for each commit. Every pull requests against your main repository will be
-automatically tested, and failing tests will be flagged by these services.
+services continuously test your package
+for each commit. Every pull request against your main repository will be
+automatically tested and failing tests will be flagged by these services.
 
-Travis CI
-#########
+Github Actions
+##############
 
-You should register your package on https://travis-ci.org and modify the
-``.travis.yml`` file to your needs. The default ``.travis.yml`` file contains a
-large number of builds, against various versions of Python, Astropy, and
-numpy, and you should choose the ones relevant to your project. Full documentation
-of the ``.travis.yml`` file can be found on the
-`Travis CI <https://docs.travis-ci.com/user/for-beginners/>`__ website.
-
-There  are many `example build configuations
-<https://github.com/astropy/astropy/wiki/travis-ci-test-status>`__ for
-``.travis.yml``. Generally you should aim to always have your ``master`` branch
+Github now provides an integrated CI service called `Github Actions <https://docs.github.com/en/free-pro-team@latest/actions>`__.
+The default workflows in ``.github/workflows`` show how to set up perform integration testing
+upon every push or pull request, ``ci_tests.yml``, and how to run scheduled tests via cron, ``ci_cron_weekly.yml``.
+The default ``ci_tests.yml`` file contains a large number of builds against various versions of Python, astropy, and
+numpy, and you should choose the ones relevant to your project. Generally you should aim to always have your ``master`` branch
 work with the latest stable and latest development version of astropy (i.e. the
 astropy git master branch) and the same versions of python and numpy supported
-by astropy.  The template ``.travis.yml`` covers those versions; in some
+by astropy.  The template ``ci_tests.yml`` covers those versions; in some
 circumstances you may need to limit the versions your package covers.
 
-Coveralls
-#########
+Codecov
+#######
 
-Coveralls is a web interface to monitoring what lines of code in your project
+Codecov is a web interface to monitoring what lines of code in your project
 are executed by your test suite.
 
-If you register your package with `coveralls.io <https://coveralls.io/>`_, you
-will need to uncomment the coveralls line in the ``.travis.yml`` file to enable
-upload of your coverage statistics to coveralls.
+If you register your package with `codecov.io <https://codecov.io/>`_, you
+will need to uncomment the codecov section in the ``ci_tests.yml`` file under
+``.github/workflows`` to enable upload of your coverage statistics to codecov.
 
 Read the Docs
 #############

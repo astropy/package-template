@@ -496,11 +496,10 @@ recommended approach is to use the tox file to set up the different
 configurations you want to use, and to then keep the CI configuration as simple
 as possible.
 
-If you use Travis CI, a good place to start is the ``.travis.yml`` file
-generated in :ref:`Step 0 <step-rerender>`, and you can then see if any previous customizations you had
-made need to be copied over. This file shows how one can configure Travis to use
-tox, optionally using conda via ci-helpers to set up Python on MacOS X and
-Windows.
+Github now has an integrated CI service, Github Actions. If you wish to use Actions, a good place to start
+is the ``.github/workflows/ci_tests.yml`` file generated in :ref:`Step 0 <step-rerender>`. You can then
+see if any previous customizations you had made need to be copied over. This file shows how one can configure
+Actions to use tox to test different environments with different versions of python on different platforms.
 
 Step 14 - Update ReadTheDocs configuration
 ------------------------------------------
