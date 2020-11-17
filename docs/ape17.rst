@@ -496,7 +496,7 @@ recommended approach is to use the tox file to set up the different
 configurations you want to use, and to then keep the CI configuration as simple
 as possible.
 
-Github now has an integrated CI service, Github Actions. If you wish to use Actions, a good place to start
+GitHub now has an integrated CI service, GitHub Actions. If you wish to use Actions, a good place to start
 is the ``.github/workflows/ci_tests.yml`` file generated in :ref:`Step 0 <step-rerender>`. You can then
 see if any previous customizations you had made need to be copied over. This file shows how one can configure
 Actions to use tox to test different environments with different versions of python on different platforms.
