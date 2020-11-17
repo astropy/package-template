@@ -4,7 +4,12 @@
 
 name: CI Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+    tags:
+  pull_request:
 
 jobs:
   # Github Actions supports ubuntu, windows, and macos virtual environments:
