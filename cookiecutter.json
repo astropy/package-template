@@ -16,7 +16,7 @@
     "_parent_project": "astropy",
     "required_dependencies": "astropy",
     "optional_dependencies": "",
-    "minimum_python_version": ["3.6", "3.7", "3.8"],
+    "minimum_python_version": ["3.7", "3.8", "3.9"],
     "_copy_without_render": [
         ".github"
     ]
