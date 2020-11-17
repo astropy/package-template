@@ -26,8 +26,8 @@ Github now provides an integrated CI service called `Github Actions <https://doc
 The default workflows in ``.github/workflows`` show how to set up integration testing
 upon every push or pull request, ``ci_tests.yml``, and how to run scheduled tests via cron, ``ci_cron_weekly.yml``.
 The default ``ci_tests.yml`` file contains a large number of builds against various versions of Python, astropy, and
-numpy, and you should choose the ones relevant to your project. Generally, you should aim to always have your ``master`` branch
-work with the latest stable and latest development version of astropy (i.e. the
+numpy, and you should choose the ones relevant to your project. Generally, you should aim to always have your
+``main`` branch work with the latest stable and latest development version of astropy (i.e. the
 astropy git master branch) and the same versions of python and numpy supported
 by astropy.  The template ``ci_tests.yml`` covers those versions; in some
 circumstances you may need to limit the versions your package covers.
