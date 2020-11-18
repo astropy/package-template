@@ -19,15 +19,15 @@ services continuously test your package
 for each commit. Every pull request against your main repository will be
 automatically tested and failing tests will be flagged by these services.
 
-Github Actions
+GitHub Actions
 ##############
 
-Github now provides an integrated CI service called `Github Actions <https://docs.github.com/en/free-pro-team@latest/actions>`__.
+GitHub now provides an integrated CI service called `GitHub Actions <https://docs.github.com/en/free-pro-team@latest/actions>`__.
 The default workflows in ``.github/workflows`` show how to set up integration testing
 upon every push or pull request, ``ci_tests.yml``, and how to run scheduled tests via cron, ``ci_cron_weekly.yml``.
 The default ``ci_tests.yml`` file contains a large number of builds against various versions of Python, astropy, and
 numpy, and you should choose the ones relevant to your project. Generally, you should aim to always have your
-``main`` branch work with the latest stable and latest development version of astropy (i.e. the
+``main`` branch work with the latest stable and latest development version of astropy (i.e., the
 astropy git master branch) and the same versions of python and numpy supported
 by astropy.  The template ``ci_tests.yml`` covers those versions; in some
 circumstances you may need to limit the versions your package covers.

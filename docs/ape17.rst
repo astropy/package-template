@@ -499,7 +499,7 @@ as possible.
 GitHub now has an integrated CI service, GitHub Actions. If you wish to use Actions, a good place to start
 is the ``.github/workflows/ci_tests.yml`` file generated in :ref:`Step 0 <step-rerender>`. You can then
 see if any previous customizations you had made need to be copied over. This file shows how one can configure
-Actions to use tox to test different environments with different versions of python on different platforms.
+Actions to use tox to test different environments with different versions of Python on different platforms.
 
 Step 14 - Update ReadTheDocs configuration
 ------------------------------------------

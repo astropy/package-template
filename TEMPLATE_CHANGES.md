@@ -13,12 +13,12 @@ be copied over manually if desired.
 - Moved as much as possible of the setup.py configuration to setup.cfg, and now require
   setuptools>=30.3. [#375]
 
-- Removed Appveyor CI option. Use ``os: windows-latest`` in Github Actions. [#420]
+- Removed Appveyor CI option. Use ``os: windows-latest`` in GitHub Actions. [#420]
 
 - Refactored the template to follow the recommendations in APE 17:
   https://github.com/astropy/astropy-APEs/blob/master/APE17.rst [#438]
 
-- Switch to using Github Actions for CI; remove Travis config. [#449]
+- Switch to using GitHub Actions for CI; remove Travis config. [#449]
 
 - Added cron job for RST link checking [#482]
 
