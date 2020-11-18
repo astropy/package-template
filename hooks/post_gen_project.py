@@ -39,8 +39,9 @@ if __name__ == '__main__':
 
     process_license('{{ cookiecutter.license }}')
 
-    if '{{ cookiecutter.use_travis_ci }}' != 'y':
-        remove_file('.travis.yml')
+    if '{{ cookiecutter.use_gh_actions }}' != 'y':
+        remove_file('.github/workflows/ci_tests.yml')
+        remove_file('.github/workflows/ci_cron_weekly.yml')
 
     if '{{ cookiecutter.use_read_the_docs }}' != 'y':
         remove_file('.rtd-environment.yml')

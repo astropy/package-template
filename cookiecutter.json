@@ -10,11 +10,14 @@
     "include_example_code": "y",
     "edit_on_github_extension": "False",
     "github_project": "astropy/astropy",
-    "use_travis_ci": "y",
+    "use_gh_actions": "y",
     "use_read_the_docs": "y",
     "sphinx_theme": "astropy-bootstrap",
     "_parent_project": "astropy",
     "required_dependencies": "astropy",
     "optional_dependencies": "",
-    "minimum_python_version": ["3.6", "3.7", "3.8"]
+    "minimum_python_version": ["3.7", "3.8", "3.9"],
+    "_copy_without_render": [
+        ".github"
+    ]
 }

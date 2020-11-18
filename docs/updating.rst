@@ -41,7 +41,7 @@ settings configured to your package and then pull the changes into your package.
 
 #. **Edit the files** until the changes shown by `` git diff`` are the ones you want to have in your package.
 
-#. **Merge the changes** Either by a Pull Request or by merging the ``update_template`` branch into your master branch.
+#. **Merge the changes** Either by a Pull Request or by merging the ``update_template`` branch into your ``main`` branch.
 
 
 Using git Update
