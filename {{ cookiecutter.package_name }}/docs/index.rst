@@ -6,6 +6,7 @@ This is the documentation for {{ cookiecutter.package_name }}.
 .. toctree::
   :maxdepth: 2
 
+  documentation/installation
   {{ cookiecutter.module_name }}/index.rst
 
 .. note:: The layout of this directory is simply a suggestion.  To follow

@@ -22,6 +22,9 @@ be copied over manually if desired.
 
 - Added cron job for RST link checking [#482]
 
+- Add rendered package installation instructions to rendered docs [#493]
+
+
 2.1 (unreleased)
 ----------------
 
