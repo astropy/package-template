@@ -17,3 +17,4 @@ default_context:
   minimum_python_version: "3.6"
   required_dependencies: "astropy"
   optional_dependencies: ""
+  private_project: "n"

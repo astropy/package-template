@@ -22,3 +22,4 @@ a description of each of the prompts.
 15. ``required_dependencies``: Comma-separated list of required dependencies
 16. ``optional_dependencies``: Comma-separated list of optional dependencies
 17. ``minimum_python_version``: Version string of minimum supported Python version
+18. ``private_project``: Whether this is a private project or not.

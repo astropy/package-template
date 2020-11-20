@@ -63,6 +63,24 @@ documentation, read the :ref:`next-steps` for further information.
    updating
    ape17
 
+Taking a Project Public
+-----------------------
+
+If the 'private_project' option was set true when rendering with cookiecutter,
+then there a number of settings to consider when taking the project public.
+
+In ``.travis.yml``:
+
+For private repos, we whitelist only the main branch.
+Since on CIs, PRs to the main branch are still built, this means branches (with PRs) are only built once, saving time.
+On public repos this limitation is less important.
+
+::
+    branches:
+        only:
+            - master
+            - main  # as GitHub makes the transition
+
 
 Removal of Python 2 support
 ===========================

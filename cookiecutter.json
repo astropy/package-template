@@ -19,5 +19,6 @@
     "minimum_python_version": ["3.7", "3.8", "3.9"],
     "_copy_without_render": [
         ".github"
-    ]
+    ],
+    "private_project": "n"
 }
