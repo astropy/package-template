@@ -22,6 +22,8 @@ be copied over manually if desired.
 
 - Added cron job for RST link checking [#482]
 
+- Add credits document on render [#492]
+
 2.1 (unreleased)
 ----------------
 
