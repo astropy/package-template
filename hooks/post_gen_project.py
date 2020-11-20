@@ -54,3 +54,23 @@ if __name__ == '__main__':
 
     if '{{ cookiecutter.use_compiled_extensions }}' != 'y' or '{{ cookiecutter.include_example_code }}' != 'y':
         remove_file('{{ cookiecutter.module_name }}/example_c.pyx')
+
+    # NOTE! Has to be the last thing in __main__
+    # Code modified from @Cadair
+    # https://github.com/astropy/package-template/blob/34c5256e192113882fa52ccbb30a15cd002f3b6a/hooks/post_gen_project.py#L61
+    if '{{ cookiecutter.initialize_git_repo }}' == 'y':
+        try:
+            from git import Repo
+
+            new_repo = Repo.init(PROJECT_DIRECTORY)
+            new_repo.git.add('.')
+            new_repo.index.commit("Creation of {{ cookiecutter.package_name }}"
+                                  " from {{ cookiecutter._parent_project }}"
+                                  " package template")
+            # we do not push the repo for 2 reasons:
+            # 1) because we don't know to where it should be pushed
+            # 2) so that the user can modify / ammend the first commit.
+
+        except ImportError:
+            print("gitpython is not installed "
+                  "so the repository will not be initialized.")

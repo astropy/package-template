@@ -22,6 +22,8 @@ be copied over manually if desired.
 
 - Added cron job for RST link checking [#482]
 
+- Add cookiecutter question to run ``git init .`` on render [#489]
+
 2.1 (unreleased)
 ----------------
 
