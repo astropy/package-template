@@ -36,7 +36,7 @@ From the command line.
 
    cd {{ cookiecutter.package_name }}
 
-   python setup.py install
+   pip install .
 
 
 ..
