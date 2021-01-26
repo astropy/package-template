@@ -6,6 +6,8 @@ on:
     types:
       - completed
 
+# github-script can be replaced then this issue is fixed:
+# https://github.com/actions/download-artifact/issues/60
 jobs:
   upload:
     name: Push template to master
