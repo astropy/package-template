@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - cookiecutter
+  pull_request:
+    branches:
+    - cookiecutter
+
+# Extra context is a way to override options that the user normally
+# specifies during the questions phase of the cookiecutter setup. The keys
+# being overridden here must exist in the cookiecutter.json
+# See https://cookiecutter.readthedocs.io/en/0.9.1/advanced_usage.html#injecting-extra-context
+jobs:
+  tests:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+
+          - name: Default setup
+            extra_context: ''
+            extra_flags: ''
+            foldername: 'packagename'
+
+          - name: Compile ext and example code
+            extra_context: 'use_compiled_extensions=y include_example_code=y'
+            extra_flags: ''
+            foldername: 'packagename'
+
+          - name: Custom package name
+            extra_context: 'package_name=AstropyProject'
+            extra_flags: ''
+            foldername: 'AstropyProject'
+
+          - name: Parent is sunpy
+            extra_context: '_parent_project=sunpy'
+            extra_flags: ''
+            foldername: 'packagename'
+
+          - name: Python minversion
+            extra_context: 'minimum_python_version=3.6'
+            extra_flags: ''
+            foldername: 'packagename'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade tox
+        python -m pip install sphinx-astropy cookiecutter gitpython
+    - name: Generate package
+      run: |
+        cd docs ; make html ; cd ..
+        cookiecutter --no-input ./ -o ../test ${{ matrix.extra_context }} ${{ matrix.extra_flags }}
+        cd ../test/${{ matrix.foldername }}
+        git init
+    - name: Code style checks
+      run: |
+        cd ../test/${{ matrix.foldername }}
+        tox -e codestyle
+    - name: Build docs
+      run: |
+        cd ../test/${{ matrix.foldername }}
+        tox -e build_docs
+    - name: Tests
+      run: |
+        cd ../test/${{ matrix.foldername }}
+        tox -e py38-test
+
+  # upload-artifact does not take relpath, so render inside code checkout
+  render:
+    name: Render template
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade tox
+        python -m pip install sphinx-astropy cookiecutter gitpython
+    - name: Generate package
+      run: |
+        cd docs ; make html ; cd ..
+        cookiecutter --no-input ./ -o ./test use_compiled_extensions=y include_example_code=y license=Other --config-file rendered.yml --no-input
+        cd ./test/packagename
+        git init
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      if: github.repository == 'astropy/package-template' && github.event_name == 'push'
+      with:
+        name: rendered
+        path: ${{ github.workspace }}/test/packagename/
+        retention-days: 1

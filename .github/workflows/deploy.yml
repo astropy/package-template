@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+# github-script can be replaced then this issue is fixed:
+# https://github.com/actions/download-artifact/issues/60
+jobs:
+  upload:
+    name: Push template to master
+    runs-on: ubuntu-latest
+    if: github.repository == 'astropy/package-template' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
+    steps:
+    - name: Set up Git
+      run: |
+        git --version
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    - name: Download artifact
+      uses: actions/github-script@v3
+      with:
+        script: |
+          var artifacts = await github.actions.listWorkflowRunArtifacts({
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             run_id: ${{ github.event.workflow_run.id }},
+          });
+          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == "rendered"
+          })[0];
+          var download = await github.actions.downloadArtifact({
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             artifact_id: matchArtifact.id,
+             archive_format: 'zip',
+          });
+          var fs = require('fs');
+          fs.writeFileSync('${{ github.workspace }}/rendered.zip', Buffer.from(download.data));
+    - name: Unzip artifact
+      run: |
+        mkdir -p test/packagename
+        mv rendered.zip test/packagename
+        cd test/packagename
+        unzip rendered.zip
+        rm rendered.zip
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        path: 'test/rendered_dir'
+        token: ${{ secrets.ACTIONS_TOKEN }}
+    - name: Run script
+      run: |
+        cd ${{ github.workspace }}/test/rendered_dir
+        git remote update
+        git checkout master
+        rsync -avz --delete --exclude .git/ ../packagename/ ./
+        git add -A
+        git commit --allow-empty -m "Update rendered version to ""$GITHUB_SHA"
+        git push origin master
