@@ -10,7 +10,7 @@ on:
 # https://github.com/actions/download-artifact/issues/60
 jobs:
   upload:
-    name: Push template to master
+    name: Push template to main
     runs-on: ubuntu-latest
     if: github.repository == 'astropy/package-template' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
     steps:
@@ -55,8 +55,8 @@ jobs:
       run: |
         cd ${{ github.workspace }}/test/rendered_dir
         git remote update
-        git checkout master
+        git checkout main
         rsync -avz --delete --exclude .git/ ../packagename/ ./
         git add -A
         git commit --allow-empty -m "Update rendered version to ""$GITHUB_SHA"
-        git push origin master
+        git push origin main

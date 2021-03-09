@@ -28,7 +28,7 @@ upon every push or pull request, ``ci_tests.yml``, and how to run scheduled test
 The default ``ci_tests.yml`` file contains a large number of builds against various versions of Python, astropy, and
 numpy, and you should choose the ones relevant to your project. Generally, you should aim to always have your
 ``main`` branch work with the latest stable and latest development version of astropy (i.e., the
-astropy git master branch) and the same versions of python and numpy supported
+astropy git main branch) and the same versions of python and numpy supported
 by astropy.  The template ``ci_tests.yml`` covers those versions; in some
 circumstances you may need to limit the versions your package covers.
 
@@ -79,7 +79,7 @@ Customizing the documentation CSS
 #################################
 
 As described in the documentation configuration file (`template/docs/conf.py
-<https://github.com/astropy/package-template/blob/master/docs/conf.py#L95>`_),
+<https://github.com/astropy/package-template/blob/main/docs/conf.py#L95>`_),
 the documentation uses a custom theme based on `bootstrap
 <http://getbootstrap.com/css/>`_. You can swap out this theme by editing the
 configuration file. You can also tweak aspects of the documentation theme by

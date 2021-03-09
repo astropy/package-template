@@ -65,4 +65,4 @@ this branch.
 
 3. Merge the branch::
 
-   $ git merge package-template/master
+   $ git merge package-template/main

@@ -5,7 +5,7 @@ The Astropy project is now transitioning from using astropy-helpers for
 infrastructure to more standard Python packaging tools. The motivation
 and implications of this are discussed in an Astropy Proposal for
 Enhancements: `APE 17: A roadmap for package infrastructure without
-astropy-helpers <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst>`__.
+astropy-helpers <https://github.com/astropy/astropy-APEs/blob/main/APE17.rst>`__.
 The core astropy package has already migrated and these changes will be included
 in astropy v4.1.
 
@@ -270,7 +270,7 @@ Step 7c - Cython and Numpy build-time dependencies
 If your compiled extensions rely on the NumPy C API, you will need to
 declare Numpy as a build-time dependency in ``pyproject.toml``. Note
 that as described in `APE
-17 <https://github.com/astropy/astropy-APEs/blob/master/APE17.rst#build-time-dependencies>`__,
+17 <https://github.com/astropy/astropy-APEs/blob/main/APE17.rst#build-time-dependencies>`__,
 you need to pin the build-time Numpy dependency to the **oldest**
 supported Numpy version for each Python version. However, rather than doing this
 manually, you can add the ``oldest-supported-numpy`` package to the build

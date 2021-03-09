@@ -71,7 +71,7 @@ This package template now supports Python 3.6+ versions only. However we
 will provide critical bug fixes to the ``cookiecutter-2.x`` branch until
 the end of 2019.
 We also provide a Python 2 compatible rendered versions of the template in
-the ``master-py2`` branch.
+the ``main-py2`` branch.
 
 
 Indices and tables
