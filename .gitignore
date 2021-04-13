@@ -58,9 +58,6 @@ pip-wheel-metadata
 .tox
 .*.sw[op]
 *~
-.project
-.pydevproject
-.settings
 
 # Mac OSX
 .DS_Store
