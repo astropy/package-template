@@ -16,7 +16,7 @@ Fixes #<Issue Number>
 
 ## PR Checklist
 
-- [ ] Check out the [contributing guidelines](https://github.com/astropy/astropy/blob/master/CONTRIBUTING.md) and [code of conduct](https://github.com/astropy/astropy/blob/master/CODE_OF_CONDUCT.md)
+- [ ] Check out the [contributing guidelines](https://github.com/astropy/astropy/blob/main/CONTRIBUTING.md) and [code of conduct](https://github.com/astropy/astropy/blob/main/CODE_OF_CONDUCT.md)
 - [ ] Check out the [contributing workflow](http://docs.astropy.org/en/latest/development/workflow/development_workflow.html) ( for a practical example [click here](https://docs.astropy.org/en/latest/development/workflow/git_edit_workflow_examples.html#astropy-fix-example) )
 
 - [ ] Give a detailed description of the PR above.
