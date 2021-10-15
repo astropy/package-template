@@ -37,7 +37,7 @@ jobs:
             python: 3.8
             toxenv: py38-test-alldeps-cov
 
-          - name: OS X - Python 3.8 with all optional dependencies
+          - name: macOS - Python 3.8 with all optional dependencies
             os: macos-latest
             python: 3.8
             toxenv: py38-test-alldeps
