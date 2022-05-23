@@ -2,9 +2,10 @@ version: 2
 
 build:
   image: latest
+  tools:
+    python: '{{ cookiecutter.minimum_python_version }}'
 
 python:
-  version: '{{ cookiecutter.minimum_python_version }}'
   install:
     - method: pip
       path: .
