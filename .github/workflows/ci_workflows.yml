@@ -42,7 +42,7 @@ jobs:
             foldername: 'packagename'
 
           - name: Python minversion
-            extra_context: 'minimum_python_version=3.6'
+            extra_context: 'minimum_python_version=3.7'
             extra_flags: ''
             foldername: 'packagename'
 
