@@ -1,4 +1,4 @@
-Copyright 2022, Astropy Developers
+Copyright 2023, Astropy Developers
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

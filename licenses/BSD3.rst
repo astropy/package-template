@@ -1,4 +1,4 @@
-Copyright 2022 Astropy Developers
+Copyright 2023 Astropy Developers
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
