@@ -8,7 +8,7 @@ Pending Deprecation Warning
 This template is in the process of being subsumed by the 
 `OpenAstronomy packaging guide <https://github.com/OpenAstronomy/packaging-guide>`__,
 which reflects more up-to-date Python packaging techniques than this template. In 
-the future this template will be replaced by a guide built from the OA guide specific
+the future this template may be replaced by a guide built from the OA guide specific
 to Astropy, but in the meantime, if you are starting a new project you may wish to
 start from the OA guide.
 
