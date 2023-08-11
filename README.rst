@@ -1,7 +1,9 @@
 Astropy package template
 ========================
 
-|powered|   -   **cookiecutter branch:** |ci cookiecutter|
+**cookiecutter branch:** |ci cookiecutter|
+
+|powered|
 
 Pending Deprecation Warning
 ---------------------------
